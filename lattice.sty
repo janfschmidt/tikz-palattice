@@ -1,0 +1,145 @@
+% draw accelerator lattices
+% with pgf/tikz
+%
+% by Jan Schmidt <schmidt@physik.uni-bonn.de>
+%
+% usage:
+% * lattice environment with 3 optional arguments:
+%   1. [scale] scale whole picture
+%   2. [label-fontsize] text label fontsize (default \normalsize)
+%   3. [label-distance] distance of text labels to elements (default 1cm)
+% * within lattice environment:
+%   - \drift{length/m}[name (default: none)]
+%   - \dipole{name}{length/m}{bending angle}[thickness (default 8mm)]
+%   - \quadrupole{name}{length/m}
+%   - \corrector{name}{length/m}
+%   - \cavity{name}{length/m}
+%   - \setdriftcolor{color (default black)}
+%   - \setelementcolor{type}{color (default depends on type)} define color for one element-type
+%  [minimum element length 0.01m]
+% 
+
+
+\RequirePackage{tikz,pgf}
+\RequirePackage{xargs}
+
+\usetikzlibrary{chains}
+
+\newcommand{\setelementcolor}[2]{\tikzset{#1/.append style={bottom color=#2}}}
+\newcommand{\setdriftcolor}[1]{\tikzset{drift/.append style={fill=#1}}}
+
+\newcommand{\elementlabel}[1]{\path [draw=none] (\j.center) --+ (\angle-90:\labeldist)
+  node[label] {#1};}
+
+% \begin{lattice}[scale][label-distance][label-fontsize]
+% defaults: scale=1, label-fontsize=\normalsize, label-distance=1cm
+\newenvironmentx{lattice}[3][1=1, 2=\normalsize, 3=1cm]{%
+%begin
+\tikzpicture[node distance=0mm]
+\newdimen\labeldist;
+\newdimen\corners;
+\newdimen\dipheight;
+\pgfmathsetmacro{\scal}{#1*0.1};
+\def\labelfont{#2};
+\pgfmathsetlength{\labeldist}{10*\scal*#3};
+\pgfmathtruncatemacro{\i}{0};
+\pgfmathsetmacro{\angle}{0};
+\node (\i) [draw=red, anchor=center, scale=0.1] at (0,0) {};
+}{%
+%end
+\endtikzpicture
+}
+
+
+% 1: länge 2: name (default "")
+\newcommandx{\drift}[2][2=]{%
+\pgfmathtruncatemacro{\j}{\i+1};
+\node (\j) [drift,minimum width=10*#1*20cm] at (\i.east) {};
+\elementlabel{#2};
+\pgfmathtruncatemacro{\i}{\j};
+}
+
+% 1: name, 2: länge, 3: winkel, 4: "dicke" (default 8mm)
+\newcommandx{\dipole}[4][4=8mm]{%
+\pgfmathsetmacro{\angle}{\angle+0.5*#3};
+\pgfmathtruncatemacro{\j}{\i+1};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
+%\pgfmathsetlength{\dipheight}{#3*(12cm/90)+3cm};
+\pgfmathsetlength{\dipheight}{10*#4};
+\node (\j) [dipole, minimum width=#2*20cm] at (\i.east) {};
+\elementlabel{#1};
+\pgfmathtruncatemacro{\i}{\j};
+\pgfmathsetmacro{\angle}{\angle+0.5*#3};
+}
+
+% 1: name, 2: länge
+\newcommand{\quadrupole}[2]{%
+\pgfmathtruncatemacro{\j}{\i+1};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
+\node (\j) [quadrupole, minimum width=#2*20cm] at (\i.east) {};
+\elementlabel{#1};
+\pgfmathtruncatemacro{\i}{\j};
+}
+
+% 1: name, 2: länge
+\newcommand{\corrector}[2]{%
+\pgfmathtruncatemacro{\j}{\i+1};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
+\node (\j) [corrector, minimum width=#2*20cm] at (\i.east) {};
+\elementlabel{#1};
+\pgfmathtruncatemacro{\i}{\j};
+}
+
+% 1: name, 2: länge
+\newcommand{\cavity}[2]{%
+\pgfmathtruncatemacro{\j}{\i+1};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
+\node (\j) [cavity, minimum width=#2*20cm] at (\i.east) {};
+\elementlabel{#1};
+\pgfmathtruncatemacro{\i}{\j};
+}
+
+
+\tikzset{element/.style={
+rectangle,rounded corners=\corners,
+thick, draw=black,
+top color=white, bottom color=blue,
+anchor=west,
+scale=\scal,
+rotate=\angle
+}}
+
+\tikzset{dipole/.style={
+element,
+minimum height=\dipheight,
+}}
+
+\tikzset{quadrupole/.style={
+element,
+bottom color=yellow, 
+minimum height=10cm,
+}}
+
+\tikzset{corrector/.style={
+element,
+bottom color=gray, 
+minimum height=7cm,
+}}
+
+\tikzset{cavity/.style={
+element,
+bottom color=brown, 
+minimum height=8cm,
+}}
+
+\tikzset{drift/.style={
+scale=0.1*\scal,
+rectangle,
+fill=black,
+anchor=west,
+minimum height=4cm,
+rotate=\angle}}
+
+\tikzset{label/.style={
+font=\labelfont
+}}
