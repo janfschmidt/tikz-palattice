@@ -3,42 +3,93 @@
 %
 % by Jan Schmidt <schmidt@physik.uni-bonn.de>
 %
+%
 % usage:
+%  -----
 % * lattice environment with 3 optional arguments:
 %   1. [scale] scale whole picture
-%   2. [label-fontsize] text label fontsize (default \normalsize)
-%   3. [label-distance] distance of text labels to elements (default 1cm)
+%   2. [label fontsize] text label fontsize (default \normalsize)
+%   3. [label distance] distance of text labels to elements (default 1cm)
+%  -----
 % * within lattice environment:
+% ** elements:
 %   - \drift{length/m}[name (default: none)]
-%   - \dipole{name}{length/m}{bending angle}[thickness (default 8mm)]
+%   - \dipole{name}{length/m}{bending angle/deg}[thickness (default 8mm)]
 %   - \quadrupole{name}{length/m}
 %   - \corrector{name}{length/m}
 %   - \cavity{name}{length/m}
-%   - \setdriftcolor{color (default black)}
+%   - \marker{name}[height/m (default )] a line perpendicular to beamline of given length/height
+% ** other commands:
+%   - \rotate{angle/deg} "bends" the beamline. e.g. to set starting angle
+%   - \drawrule{start coordinate/m}{tick distance/m} a rule to visualize lattice size.
+%      coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+%   - \setdriftcolor{color (default black)} for all following drifts
+%   - \setmarkercolor{color (default red)} for all following markers
 %   - \setelementcolor{type}{color (default depends on type)} define color for one element-type
-%  [minimum element length 0.01m]
+% ** to add something manually:
+%   - \savecoordinate{name}[position (default: east)] save coordinate of previous element
+%      to access it later. you can use all tikz/pgf commands within lattice environment.
+%      position specifies the exact place of the element (north, center, south west, ...).
+%      Here east is always downstream and west upstream.
+%      ! DON'T use bare numbers as names - e.g. (1). These are the internal identifiers.
+%  -----
+%  * lengths are set in meter, so you write {1.32} for 1.32m.
+%  * picture scale: for lattice scale=1 an element of 1m length is plotted with 2cm length
+%  * minimum element length 0.01m (drifts can be shorter)
+%  * maximum drift length <2.9m (just add a second drift to get a longer one)
 % 
 
 
 \RequirePackage{tikz,pgf}
+\RequirePackage{ifthen}
+\RequirePackage{siunitx}
 \RequirePackage{xargs}
 
-\usetikzlibrary{chains}
+
 
 \newcommand{\setelementcolor}[2]{\tikzset{#1/.append style={bottom color=#2}}}
 \newcommand{\setdriftcolor}[1]{\tikzset{drift/.append style={fill=#1}}}
+\newcommand{\setmarkercolor}[1]{\tikzset{marker/.append style={#1}}}
 
-\newcommand{\elementlabel}[1]{\path [draw=none] (\j.center) --+ (\angle-90:\labeldist)
-  node[label] {#1};}
+\newcommand{\rotate}[1]{\pgfmathsetmacro{\angle}{\angle+#1};}
+\newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (\i.#2);}
 
-% \begin{lattice}[scale][label-distance][label-fontsize]
-% defaults: scale=1, label-fontsize=\normalsize, label-distance=1cm
-\newenvironmentx{lattice}[3][1=1, 2=\normalsize, 3=1cm]{%
+\newcommandx{\drawrule}[2][2=1]{%
+  \tikzset{x=2cm,y=2cm}
+  \node (rule1) [rule,minimum width=10*#2*20cm] at #1 {};
+  \tikzset{x=1cm,y=1cm}
+  \node (rule2) [rule,fill=white,minimum width=10*#2*20cm] at (rule1.east) {};
+  \node (rule3) [rule,minimum width=10*#2*20cm] at (rule2.east) {};
+  \draw [black] (rule1.west) --+ (-90:0.2*\labeldist); % half length
+  \draw [black] (rule1.west) --+ (90:0.2*\labeldist);
+  \foreach \x in {1,2,3} {%
+    \pgfmathsetmacro{\len}{#2*\x}
+    \path [draw=none] (rule\x.east) --+ (-90:\labeldist) node[label, anchor=center]
+    {\SI[zero-decimal-to-integer]{\len}{\meter}};
+    \draw [black] (rule\x.east) --+ (-90:0.2*\labeldist); % half length
+    \draw [black] (rule\x.east) --+ (90:0.2*\labeldist);
+  }
+}
+
+\newcommand{\elementlabel}[1]{%
+\pgfmathtruncatemacro\iang{\angle}
+\def\labelanchor{north};
+\ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
+\ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
+\ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
+\ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
+\path [draw=none] (\j.center) --+ (\angle-90:\labeldist) node[label] {#1};}
+
+
+
+%lattice environment
+\newenvironmentx{lattice}[3][1=1, 2=\normalsize, 3=7mm]{%
 %begin
 \tikzpicture[node distance=0mm]
 \newdimen\labeldist;
 \newdimen\corners;
 \newdimen\dipheight;
+\newdimen\markerlen;
 \pgfmathsetmacro{\scal}{#1*0.1};
 \def\labelfont{#2};
 \pgfmathsetlength{\labeldist}{10*\scal*#3};
@@ -51,7 +102,8 @@
 }
 
 
-% 1: länge 2: name (default "")
+% ----- element commands -----
+% drift
 \newcommandx{\drift}[2][2=]{%
 \pgfmathtruncatemacro{\j}{\i+1};
 \node (\j) [drift,minimum width=10*#1*20cm] at (\i.east) {};
@@ -59,7 +111,7 @@
 \pgfmathtruncatemacro{\i}{\j};
 }
 
-% 1: name, 2: länge, 3: winkel, 4: "dicke" (default 8mm)
+%dipole
 \newcommandx{\dipole}[4][4=8mm]{%
 \pgfmathsetmacro{\angle}{\angle+0.5*#3};
 \pgfmathtruncatemacro{\j}{\i+1};
@@ -72,7 +124,7 @@
 \pgfmathsetmacro{\angle}{\angle+0.5*#3};
 }
 
-% 1: name, 2: länge
+%quadrupole
 \newcommand{\quadrupole}[2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
@@ -81,7 +133,7 @@
 \pgfmathtruncatemacro{\i}{\j};
 }
 
-% 1: name, 2: länge
+%corrector
 \newcommand{\corrector}[2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
@@ -90,7 +142,7 @@
 \pgfmathtruncatemacro{\i}{\j};
 }
 
-% 1: name, 2: länge
+%cavity
 \newcommand{\cavity}[2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
@@ -99,7 +151,23 @@
 \pgfmathtruncatemacro{\i}{\j};
 }
 
+%marker
+\newcommandx{\marker}[2][2=0.7]{%
+\pgfmathsetlength{\markerlen}{#2*10cm*\scal};
+\pgfmathtruncatemacro\iang{\angle}
+\def\labelanchor{south};
+\ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
+\ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
+\ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
+\ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+\draw [marker] (\i.east) --+ (\angle-90:\markerlen); % half length (=> 10cm)
+\draw [marker] (\i.east) --+ (\angle+90:\markerlen);
+\draw [draw=none] (\i.east) --+ (\angle+90:\markerlen+0.5*\labeldist) node[label] {#1};
+}
 
+
+% ----- styles -----
+%element (for all, except drift)
 \tikzset{element/.style={
 rectangle,rounded corners=\corners,
 thick, draw=black,
@@ -109,37 +177,59 @@ scale=\scal,
 rotate=\angle
 }}
 
+%dipole
 \tikzset{dipole/.style={
 element,
 minimum height=\dipheight,
 }}
 
+%quadrupole
 \tikzset{quadrupole/.style={
 element,
 bottom color=yellow, 
 minimum height=10cm,
 }}
 
+%corrector
 \tikzset{corrector/.style={
 element,
 bottom color=gray, 
 minimum height=7cm,
 }}
 
+%cavity
 \tikzset{cavity/.style={
 element,
 bottom color=brown, 
 minimum height=8cm,
 }}
 
+%drift
 \tikzset{drift/.style={
 scale=0.1*\scal,
-rectangle,
+rectangle, %draw=black,
 fill=black,
 anchor=west,
 minimum height=4cm,
 rotate=\angle}}
 
+%text label
 \tikzset{label/.style={
-font=\labelfont
+text=black,
+font=\labelfont,
+anchor=\labelanchor
+}}
+
+%marker (line)
+\tikzset{marker/.style={
+red, densely dashed
+}}
+
+%rule
+\tikzset{rule/.style={
+scale=0.1*\scal,
+rectangle, draw=black,
+fill=black,
+anchor=west,
+minimum height=4cm
 }}
