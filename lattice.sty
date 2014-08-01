@@ -16,8 +16,10 @@
 %   - \drift{length/m}[name (default: none)]
 %   - \dipole{name}{length/m}{bending angle/deg}[thickness (default 8mm)]
 %   - \quadrupole{name}{length/m}
-%   - \corrector{name}{length/m}
+%   - \kicker{name}{length/m}
 %   - \cavity{name}{length/m}
+%   - \source{name}
+%   - \screen{name}
 %   - \marker{name}[height/m (default )] a line perpendicular to beamline of given length/height
 % ** other commands:
 %   - \rotate{angle/deg} "bends" the beamline. e.g. to set starting angle
@@ -133,11 +135,11 @@
 \pgfmathtruncatemacro{\i}{\j};
 }
 
-%corrector
-\newcommand{\corrector}[2]{%
+%kicker
+\newcommand{\kicker}[2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
-\node (\j) [corrector, minimum width=#2*20cm] at (\i.east) {};
+\node (\j) [kicker, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
 }
@@ -147,6 +149,24 @@
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
 \node (\j) [cavity, minimum width=#2*20cm] at (\i.east) {};
+\elementlabel{#1};
+\pgfmathtruncatemacro{\i}{\j};
+}
+
+%source
+\newcommand{\source}[1]{%
+\pgfmathtruncatemacro{\j}{\i+1};
+\pgfmathsetlength{\corners}{1mm};
+\node (\j) [source, minimum width=10cm] at (\i.east) {};
+\elementlabel{#1};
+\pgfmathtruncatemacro{\i}{\j};
+}
+
+%screen
+\newcommand{\screen}[1]{%
+\pgfmathtruncatemacro{\j}{\i+1};
+\pgfmathsetlength{\corners}{0mm};
+\node (\j) [screen, minimum width=4cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
 }
@@ -190,11 +210,11 @@ bottom color=yellow,
 minimum height=10cm,
 }}
 
-%corrector
-\tikzset{corrector/.style={
+%kicker
+\tikzset{kicker/.style={
 element,
-bottom color=gray, 
-minimum height=7cm,
+bottom color=orange!90!black, 
+minimum height=4cm,
 }}
 
 %cavity
@@ -203,6 +223,24 @@ element,
 bottom color=brown, 
 minimum height=8cm,
 }}
+
+%source
+\tikzset{source/.style={
+element,
+regular polygon,regular polygon sides=3, shape border rotate=30,
+bottom color=gray, 
+minimum height=8cm,
+}}
+
+%screen
+\tikzset{screen/.style={
+element,
+forbidden sign,
+bottom color=white, 
+minimum height=4cm,
+}}
+
+
 
 %drift
 \tikzset{drift/.style={
