@@ -1,6 +1,77 @@
 % a4paper, multiple short beamlines
+\documentclass[a4paper]{scrartcl}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{subcaption}
+\usepackage{lattice}
 
+\title{Lattices in a document}
+\date{}
+
+\begin{document}
+\maketitle
 % scale
 % label size
 % rotate
 % custom coordinates
+
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \begin{lattice}
+    \rotate{90}
+    \drift{0.5}
+    \quadrupole{QF1}{0.3}
+    \drift{0.2}
+    \kicker{}{0.1}
+    \drift{0.07}
+    \quadrupole{QD1}{0.3}
+    \drift{0.4}
+    \dipole{MB1}{0.5}{20}
+    \drift{0.2}
+    \kicker{SSV1}{0.2}
+    \drift{0.2}
+    \kicker{SSH1}{0.2}
+    \drift{0.3}
+    \dipole{M1}{0.2}{30}
+    \drift{0.2}
+    \dipole{M2}{0.2}{-50}
+    \drift{0.2}
+    \dipole{M3}{0.2}{20}
+    \drift{0.7}
+    \drawrule{(-0.75,-0.2)}[0.5]
+  \end{lattice}
+  % \caption{Lattice 1}
+  % \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \begin{lattice}[0.3][\tiny][1.5cm]
+  \drift{1}
+  \dipole{M1}{2}{45}
+  \drift{1}
+  \dipole{M2}{2}{45}
+  \drift{1}
+  \dipole{M3}{2}{45}
+  \drift{1}
+  \dipole{M4}{2}{45}
+  \drift{1}
+  \dipole{M5}{2}{45}
+  \drift{1}
+  \dipole{M6}{2}{45}
+  \drift{1}
+  \dipole{M7}{2}{45}
+  \drift{1}
+  \dipole{M8}{2}{45}
+  \drawrule{(-0.75,-0.5)}[2]
+  \end{lattice}  
+  % \caption{Lattice 2}
+  % \label{fig:sub2}
+\end{subfigure}
+\caption{A figure with two subfigures}
+\label{fig:test}
+\end{figure}
+
+\end{document}
