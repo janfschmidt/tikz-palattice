@@ -5,11 +5,11 @@
 \usepackage{lattice}
 
 
-% compile twice to connect lattices
+% compile twice to connect lattices!
 
 
 \title{Two more lattices}
-\subtitle{saving coordinates and scaling lattices}
+\subtitle{scaling lattices and accessing coordinates}
 \date{}
 
 \begin{document}
@@ -17,6 +17,40 @@
 
 \begin{figure}[h]
 \centering
+\begin{subfigure}{.45\textwidth}
+  \centering
+  % this is the ring from example 2, but plotted smaller (30%).
+  % the element sizes (in meter) are the same - as the rule indicates.
+  \begin{lattice}[][0.3][\tiny][4mm]
+    \drift{1}
+    \dipole{M1}{2}{45}
+    \drift{1}
+    \shiftlabels
+    \dipole{M2}{2}{45}
+    \shiftlabels
+    \drift{1}
+    \dipole{M3}{2}{45}
+    \drift{1}
+    \savecoordinate{myCoord1}[center]
+    \dipole{M4}{2}{45}
+    \drift{1}
+    \dipole{M5}{2}{45}
+    \drift{1}
+    \dipole{M6}{2}{45}
+    \drift{1}
+    \savecoordinate{myCoord2}[center]
+    \dipole{M7}{2}{45}
+    \drift{1}
+    \dipole{M8}{2}{45}
+    \drawrule{(-0.75,-0.5)}[2]
+
+    % custom drawing using saved coordinates (to center of drifts)
+    \draw[->, thick] (myCoord2) -- (myCoord1) node[midway,fill=white,rotate=20] {signal};
+  \end{lattice}  
+\end{subfigure}
+%
+%
+%
 \begin{subfigure}{.45\textwidth}
   \centering
   \begin{lattice}
@@ -59,40 +93,6 @@
     \dipole{M3}{0.2}{-20}
     \drift{0.7}
   \end{lattice}
-\end{subfigure}
-%
-%
-%
-\begin{subfigure}{.45\textwidth}
-  \centering
-  % this is the ring from example 2, but plotted smaller (30%).
-  % the element sizes (in meter) are the same - as the rule indicates.
-  \begin{lattice}[][0.3][\tiny][4mm]
-    \drift{1}
-    \dipole{M1}{2}{45}
-    \drift{1}
-    \shiftlabels
-    \dipole{M2}{2}{45}
-    \shiftlabels
-    \drift{1}
-    \dipole{M3}{2}{45}
-    \drift{1}
-    \savecoordinate{myCoord1}[center]
-    \dipole{M4}{2}{45}
-    \drift{1}
-    \dipole{M5}{2}{45}
-    \drift{1}
-    \dipole{M6}{2}{45}
-    \drift{1}
-    \savecoordinate{myCoord2}[center]
-    \dipole{M7}{2}{45}
-    \drift{1}
-    \dipole{M8}{2}{45}
-    \drawrule{(-0.75,-0.5)}[2]
-
-    % custom drawing using saved coordinates (to center of drifts)
-    \draw[->, thick] (myCoord2) -- (myCoord1) node[midway,fill=white,rotate=20] {signal};
-  \end{lattice}  
 \end{subfigure}
 \caption{A figure with two lattices}
 \label{fig:lattices}
