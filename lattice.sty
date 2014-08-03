@@ -117,7 +117,7 @@
 \newcommandx{\dipole}[4][4=8mm]{%
 \pgfmathsetmacro{\angle}{\angle+0.5*#3};
 \pgfmathtruncatemacro{\j}{\i+1};
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 %\pgfmathsetlength{\dipheight}{#3*(12cm/90)+3cm};
 \pgfmathsetlength{\dipheight}{10*#4};
 \node (\j) [dipole, minimum width=#2*20cm] at (\i.east) {};
@@ -129,7 +129,7 @@
 %quadrupole
 \newcommand{\quadrupole}[2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [quadrupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
@@ -138,7 +138,7 @@
 %kicker
 \newcommand{\kicker}[2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [kicker, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
@@ -147,7 +147,7 @@
 %cavity
 \newcommand{\cavity}[2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? 1mm : 0mm};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [cavity, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
@@ -190,7 +190,7 @@
 %element (for all, except drift)
 \tikzset{element/.style={
 rectangle,rounded corners=\corners,
-thick, draw=black,
+line width=0.8pt*10*\scal, draw=black,
 top color=white, bottom color=blue,
 anchor=west,
 scale=\scal,
@@ -245,7 +245,7 @@ minimum height=4cm,
 %drift
 \tikzset{drift/.style={
 scale=0.1*\scal,
-rectangle, %draw=black,
+rectangle,
 fill=black,
 anchor=west,
 minimum height=4cm,
@@ -269,5 +269,5 @@ scale=0.1*\scal,
 rectangle, draw=black,
 fill=black,
 anchor=west,
-minimum height=6cm
+minimum height=6cm/(10*\scal)
 }}
