@@ -6,10 +6,11 @@
 %
 % usage:
 %  -----
-% * lattice environment with 3 optional arguments:
-%   1. [scale] scale whole picture
-%   2. [label fontsize] text label fontsize (default \normalsize)
-%   3. [label distance] distance of text labels to elements (default 1cm)
+% * lattice environment with 4 optional arguments:
+%   1. [tikz options] give any options for the tikzpicture (e.g. overlay)
+%   2. [scale] scale whole picture
+%   3. [label fontsize] text label fontsize (default \normalsize)
+%   4. [label distance] distance of text labels to elements (default 1cm)
 %  -----
 % * within lattice environment:
 % ** elements:
@@ -23,6 +24,10 @@
 %   - \marker{name}[height/m (default )] a line perpendicular to beamline of given length/height
 % ** other commands:
 %   - \rotate{angle/deg} "bends" the beamline. e.g. to set starting angle
+%   - \shiftlabels moves labels to other side of elements (swap with marker labels)
+%   - \start{coordinate/m} sets starting point of lattice. use before first element
+%      coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+%      hint: use with \savecoordinate to connect lattices!
 %   - \drawrule{start coordinate/m}{tick distance/m} a rule to visualize lattice size.
 %      coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
 %   - \setdriftcolor{color (default black)} for all following drifts
@@ -31,9 +36,11 @@
 % ** to add something manually:
 %   - \savecoordinate{name}[position (default: east)] save coordinate of previous element
 %      to access it later. you can use all tikz/pgf commands within lattice environment.
+%      You can also connect multiple lattices. use tikz overlay option (1. argument of lattice)
 %      position specifies the exact place of the element (north, center, south west, ...).
 %      Here east is always downstream and west upstream.
 %      ! DON'T use bare numbers as names - e.g. (1). These are the internal identifiers.
+%      hint: use with \start to connect lattices!
 %  -----
 %  * lengths are set in meter, so you write {1.32} for 1.32m.
 %  * picture scale: for lattice scale=1 an element of 1m length is plotted with 2cm length
@@ -54,6 +61,17 @@
 \newcommand{\setmarkercolor}[1]{\tikzset{marker/.append style={#1}}}
 
 \newcommand{\rotate}[1]{\pgfmathsetmacro{\angle}{\angle+#1};}
+\newcommand{\start}[1]{%
+  \tikzset{x=2cm,y=2cm}
+  \node (0) [start] at #1 {};
+  \tikzset{x=1cm,y=1cm}
+}
+
+\newcommand{\shiftlabels}{%
+\ifthenelse{\labelang = -90}{%
+\def\labelang{+90} \def\marklabelang{-90}}{%
+\def\labelang{-90} \def\marklabelang{+90}}}
+
 \newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (\i.#2);}
 
 \newcommandx{\drawrule}[2][2=1]{%
@@ -62,42 +80,51 @@
   \tikzset{x=1cm,y=1cm}
   \node (rule2) [rule,fill=white,minimum width=10*#2*20cm] at (rule1.east) {};
   \node (rule3) [rule,minimum width=10*#2*20cm] at (rule2.east) {};
-  \draw [black] (rule1.west) --+ (-90:0.2*\labeldist); % half length
-  \draw [black] (rule1.west) --+ (90:0.2*\labeldist);
+  \draw [black] (rule1.west) --+ (-90:1mm); % half length
+  \draw [black] (rule1.west) --+ (90:1mm);
   \foreach \x in {1,2,3} {%
     \pgfmathsetmacro{\len}{#2*\x}
-    \path [draw=none] (rule\x.east) --+ (-90:\labeldist) node[label, anchor=center]
+    \path [draw=none] (rule\x.south east) --+ (-90:0.06*\labeldist/\scal) node[label, anchor=center]
     {\SI[zero-decimal-to-integer]{\len}{\meter}};
-    \draw [black] (rule\x.east) --+ (-90:0.2*\labeldist); % half length
-    \draw [black] (rule\x.east) --+ (90:0.2*\labeldist);
+    \draw [black] (rule\x.east) --+ (-90:1mm); % half length
+    \draw [black] (rule\x.east) --+ (90:1mm);
   }
 }
 
 \newcommand{\elementlabel}[1]{%
 \pgfmathtruncatemacro\iang{\angle}
 \def\labelanchor{north};
-\ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
-\ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
-\ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
-\ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
-\path [draw=none] (\j.center) --+ (\angle-90:\labeldist) node[label] {#1};}
+\ifthenelse{\labelang = -90}{%
+  \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
+  \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
+  \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
+  \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
+}{%
+  \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
+  \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
+  \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
+  \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+}
+\path [draw=none] (\j.center) --+ (\angle\labelang:\labeldist) node[label] {#1};}
 
 
 
 %lattice environment
-\newenvironmentx{lattice}[3][1=1, 2=\normalsize, 3=7mm]{%
+\newenvironmentx{lattice}[4][1=, 2=1, 3=\normalsize, 4=7mm]{%
 %begin
-\tikzpicture[node distance=0mm]
-\newdimen\labeldist;
+\tikzpicture[node distance=0mm, remember picture, #1]
+\newdimen\labeldist
 \newdimen\corners;
 \newdimen\dipheight;
 \newdimen\markerlen;
-\pgfmathsetmacro{\scal}{#1*0.1};
-\def\labelfont{#2};
-\pgfmathsetlength{\labeldist}{10*\scal*#3};
+\pgfmathsetmacro{\scal}{#2*0.1};
+\def\labelfont{#3};
+\def\labelang{-90};
+\def\marklabelang{+90};
+\pgfmathsetlength{\labeldist}{10*\scal*#4};
 \pgfmathtruncatemacro{\i}{0};
 \pgfmathsetmacro{\angle}{0};
-\node (\i) [draw=red, anchor=center, scale=0.1] at (0,0) {};
+\node (\i) [start] at (0,0) {};
 }{%
 %end
 \endtikzpicture
@@ -176,13 +203,20 @@
 \pgfmathsetlength{\markerlen}{#2*10cm*\scal};
 \pgfmathtruncatemacro\iang{\angle}
 \def\labelanchor{south};
-\ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
-\ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
-\ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
-\ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+\ifthenelse{\marklabelang = +90}{%
+  \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
+  \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
+  \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
+  \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+}{%
+  \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
+  \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
+  \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
+  \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
+}
 \draw [marker] (\i.east) --+ (\angle-90:\markerlen); % half length (=> 10cm)
 \draw [marker] (\i.east) --+ (\angle+90:\markerlen);
-\draw [draw=none] (\i.east) --+ (\angle+90:\markerlen+0.5*\labeldist) node[label] {#1};
+\draw [draw=none] (\i.east) --+ (\angle\marklabelang:\markerlen+0.5*\labeldist) node[label] {#1};
 }
 
 
@@ -271,3 +305,9 @@ fill=black,
 anchor=west,
 minimum height=6cm/(10*\scal)
 }}
+
+%start
+\tikzset{start/.style={%
+draw=none,
+anchor=center,
+scale=0.1}}
