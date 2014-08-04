@@ -32,32 +32,49 @@
 
 \newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (\i.#2);}
 
+
 \newcommandx{\drawrule}[2][2=1]{%
   \tikzset{x=2cm,y=2cm}
-  \node (rule1) [rule,minimum width=10*#2*20cm] at #1 {};
+  \node (rule11) [rule,minimum width=#2*20cm] at #1 {};
+  \foreach \a in {2,3,...,10} {%
+    \pgfmathtruncatemacro{\b}{\a-1}
+    \node (rule1\a) [rule,minimum width=#2*20cm] at (rule1\b.east) {};
+  }
+  \node (rule21) [rule,fill=white,draw=none,minimum width=#2*20cm] at (rule110.east) {};
+  \foreach \a in {2,3,...,10} {%
+    \pgfmathtruncatemacro{\b}{\a-1}
+    \node (rule2\a) [rule,fill=white,draw=none,minimum width=#2*20cm] at (rule2\b.east) {};
+  }
+  \node (rule31) [rule,minimum width=#2*20cm] at (rule210.east) {};
+  \foreach \a in {2,3,...,10} {%
+    \pgfmathtruncatemacro{\b}{\a-1}
+    \node (rule3\a) [rule,minimum width=#2*20cm] at (rule3\b.east) {};
+  }
   \tikzset{x=1cm,y=1cm}
-  \node (rule2) [rule,fill=white,minimum width=10*#2*20cm] at (rule1.east) {};
-  \node (rule3) [rule,minimum width=10*#2*20cm] at (rule2.east) {};
-  \draw [black, thick] (rule1.west) --+ (-90:1mm); % half length
-  \draw [black, thick] (rule1.west) --+ (90:1mm);
+  \draw [black] (rule11.south west) -- (rule310.south east);
+  \draw [black] (rule11.north west) -- (rule310.north east);
+  \draw [black, thick] (rule11.west) --+ (-90:1mm); % half length
+  \draw [black, thick] (rule11.west) --+ (90:1mm);
   \foreach \x in {1,2,3} {%
     \pgfmathsetmacro{\len}{#2*\x}
-    \path [draw=none] (rule\x.south east) --+ (-90:0.06*\labeldist/\scal) node[label, anchor=center]
+    \path [draw=none] (rule\x10.south east) --+ (-90:0.06*\labeldist/\scal) node[label, anchor=center]
     {\SI[zero-decimal-to-integer]{\len}{\meter}};
-    \draw [black,thick] (rule\x.east) --+ (-90:1mm); % half length
-    \draw [black,thick] (rule\x.east) --+ (90:1mm);
+    \draw [black,thick] (rule\x10.east) --+ (-90:1mm); % half length
+    \draw [black,thick] (rule\x10.east) --+ (90:1mm);
   }
 }
 
+
 \newcommand{\elementlabel}[1]{%
 \pgfmathtruncatemacro\iang{\angle}
-\def\labelanchor{north};
 \ifthenelse{\labelang = -90}{%
+  \def\labelanchor{north};
   \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
   \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
   \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
   \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
 }{%
+  \def\labelanchor{south};
   \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
   \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
   \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
@@ -74,6 +91,7 @@
 \newdimen\labeldist
 \newdimen\corners;
 \newdimen\dipheight;
+\newdimen\quadheight;
 \newdimen\markerlen;
 \pgfmathsetmacro{\scal}{#2*0.1};
 \def\labelfont{#3};
@@ -99,12 +117,12 @@
 }
 
 %dipole
-\newcommandx{\dipole}[4][4=8mm]{%
+\newcommandx{\dipole}[4][4=0.4]{%
 \pgfmathsetmacro{\angle}{\angle+0.5*#3};
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 %\pgfmathsetlength{\dipheight}{#3*(12cm/90)+3cm};
-\pgfmathsetlength{\dipheight}{10*#4};
+\pgfmathsetlength{\dipheight}{#4*20cm};
 \node (\j) [dipole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
@@ -112,9 +130,10 @@
 }
 
 %quadrupole
-\newcommand{\quadrupole}[2]{%
+\newcommandx{\quadrupole}[3][3=0.5]{%
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
+\pgfmathsetlength{\quadheight}{#3*20cm};
 \node (\j) [quadrupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
@@ -166,16 +185,17 @@
 }
 
 %marker
-\newcommandx{\marker}[2][2=0.7]{%
-\pgfmathsetlength{\markerlen}{#2*10cm*\scal};
+\newcommandx{\marker}[2][2=0.35]{%
+\pgfmathsetlength{\markerlen}{#2*20cm*\scal};
 \pgfmathtruncatemacro\iang{\angle}
-\def\labelanchor{south};
 \ifthenelse{\marklabelang = +90}{%
+  \def\labelanchor{south};
   \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
   \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
   \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
   \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
 }{%
+  \def\labelanchor{north};
   \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
   \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
   \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
@@ -208,7 +228,7 @@ minimum height=\dipheight,
 \tikzset{quadrupole/.style={
 element,
 bottom color=yellow, 
-minimum height=10cm,
+minimum height=\quadheight,
 }}
 
 %sextupole

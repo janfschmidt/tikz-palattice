@@ -31,14 +31,14 @@ the lattice environment has 4 optional arguments:
 * Within lattice environment
 ** Elements
   - \verb+\drift{length/m}[name (default: none)]+
-  - \verb+\dipole{name}{length/m}{bending angle/deg}[thickness (default 8mm)]+
-  - \verb+\quadrupole{name}{length/m}+
+  - \verb+\dipole{name}{length/m}{bending angle/deg}[thickness/m (default 0.4)]+
+  - \verb+\quadrupole{name}{length/m}[thickness/m (default 0.5)]+
   - \verb+\sextupole{name}{length/m}+
   - \verb+\kicker{name}{length/m}+
   - \verb+\cavity{name}{length/m}+
   - \verb+\source{name}+
   - \verb+\screen{name}+
-  - \verb+\marker{name}[length/m (default )]+ a line perpendicular to beamline of given length
+  - \verb+\marker{name}[length/m (default 0.35)]+ a line perpendicular to beamline of given length
 ** Other commands
   - \verb+\rotate{angle/deg}+ "bends" the beamline. e.g. to set starting angle
   - \verb+\shiftlabels+ moves labels to other side of elements (swap with marker labels)
