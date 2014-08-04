@@ -1,5 +1,4 @@
-#+TITLE:     TeXlattice - draw accelerator lattices with LaTeX
-#+SUBTITLE:  using pgf/tikz
+#+TITLE:     TeXlattice - draw accelerator lattices with LaTeX\\\textit{using pgf/tikz}
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
 * Installation
@@ -22,13 +21,13 @@ Read the documentation of your LaTeX distribution for details.
 To draw a lattice just add
 #+BEGIN_EXAMPLE
 \usepackage{lattice}
-#+END_EXAMPLE
+#+END_EXAMPLEo
 to your preambel and use the lattice environment.
 the lattice environment has 4 optional arguments:
   1. \verb+[tikz options]+ give any options for the tikzpicture (e.g. overlay)
-  2. \verb+[scale]+ scale whole picture
-  3. \verb+[label fontsize]+ text label fontsize (default \verb+\normalsize+)
-  4. \verb+[label distance]+ distance of text labels to elements (default 1cm)
+  2. \verb+[scale]+ scale whole picture (default: 1)
+  3. \verb+[label fontsize]+ text label fontsize (default: \verb+\normalsize+)
+  4. \verb+[label distance]+ distance of text labels to elements (default: 1cm)
 * Within lattice environment
 ** Elements
   - \verb+\drift{length/m}[name (default: none)]+
