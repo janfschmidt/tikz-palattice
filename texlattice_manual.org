@@ -45,7 +45,7 @@ the lattice environment has 4 optional arguments:
   - \verb+\start{coordinate/m}+ sets starting point of lattice. use before first element
      coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
      hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)
-  - \verb+\drawrule{start coordinate/m}{tick distance/m}+ a rule to visualize lattice size.
+  - \verb+\drawrule{start coordinate/m}[tick distance/m (default: 1)]+ a rule to visualize lattice size.
      coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
   - \verb+\setdriftcolor{color (default black)}+ for all following drifts
   - \verb+\setmarkercolor{color (default red)}+ for all following markers
