@@ -1,0 +1,65 @@
+#+TITLE:     TeXlattice - draw accelerator lattices with LaTeX
+#+SUBTITLE:  using pgf/tikz
+#+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
+#+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
+* Installation
+** Copy lattice.sty
+You just need to copy the lattice.sty file to a place where your LaTeX installation can recognize it.
+This can be
+  - the same folder as your .tex document
+  - in the LaTeX system tree (e.g. for texlive under ubuntu /usr/share/texmf/tex/latex/...)
+  - in a LaTeX user tree
+Read the documentation of your LaTeX distribution for details.
+** Required packages
+  - tikz, pgf
+  - siunitx
+  - ifthen
+  - xargs
+* What is missing?
+  - The look of the elements can definitely be improved. Feel free to do it! The only constraint is that it must be drawn as a tikz node.
+  - More element types can be added easily - please report what you need!
+* lattice environment
+To draw a lattice just add
+#+BEGIN_EXAMPLE
+\usepackage{lattice}
+#+END_EXAMPLE
+to your preambel and use the lattice environment.
+the lattice environment has 4 optional arguments:
+  1. \verb+[tikz options]+ give any options for the tikzpicture (e.g. overlay)
+  2. \verb+[scale]+ scale whole picture
+  3. \verb+[label fontsize]+ text label fontsize (default \verb+\normalsize+)
+  4. \verb+[label distance]+ distance of text labels to elements (default 1cm)
+* Within lattice environment
+** Elements
+  - \verb+\drift{length/m}[name (default: none)]+
+  - \verb+\dipole{name}{length/m}{bending angle/deg}[thickness (default 8mm)]+
+  - \verb+\quadrupole{name}{length/m}+
+  - \verb+\kicker{name}{length/m}+
+  - \verb+\cavity{name}{length/m}+
+  - \verb+\source{name}+
+  - \verb+\screen{name}+
+  - \verb+\marker{name}[length/m (default )]+ a line perpendicular to beamline of given length
+** Other commands
+  - \verb+\rotate{angle/deg}+ "bends" the beamline. e.g. to set starting angle
+  - \verb+\shiftlabels+ moves labels to other side of elements (swap with marker labels)
+  - \verb+\start{coordinate/m}+ sets starting point of lattice. use before first element
+     coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+     hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)
+  - \verb+\drawrule{start coordinate/m}{tick distance/m}+ a rule to visualize lattice size.
+     coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+  - \verb+\setdriftcolor{color (default black)}+ for all following drifts
+  - \verb+\setmarkercolor{color (default red)}+ for all following markers
+  - \verb+\setelementcolor{type}{color (default depends on type)}+ define color for one element-type
+** Access lattice coordinates to add sth. manually or connect lattices
+  - \verb+\savecoordinate{name}[position (default: east)]+ saves coordinate of previous element
+     to access it later.
+    - position specifies the exact place of the element (north, center, south west, ...). Here east is always downstream and west upstream.
+    - you can use all tikz/pgf commands within lattice environment to draw anything.
+    - You can also connect multiple lattices. use tikz overlay option (1. argument of lattice) and \verb+\start+. See example 3.
+    - ! DON'T use bare numbers as names (e.g. (1)) These are the internal element identifiers.
+* Remarks
+  - lengths are set in meter, so you write {1.32} for 1.32m.
+  - picture scale: for lattice scale=1 an element of 1m length is plotted with 2cm length
+  - minimum element length 0.01m (drifts can be shorter)
+  - maximum drift length <2.9m (just add a second drift to get a longer one)
+  - if you refer to a coordinate from another lattice (another tikzpicture) you have to compile twice
