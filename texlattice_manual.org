@@ -1,6 +1,7 @@
 #+TITLE:     TeXlattice - draw accelerator lattices with LaTeX\\\textit{using pgf/tikz}
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
+#+LaTeX_CLASS_OPTIONS:[colorlinks]
 * Installation
 ** Copy lattice.sty
 You just need to copy the lattice.sty file to a place where your LaTeX installation can recognize it.
@@ -23,11 +24,9 @@ To draw a lattice just add
 \usepackage{lattice}
 #+END_EXAMPLEo
 to your preambel and use the lattice environment.
-the lattice environment has 4 optional arguments:
+the lattice environment has 2 optional arguments:
   1. \verb+[tikz options]+ give any options for the tikzpicture (e.g. overlay)
   2. \verb+[scale]+ scale whole picture (default: 1)
-  3. \verb+[label fontsize]+ text label fontsize (default: \verb+\normalsize+)
-  4. \verb+[label distance]+ distance of text labels to elements (default: 1cm)
 * Within lattice environment
 ** Elements
   - \verb+\drift{length/m}[name (default: none)]+
@@ -39,18 +38,26 @@ the lattice environment has 4 optional arguments:
   - \verb+\source{name}+
   - \verb+\screen{name}+
   - \verb+\marker{name}[length/m (default 0.35)]+ a line perpendicular to beamline of given length
-** Other commands
+** Modify your lattice/elements
   - \verb+\rotate{angle/deg}+ "bends" the beamline. e.g. to set starting angle
-  - \verb+\shiftlabels+ moves labels to other side of elements (swap with marker labels)
   - \verb+\start{coordinate/m}+ sets starting point of lattice. use before first element
-     coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
-     hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)
+    coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+    hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)
   - \verb+\drawrule{start coordinate/m}[tick distance/m (default: 1)]+ a rule to visualize lattice size.
-     coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+      coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+*** Labels
+  - \verb+\shiftlabels+ moves labels to other side of elements (swap with marker labels)
+  - \verb+\rotatelabels{angle/deg}[anchor (default: automatic)]+ allows rotation of element labels.
+     the anchor sets the center of rotation (north, center, south west, ...). west corresponds to labels first character.
+  - \verb+\setlabeldistance{distance/m}+ distance of text labels to element center (default is 0.35)
+  - \verb+\resetlabeldistance+ reset label distance to previous value (e.g. useful for going back to your "global" but non-default setting)
+  - \verb+\setlabelfont{fontsize}+ text label fontsize (default is \verb+\normalsize+)
+*** Colors
   - \verb+\setdriftcolor{color (default black)}+ for all following drifts
   - \verb+\setmarkercolor{color (default red)}+ for all following markers
   - \verb+\setelementcolor{type}{color (default depends on type)}+ define color for one element-type
-** Access lattice coordinates to add sth. manually or connect lattices
+** Access lattice coordinates
+   You can use element coordinates to draw anything you want using pgf/tikz. You can even connect lattices to draw injection/extraction or a complete accelerator facility.
   - \verb+\savecoordinate{name}[position (default: east)]+ saves coordinate of previous element
      to access it later.
     - position specifies the exact place of the element (north, center, south west, ...). Here east is always downstream and west upstream.

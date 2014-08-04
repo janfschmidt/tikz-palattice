@@ -10,11 +10,11 @@
 
 \begin{document}
 \begin{lattice}[][0.5]
-\drawrule{(-7,-12)}[5]
+\drawrule{(-5,-6)}[5]
 
 \shiftlabels
 \rotate{-45}
-\marker{start}[0.6]
+\marker{start}[0.5]
 
 \drift{0.03415}
 \quadrupole{QD1}{0.4997}
@@ -40,17 +40,27 @@
 \kicker{KV03}{0.1}
 \drift{1.84183}
 \drift{1.84183}
+
+% labels rotated (with manually set anchor)
+\rotatelabels{60}[west]
 \quadrupole{QF4}{0.4997}
 \drift{0.13665}
 \sextupole{SF4}{0.287}
 \drift{0.214}
 \kicker{KV04}{0.1}
 \drift{0.7237}
+\rotatelabels{0}
+
 \dipole{M4}{2.875}{15}
 \drift{0.30145}
 \quadrupole{QD5}{0.4997}
 \drift{0.09715}
+
+% labels with changed fontsize
+\setlabelfont{\tiny}
 \kicker{KV05}{0.1}
+\setlabelfont{\normalsize}
+
 \drift{1.2642}
 \dipole{M5}{2.875}{15}
 \drift{0.30145}
@@ -60,9 +70,14 @@
 \drift{0.4167}
 \dipole{M6}{2.875}{15}
 \drift{0.30145}
+
+%labels rotated (with manually set anchor)
+\rotatelabels{-70}[east]
 \quadrupole{QD7}{0.4997}
 \drift{0.19415}
 \kicker{KV07}{0.1}
+\rotatelabels{0}
+
 \drift{1.1672}
 \dipole{M7}{2.875}{15}
 \drift{0.30145}
@@ -107,6 +122,7 @@
 \kicker{KV13}{0.1}
 \drift{0.62165}
 \quadrupole{QF14}{0.4997}
+\savecoordinate{rechts}
 \drift{1.86133}
 \drift{1.86133}
 \kicker{KV14}{0.1}
@@ -140,22 +156,37 @@
 \drift{0.9447}
 \dipole{M18}{2.875}{15}
 \drift{0.30145}
+
+%labels rotated (anchor automatic)
+\rotatelabels{50}
 \quadrupole{QD19}{0.4997}
 \drift{0.13665}
 \sextupole{SD19}{0.287}
 \drift{0.1965}
 \kicker{KV19}{0.1}
+\rotatelabels{0}
+
 \drift{1.747}
 \drift{1.747}
 \sextupole{SF19}{0.287}
 \drift{0.13665}
 \quadrupole{QF20}{0.4997}
 \drift{0.22565}
+
+%labels outside ring
+\shiftlabels
 \kicker{KV20}{0.1}
+\shiftlabels
+
 \drift{1.1357}
 \dipole{M20}{2.875}{15}
 \drift{0.30145}
+
+%labels in other distance to elements
+\setlabeldistance{0.6}
 \quadrupole{QD21}{0.4997}
+\resetlabeldistance %back to previous label distance
+
 \drift{0.21015}
 \kicker{KV21}{0.1}
 \drift{1.151}
@@ -208,6 +239,7 @@
 \quadrupole{QD29}{0.4997}
 \drift{0.30115}
 \dipole{M29}{2.875}{15}
+\savecoordinate{links}
 \drift{0.318}
 \kicker{KV29}{0.1}
 \drift{1.04365}
@@ -234,5 +266,9 @@
 \drift{1.382}
 \quadrupole{TJQ32}{0.5515}[0.2]
 \drift{0.12625}
+
+%title - aligned between M29 and QF14 via \savecoordinate
+\draw[draw=none] (links) -- (rechts) node[midway, font=\Huge,scale=2, align=center]
+{ELSA Stretcherring\\{\Large\SIrange[range-units=single]{0.5}{3.2}{\GeV}}};
 \end{lattice}
 \end{document}
