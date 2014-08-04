@@ -33,6 +33,7 @@ the lattice environment has 4 optional arguments:
   - \verb+\drift{length/m}[name (default: none)]+
   - \verb+\dipole{name}{length/m}{bending angle/deg}[thickness (default 8mm)]+
   - \verb+\quadrupole{name}{length/m}+
+  - \verb+\sextupole{name}{length/m}+
   - \verb+\kicker{name}{length/m}+
   - \verb+\cavity{name}{length/m}+
   - \verb+\source{name}+

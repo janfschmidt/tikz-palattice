@@ -18,6 +18,7 @@
 %   - \drift{length/m}[name (default: none)]
 %   - \dipole{name}{length/m}{bending angle/deg}[thickness (default 8mm)]
 %   - \quadrupole{name}{length/m}
+%   - \sextupole{name}{length/m}
 %   - \kicker{name}{length/m}
 %   - \cavity{name}{length/m}
 %   - \source{name}
@@ -163,6 +164,15 @@
 \pgfmathtruncatemacro{\i}{\j};
 }
 
+%sextupole
+\newcommand{\sextupole}[2]{%
+\pgfmathtruncatemacro{\j}{\i+1};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
+\node (\j) [sextupole, minimum width=#2*20cm] at (\i.east) {};
+\elementlabel{#1};
+\pgfmathtruncatemacro{\i}{\j};
+}
+
 %kicker
 \newcommand{\kicker}[2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
@@ -243,6 +253,13 @@ minimum height=\dipheight,
 element,
 bottom color=yellow, 
 minimum height=10cm,
+}}
+
+%sextupole
+\tikzset{sextupole/.style={
+element,
+bottom color=violet!70!black, 
+minimum height=6cm,
 }}
 
 %kicker
