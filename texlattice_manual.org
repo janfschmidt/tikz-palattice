@@ -7,8 +7,13 @@
 You just need to copy the lattice.sty file to a place where your LaTeX installation can recognize it.
 This can be
   - the same folder as your .tex document
-  - in the LaTeX system tree (e.g. for texlive under ubuntu /usr/share/texmf/tex/latex/...)
-  - in a LaTeX user tree
+  - in the LaTeX system or user tree
+e.g. to add it to the system tree for texlive under ubuntu:
+#+BEGIN_EXAMPLE
+sudo mkdir -p /usr/local/share/texmf/tex/latex/lattice/
+sudo cp lattice.sty /usr/local/share/texmf/tex/latex/lattice/
+sudo mktexlsr (or sudo texhash)
+#+END_EXAMPLE
 Read the documentation of your LaTeX distribution for details.
 ** Required packages
   - tikz, pgf
@@ -69,4 +74,5 @@ the lattice environment has 2 optional arguments:
   - picture scale: for lattice scale=1 an element of 1m length is plotted with 2cm length
   - minimum element length 0.01m (drifts can be shorter)
   - maximum drift length <2.9m (just add a second drift to get a longer one)
+  - maximum rule length < 3x29m
   - if you refer to a coordinate from another lattice (another tikzpicture) you have to compile twice
