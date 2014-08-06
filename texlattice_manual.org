@@ -45,6 +45,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\sextupole{name}{length/m}+
   - \verb+\kicker{name}{length/m}+
   - \verb+\cavity{name}{length/m}+
+  - \verb+\solenoid{name}{length/m}+
   - \verb+\source{name}+
   - \verb+\screen{name}+
   - \verb+\marker{name}[length/m (default 0.35)]+ a line perpendicular to beamline of given length

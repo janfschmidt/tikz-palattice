@@ -206,6 +206,15 @@
 \pgfmathtruncatemacro{\i}{\j};
 }
 
+%solenoid
+\newcommand{\solenoid}[2]{%
+\pgfmathtruncatemacro{\j}{\i+1};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
+\node (\j) [solenoid, minimum width=#2*20cm] at (\i.east) {};
+\elementlabel{#1};
+\pgfmathtruncatemacro{\i}{\j};
+}
+
 %source
 \newcommand{\source}[1]{%
 \pgfmathtruncatemacro{\j}{\i+1};
@@ -297,6 +306,13 @@ minimum height=4cm,
 element,
 bottom color=brown, 
 minimum height=8cm,
+}}
+
+%solenoid
+\tikzset{solenoid/.style={
+element,
+bottom color=green!70!black, 
+minimum height=5cm,
 }}
 
 %source
