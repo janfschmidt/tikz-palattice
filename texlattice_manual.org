@@ -48,6 +48,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\solenoid{name}{length/m}+
   - \verb+\source{name}+
   - \verb+\screen{name}+
+  - \verb+\valve{name}+
   - \verb+\marker{name}[length/m (default 0.35)]+ a line perpendicular to beamline of given length
 ** Modify your lattice/elements
   - \verb+\rotate{angle/deg}+ "bends" the beamline. e.g. to set starting angle

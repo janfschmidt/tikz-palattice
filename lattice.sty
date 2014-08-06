@@ -233,6 +233,34 @@
 \pgfmathtruncatemacro{\i}{\j};
 }
 
+%valve
+\newcommand{\valve}[1]{%
+\pgfmathtruncatemacro\iang{\angle}
+%handle angle not in [0,360] ([-720,+1080] handled)
+\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+%set label anchor according to angle
+\ifthenelse{\marklabelang = +90}{%
+  \def\labelanchor{south};
+  \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
+  \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
+  \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
+  \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+}{%
+  \def\labelanchor{north};
+  \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
+  \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
+  \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
+  \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
+}
+\draw [valve] (\i.east) --+ (\angle-90:1.4cm*\scal); % half length (=> 10cm)
+\draw [valve] (\i.east) --+ (\angle+90:1.4cm*\scal);
+\draw [draw=none] (\i.east) --+ (\angle\marklabelang:\labeldist) node[label] {#1};
+}
+
+
 %marker
 \newcommandx{\marker}[2][2=0.35]{%
 \pgfmathsetlength{\markerlen}{#2*20cm*\scal};
@@ -329,6 +357,12 @@ element,
 forbidden sign,
 bottom color=white, 
 minimum height=4cm,
+}}
+
+%valve
+\tikzset{valve/.style={
+gray, ultra thick,
+rotate=\labelrot,
 }}
 
 
