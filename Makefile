@@ -27,3 +27,4 @@ $(e5).pdf: $(e5).tex
 
 install:
 	install -m 644 -p -v lattice.sty $(INSTALL_PATH)/lattice/
+	mktexlsr

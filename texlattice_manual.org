@@ -2,6 +2,7 @@
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
 #+LaTeX_CLASS_OPTIONS:[colorlinks]
+\clearpage
 * Installation
 ** Copy lattice.sty
 You just need to copy the lattice.sty file to a place where your LaTeX installation can recognize it.
@@ -14,7 +15,11 @@ sudo mkdir -p /usr/local/share/texmf/tex/latex/lattice/
 sudo cp lattice.sty /usr/local/share/texmf/tex/latex/lattice/
 sudo mktexlsr (or sudo texhash)
 #+END_EXAMPLE
-Read the documentation of your LaTeX distribution for details.
+For this path there is also a Makefile prepared, so just enter
+#+BEGIN_EXAMPLE
+sudo make install
+#+END_EXAMPLE
+Otherwise read the documentation of your LaTeX distribution.
 ** Required packages
   - tikz, pgf
   - siunitx
