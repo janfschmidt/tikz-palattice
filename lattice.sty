@@ -117,31 +117,59 @@
 
 
 %---commands for internal use---
-\newcommand{\elementlabel}[1]{%
-\pgfmathtruncatemacro\iang{\angle}
-%handle angle not in [0,360] ([-720,+1080] handled)
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-%set label anchor according to angle
-\ifthenelse{\boolean{userlabelanchor}}{}{%  %if labelanchor is set by user just use the set value
-  \ifthenelse{\labelang = -90}{%
-    \def\labelanchor{north};
-    \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
-    \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
-    \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
-    \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
-  }{%
+\newcommand{\updatelabelanchor}{%
+  \pgfmathtruncatemacro\iang{\angle}
+  % handle angle not in [0,360] ([-720,+1080] handled)
+  \ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+  \ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+  \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+  \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+  % set label anchor according to angle
+  \ifthenelse{\boolean{userlabelanchor}}{}{%  %if labelanchor is set by user just use the set value
+    \ifthenelse{\labelang = -90}{%
+      \def\labelanchor{north};
+      \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
+      \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
+      \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
+      \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
+    }{%
+      \def\labelanchor{south};
+      \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
+      \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
+      \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
+      \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+    }
+  }
+}
+
+\newcommand{\updatemarkerlabelanchor}{%
+  \pgfmathtruncatemacro\iang{\angle}
+  % handle angle not in [0,360] ([-720,+1080] handled)
+  \ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+  \ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+  \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+  \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+  % set label anchor according to angle
+  \ifthenelse{\marklabelang = +90}{%
     \def\labelanchor{south};
     \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
     \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
     \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
     \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+  }{%
+    \def\labelanchor{north};
+    \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
+    \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
+    \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
+    \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
   }
 }
-\path [draw=none] (\j.center) --+ (\angle\labelang:\labeldist) node[label] {#1};}
 
+
+\newcommand{\elementlabel}[1]{%
+  \updatelabelanchor
+  \path [draw=none] (\j.center) --+ (\angle\labelang:\labeldist) node[label] {#1};
+}
 
 
 
@@ -234,26 +262,7 @@
 
 %valve
 \newcommand{\valve}[1]{%
-\pgfmathtruncatemacro\iang{\angle}
-%handle angle not in [0,360] ([-720,+1080] handled)
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-%set label anchor according to angle
-\ifthenelse{\marklabelang = +90}{%
-  \def\labelanchor{south};
-  \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
-  \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
-  \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
-  \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
-}{%
-  \def\labelanchor{north};
-  \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
-  \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
-  \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
-  \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
-}
+\updatemarkerlabelanchor
 \draw [valve] (\i.east) --+ (\angle-90:1.4cm*\scal); % half length (=> 10cm)
 \draw [valve] (\i.east) --+ (\angle+90:1.4cm*\scal);
 \draw [draw=none] (\i.east) --+ (\angle\marklabelang:\labeldist) node[label] {#1};
@@ -263,26 +272,7 @@
 %marker
 \newcommandx{\marker}[2][2=0.35]{%
 \pgfmathsetlength{\markerlen}{#2*20cm*\scal};
-\pgfmathtruncatemacro\iang{\angle}
-%handle angle not in [0,360] ([-720,+1080] handled)
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-%set label anchor according to angle
-\ifthenelse{\marklabelang = +90}{%
-  \def\labelanchor{south};
-  \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
-  \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
-  \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
-  \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
-}{%
-  \def\labelanchor{north};
-  \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
-  \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
-  \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
-  \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
-}
+\updatemarkerlabelanchor
 \draw [marker] (\i.east) --+ (\angle-90:\markerlen); % half length (=> 10cm)
 \draw [marker] (\i.east) --+ (\angle+90:\markerlen);
 \draw [draw=none] (\i.east) --+ (\angle\marklabelang:\markerlen+0.5*\labeldist) node[label] {#1};

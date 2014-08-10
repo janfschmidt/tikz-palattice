@@ -58,7 +58,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\drawrule{start coordinate/m}[tick distance/m (default: 1)]+ a rule to visualize lattice size.
       coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
 *** Labels
-  - \verb+\shiftlabels+ moves labels to other side of elements (swap with marker labels)
+  - \verb+\turnlabels+ moves labels to other side of elements (swap with marker labels)
   - \verb+\rotatelabels{angle/deg}[anchor (default: automatic)]+ allows rotation of element labels.
      the anchor sets the center of rotation (north, center, south west, ...). west corresponds to labels first character.
   - \verb+\setlabeldistance{distance/m}+ distance of text labels to element center (default is 0.35)
