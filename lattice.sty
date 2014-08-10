@@ -62,8 +62,13 @@
 
 
 %---label settings---
-\newcommand{\setlabeldistance}[1]{\pgfmathsetlength{\savelabeldist}{\labeldist} \pgfmathsetlength{\labeldist}{\scal*20cm*#1};}
-\newcommand{\resetlabeldistance}{\pgfmathsetlength{\labeldist}{\savelabeldist};}
+\newenvironment{labeldistance}[1]{%
+  \pgfmathsetlength{\savelabeldist}{\labeldist}
+  \pgfmathsetlength{\labeldist}{\scal*20cm*#1};
+}{%
+  \pgfmathsetlength{\labeldist}{\savelabeldist};
+}
+
 \newcommand{\setlabelfont}[1]{\def\labelfont{#1}}
 
 \newcommand{\turnlabels}{%
@@ -171,93 +176,95 @@
   \path [draw=none] (\j.center) --+ (\angle\labelang:\labeldist) node[label] {#1};
 }
 
-
+\newcommand{\jinc}{\pgfmathparse{int(\i+1)} \global\let\j\pgfmathresult}
+\newcommand{\iinc}{\global\let\i\j}
+\newcommand{\angleinc}[1]{\pgfmathparse{\angle+#1} \global\let\angle\pgfmathresult}
 
 
 % ----- element commands -----
 % drift
 \newcommandx{\drift}[2][2=]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \node (\j) [drift,minimum width=10*#1*20cm] at (\i.east) {};
 \elementlabel{#2};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %dipole
 \newcommandx{\dipole}[4][4=0.4]{%
-\pgfmathsetmacro{\angle}{\angle+0.5*#3};
-\pgfmathtruncatemacro{\j}{\i+1};
+\angleinc{0.5*#3}
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 %\pgfmathsetlength{\dipheight}{#3*(12cm/90)+3cm};
 \pgfmathsetlength{\dipheight}{#4*20cm};
 \node (\j) [dipole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
-\pgfmathsetmacro{\angle}{\angle+0.5*#3};
+\iinc
+\angleinc{0.5*#3}
 }
 
 %quadrupole
 \newcommandx{\quadrupole}[3][3=0.5]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\quadheight}{#3*20cm};
 \node (\j) [quadrupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %sextupole
 \newcommand{\sextupole}[2]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [sextupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %kicker
 \newcommand{\kicker}[2]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [kicker, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %cavity
 \newcommand{\cavity}[2]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [cavity, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %solenoid
 \newcommand{\solenoid}[2]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [solenoid, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %source
 \newcommand{\source}[1]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{1mm};
 \node (\j) [source, minimum width=10cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %screen
 \newcommand{\screen}[1]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{0mm};
 \node (\j) [screen, minimum width=4cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %valve
