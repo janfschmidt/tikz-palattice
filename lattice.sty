@@ -11,7 +11,7 @@
 \RequirePackage{ifthen}
 \RequirePackage{siunitx}
 \RequirePackage{xargs}
-\usetikzlibrary{shapes}
+\usetikzlibrary{shapes,calc}
 
 
 
@@ -84,8 +84,8 @@
 
 % rule (maßstab)
 \newcommandx{\drawrule}[2][2=1]{%
-  \tikzset{x=2cm,y=2cm}
-  \node (rule11) [rule,minimum width=#2*20cm] at #1 {};
+  \coordinate (rulestart) at ($(0,0)!2.0!#1$);
+  \node (rule11) [rule,minimum width=#2*20cm] at (rulestart) {};
   \foreach \a in {2,3,...,10} {%
     \pgfmathtruncatemacro{\b}{\a-1}
     \node (rule1\a) [rule,minimum width=#2*20cm] at (rule1\b.east) {};
@@ -100,7 +100,6 @@
     \pgfmathtruncatemacro{\b}{\a-1}
     \node (rule3\a) [rule,minimum width=#2*20cm] at (rule3\b.east) {};
   }
-  \tikzset{x=1cm,y=1cm}
   \draw [black] (rule11.south west) -- (rule310.south east);
   \draw [black] (rule11.north west) -- (rule310.north east);
   \draw [black, thick] (rule11.west) --+ (-90:1mm); % half length
