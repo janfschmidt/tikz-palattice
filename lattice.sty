@@ -60,6 +60,12 @@
 \newcommand{\setdriftcolor}[1]{\tikzset{drift/.append style={fill=#1}}}
 \newcommand{\setmarkercolor}[1]{\tikzset{marker/.append style={#1}}}
 
+\newenvironment{fade}[1]{%
+\tikzset{lattice/.append style={opacity=#1}}
+}{%
+\tikzset{lattice/.append style={opacity=1.0}}
+}
+
 
 %---label settings---
 \newenvironment{labeldistance}[1]{%
@@ -288,14 +294,20 @@
 
 
 % ----- styles -----
+%all (for global settings, including drift & labels)
+\tikzset{lattice/.style={
+opacity=1,
+}}
+
 %element (for all, except drift)
 \tikzset{element/.style={
+lattice,
 rectangle,rounded corners=\corners,
 line width=0.8pt*10*\scal, draw=black,
 top color=white, bottom color=blue,
 anchor=west,
 scale=\scal,
-rotate=\angle
+rotate=\angle,
 }}
 
 %dipole
@@ -365,6 +377,7 @@ rotate=\labelrot,
 
 %drift
 \tikzset{drift/.style={
+lattice,
 scale=0.1*\scal,
 rectangle,
 fill=black,
@@ -374,6 +387,7 @@ rotate=\angle}}
 
 %text label
 \tikzset{label/.style={
+lattice,
 text=black,
 font=\labelfont,
 rotate=\labelrot,
@@ -382,12 +396,14 @@ anchor=\labelanchor
 
 %marker (line)
 \tikzset{marker/.style={
+lattice,
 red, densely dashed,
 rotate=\labelrot,
 }}
 
 %rule
 \tikzset{rule/.style={
+lattice,
 scale=0.1*\scal,
 rectangle, draw=black,
 fill=black,
@@ -397,6 +413,7 @@ minimum height=6cm/(10*\scal)
 
 %start
 \tikzset{start/.style={%
+lattice,
 draw=none,
 anchor=center,
 scale=0.1}}

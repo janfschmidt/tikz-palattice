@@ -61,12 +61,14 @@ the lattice environment has 2 optional arguments:
   - \verb+\turnlabels+ moves labels to other side of elements (swap with marker labels)
   - \verb+\rotatelabels{angle/deg}[anchor (default: automatic)]+ allows rotation of element labels.
      the anchor sets the center of rotation (north, center, south west, ...). west corresponds to labels first character.
-  - \verb+\begin{labeldistance}{distance/m}+ ... \verb+\end{labeldistance}+ set distance of text labels to element center for all elements within this environment (default is 0.35)
+  - environment \texttt{labeldistance\{distance/m\}} sets distance of text labels to element center for all elements within this environment (default is 0.35)
   - \verb+\setlabelfont{fontsize}+ text label fontsize (default is \verb+\normalsize+)
 *** Colors
   - \verb+\setdriftcolor{color (default black)}+ for all following drifts
   - \verb+\setmarkercolor{color (default red)}+ for all following markers
   - \verb+\setelementcolor{type}{color (default depends on type)}+ define color for one element-type
+  - environment \texttt{fade\{opacity (default: 0.2)\}} sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations.
+    This can also be used to completely hide regions by setting opacity to zero.
 ** Access lattice coordinates
    You can use element coordinates to draw anything you want using pgf/tikz. You can even connect lattices to draw injection/extraction or a complete accelerator facility.
   - \verb+\savecoordinate{name}[position (default: east)]+ saves coordinate of previous element
