@@ -11,7 +11,8 @@
 \RequirePackage{ifthen}
 \RequirePackage{siunitx}
 \RequirePackage{xargs}
-\usetikzlibrary{shapes,calc}
+\RequirePackage{arrayjob,multido,etoolbox}
+\usetikzlibrary{shapes,calc,positioning}
 
 
 
@@ -23,6 +24,7 @@
 \newdimen\savelabeldist
 \newdimen\corners;
 \newdimen\elementheight;
+\newdimen\elementwidth;
 \newdimen\markerlen;
 \pgfmathsetmacro{\scal}{#2*0.1};
 \def\labelfont{\normalsize};
@@ -127,8 +129,33 @@
 
 
 
+%legend
+\newcommand{\legend}[1]{%
+\coordinate (legendstart) at ($(0,0)!2.0!#1$);
+\pgfmathsetmacro{\savescal}{\scal};
+\pgfmathsetmacro{\scal}{0.05};
+\pgfmathsetlength{\elementheight}{0.3*20cm};
+\pgfmathsetlength{\elementwidth}{0.4*20cm};
+\def\labelanchor{west}
+\matrix[draw=black,anchor=north west] at (legendstart) {
+  \legendentry{dipole}
+  \legendentry{quadrupole}
+  \legendentry{sextupole}
+  \legendentry{kicker}
+  \legendentry{cavity}
+  \legendentry{solenoid}
+  \legendentry{source}
+  \legendentry{screen}
+};
+\pgfmathsetmacro{\scal}{\savescal};
+}
+
+
 
 %---commands for internal use---
+\newcommand{\legendentry}[1]{\node [#1,minimum width=0.4*20cm] {}; \pgfmatrixnextcell
+  \node[label] {#1};\\[2pt]}
+
 \newcommand{\updatelabelanchor}{%
   \pgfmathtruncatemacro\iang{\angle}
   % handle angle not in [0,360] ([-720,+1080] handled)
@@ -305,7 +332,7 @@ opacity=1
 
 %element (for all, except drift)
 \tikzset{element/.style={
-rectangle,rounded corners=\corners,
+rounded corners=\corners,
 line width=0.8pt*10*\scal, draw=black,
 top color=white,
 anchor=west,
@@ -316,6 +343,7 @@ fadeElement  %must be last to overwrite other settings
 
 %dipole
 \tikzset{dipole/.style={
+rectangle,
 bottom color=blue,
 minimum height=\elementheight,
 element %must be last to overwrite other settings
@@ -323,6 +351,7 @@ element %must be last to overwrite other settings
 
 %quadrupole
 \tikzset{quadrupole/.style={
+rectangle,
 bottom color=yellow, 
 minimum height=\elementheight,
 element %must be last to overwrite other settings
@@ -330,6 +359,7 @@ element %must be last to overwrite other settings
 
 %sextupole
 \tikzset{sextupole/.style={
+rectangle,
 bottom color=violet!70!black, 
 minimum height=6cm,
 element %must be last to overwrite other settings
@@ -337,6 +367,7 @@ element %must be last to overwrite other settings
 
 %kicker
 \tikzset{kicker/.style={
+rectangle,
 bottom color=orange!90!black, 
 minimum height=4cm,
 element %must be last to overwrite other settings
@@ -344,6 +375,7 @@ element %must be last to overwrite other settings
 
 %cavity
 \tikzset{cavity/.style={
+rectangle,
 bottom color=brown, 
 minimum height=8cm,
 element %must be last to overwrite other settings
@@ -351,6 +383,7 @@ element %must be last to overwrite other settings
 
 %solenoid
 \tikzset{solenoid/.style={
+rectangle,
 bottom color=green!70!black, 
 minimum height=\elementheight,
 element %must be last to overwrite other settings

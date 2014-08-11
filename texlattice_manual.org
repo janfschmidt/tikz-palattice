@@ -1,5 +1,6 @@
 #+TITLE:     TeXlattice - draw accelerator lattices with LaTeX\\\textit{using pgf/tikz}
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
+#+DATE:      v1.0 (\today)
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
 #+LaTeX_CLASS_OPTIONS:[colorlinks]
 \clearpage
@@ -60,6 +61,7 @@ the lattice environment has 2 optional arguments:
     hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)
   - \verb+\drawrule{start coordinate/m}[tick distance/m (default: 1)]+ a rule to visualize lattice size.
       coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+  - \verb+\legend{position/m}+ a legend with all element types. position is north east of legend box.
 *** Labels
   - \verb+\turnlabels+ moves labels to other side of elements (swap with marker labels)
   - \verb+\rotatelabels{angle/deg}[anchor (default: automatic)]+ allows rotation of element labels.
