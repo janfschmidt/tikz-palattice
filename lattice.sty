@@ -11,7 +11,7 @@
 \RequirePackage{ifthen}
 \RequirePackage{siunitx}
 \RequirePackage{xargs}
-\usetikzlibrary{shapes}
+\usetikzlibrary{shapes,calc}
 
 
 
@@ -59,13 +59,24 @@
 \newcommand{\setdriftcolor}[1]{\tikzset{drift/.append style={fill=#1}}}
 \newcommand{\setmarkercolor}[1]{\tikzset{marker/.append style={#1}}}
 
+\newenvironment{fade}[1]{%
+\tikzset{lattice/.append style={opacity=#1}}
+}{%
+\tikzset{lattice/.append style={opacity=1.0}}
+}
+
 
 %---label settings---
-\newcommand{\setlabeldistance}[1]{\pgfmathsetlength{\savelabeldist}{\labeldist} \pgfmathsetlength{\labeldist}{\scal*20cm*#1};}
-\newcommand{\resetlabeldistance}{\pgfmathsetlength{\labeldist}{\savelabeldist};}
+\newenvironment{labeldistance}[1]{%
+  \pgfmathsetlength{\savelabeldist}{\labeldist}
+  \pgfmathsetlength{\labeldist}{\scal*20cm*#1};
+}{%
+  \pgfmathsetlength{\labeldist}{\savelabeldist};
+}
+
 \newcommand{\setlabelfont}[1]{\def\labelfont{#1}}
 
-\newcommand{\shiftlabels}{%
+\newcommand{\turnlabels}{%
 \ifthenelse{\labelang = -90}{%
 \def\labelang{+90} \def\marklabelang{-90}}{%
 \def\labelang{-90} \def\marklabelang{+90}}}
@@ -83,8 +94,8 @@
 
 % rule (maßstab)
 \newcommandx{\drawrule}[2][2=1]{%
-  \tikzset{x=2cm,y=2cm}
-  \node (rule11) [rule,minimum width=#2*20cm] at #1 {};
+  \coordinate (rulestart) at ($(0,0)!2.0!#1$);
+  \node (rule11) [rule,minimum width=#2*20cm] at (rulestart) {};
   \foreach \a in {2,3,...,10} {%
     \pgfmathtruncatemacro{\b}{\a-1}
     \node (rule1\a) [rule,minimum width=#2*20cm] at (rule1\b.east) {};
@@ -99,7 +110,6 @@
     \pgfmathtruncatemacro{\b}{\a-1}
     \node (rule3\a) [rule,minimum width=#2*20cm] at (rule3\b.east) {};
   }
-  \tikzset{x=1cm,y=1cm}
   \draw [black] (rule11.south west) -- (rule310.south east);
   \draw [black] (rule11.north west) -- (rule310.north east);
   \draw [black, thick] (rule11.west) --+ (-90:1mm); % half length
@@ -117,143 +127,154 @@
 
 
 %---commands for internal use---
-\newcommand{\elementlabel}[1]{%
-\pgfmathtruncatemacro\iang{\angle}
-%handle angle not in [0,360] ([-720,+1080] handled)
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-%set label anchor according to angle
-\ifthenelse{\boolean{userlabelanchor}}{}{%  %if labelanchor is set by user just use the set value
-  \ifthenelse{\labelang = -90}{%
-    \def\labelanchor{north};
-    \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
-    \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
-    \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
-    \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
-  }{%
+\newcommand{\updatelabelanchor}{%
+  \pgfmathtruncatemacro\iang{\angle}
+  % handle angle not in [0,360] ([-720,+1080] handled)
+  \ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+  \ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+  \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+  \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+  % set label anchor according to angle
+  \ifthenelse{\boolean{userlabelanchor}}{}{%  %if labelanchor is set by user just use the set value
+    \ifthenelse{\labelang = -90}{%
+      \def\labelanchor{north};
+      \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
+      \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
+      \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
+      \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
+    }{%
+      \def\labelanchor{south};
+      \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
+      \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
+      \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
+      \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+    }
+  }
+}
+
+\newcommand{\updatemarkerlabelanchor}{%
+  \pgfmathtruncatemacro\iang{\angle}
+  % handle angle not in [0,360] ([-720,+1080] handled)
+  \ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+  \ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
+  \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+  \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
+  % set label anchor according to angle
+  \ifthenelse{\marklabelang = +90}{%
     \def\labelanchor{south};
     \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
     \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
     \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
     \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
+  }{%
+    \def\labelanchor{north};
+    \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
+    \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
+    \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
+    \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
   }
 }
-\path [draw=none] (\j.center) --+ (\angle\labelang:\labeldist) node[label] {#1};}
 
 
+\newcommand{\elementlabel}[1]{%
+  \updatelabelanchor
+  \path [draw=none] (\j.center) --+ (\angle\labelang:\labeldist) node[label] {#1};
+}
 
+\newcommand{\jinc}{\pgfmathparse{int(\i+1)} \global\let\j\pgfmathresult}
+\newcommand{\iinc}{\global\let\i\j}
+\newcommand{\angleinc}[1]{\pgfmathparse{\angle+#1} \global\let\angle\pgfmathresult}
 
 
 % ----- element commands -----
 % drift
 \newcommandx{\drift}[2][2=]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \node (\j) [drift,minimum width=10*#1*20cm] at (\i.east) {};
 \elementlabel{#2};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %dipole
 \newcommandx{\dipole}[4][4=0.4]{%
-\pgfmathsetmacro{\angle}{\angle+0.5*#3};
-\pgfmathtruncatemacro{\j}{\i+1};
+\angleinc{0.5*#3}
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#4*20cm};
 \node (\j) [dipole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
-\pgfmathsetmacro{\angle}{\angle+0.5*#3};
+\iinc
+\angleinc{0.5*#3}
 }
 
 %quadrupole
 \newcommandx{\quadrupole}[3][3=0.5]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#3*20cm};
 \node (\j) [quadrupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %sextupole
 \newcommand{\sextupole}[2]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [sextupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %kicker
 \newcommand{\kicker}[2]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [kicker, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %cavity
 \newcommand{\cavity}[2]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (\j) [cavity, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %solenoid
 \newcommandx{\solenoid}[3][3=0.2]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#3*20cm};
 \node (\j) [solenoid, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %source
 \newcommand{\source}[1]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{1mm};
 \node (\j) [source, minimum width=10cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %screen
 \newcommand{\screen}[1]{%
-\pgfmathtruncatemacro{\j}{\i+1};
+\jinc
 \pgfmathsetlength{\corners}{0mm};
 \node (\j) [screen, minimum width=4cm] at (\i.east) {};
 \elementlabel{#1};
-\pgfmathtruncatemacro{\i}{\j};
+\iinc
 }
 
 %valve
 \newcommand{\valve}[1]{%
-\pgfmathtruncatemacro\iang{\angle}
-%handle angle not in [0,360] ([-720,+1080] handled)
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-%set label anchor according to angle
-\ifthenelse{\marklabelang = +90}{%
-  \def\labelanchor{south};
-  \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
-  \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
-  \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
-  \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
-}{%
-  \def\labelanchor{north};
-  \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
-  \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
-  \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
-  \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
-}
+\updatemarkerlabelanchor
 \draw [valve] (\i.east) --+ (\angle-90:1.4cm*\scal); % half length (=> 10cm)
 \draw [valve] (\i.east) --+ (\angle+90:1.4cm*\scal);
 \draw [draw=none] (\i.east) --+ (\angle\marklabelang:\labeldist) node[label] {#1};
@@ -263,26 +284,7 @@
 %marker
 \newcommandx{\marker}[2][2=0.35]{%
 \pgfmathsetlength{\markerlen}{#2*20cm*\scal};
-\pgfmathtruncatemacro\iang{\angle}
-%handle angle not in [0,360] ([-720,+1080] handled)
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang<0}{\pgfmathtruncatemacro\iang{\iang+360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-\ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
-%set label anchor according to angle
-\ifthenelse{\marklabelang = +90}{%
-  \def\labelanchor{south};
-  \ifthenelse{\iang > 30}{\def\labelanchor{east}}{}
-  \ifthenelse{\iang > 150}{\def\labelanchor{north}}{}
-  \ifthenelse{\iang > 210}{\def\labelanchor{west}}{}
-  \ifthenelse{\iang > 330}{\def\labelanchor{south}}{}
-}{%
-  \def\labelanchor{north};
-  \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
-  \ifthenelse{\iang > 150}{\def\labelanchor{south}}{}
-  \ifthenelse{\iang > 210}{\def\labelanchor{east}}{}
-  \ifthenelse{\iang > 330}{\def\labelanchor{north}}{}
-}
+\updatemarkerlabelanchor
 \draw [marker] (\i.east) --+ (\angle-90:\markerlen); % half length (=> 10cm)
 \draw [marker] (\i.east) --+ (\angle+90:\markerlen);
 \draw [draw=none] (\i.east) --+ (\angle\marklabelang:\markerlen+0.5*\labeldist) node[label] {#1};
@@ -291,14 +293,20 @@
 
 
 % ----- styles -----
+%all (for global settings, including drift & labels)
+\tikzset{lattice/.style={
+opacity=1,
+}}
+
 %element (for all, except drift)
 \tikzset{element/.style={
+lattice,
 rectangle,rounded corners=\corners,
 line width=0.8pt*10*\scal, draw=black,
 top color=white, bottom color=blue,
 anchor=west,
 scale=\scal,
-rotate=\angle
+rotate=\angle,
 }}
 
 %dipole
@@ -368,6 +376,7 @@ rotate=\labelrot,
 
 %drift
 \tikzset{drift/.style={
+lattice,
 scale=0.1*\scal,
 rectangle,
 fill=black,
@@ -377,6 +386,7 @@ rotate=\angle}}
 
 %text label
 \tikzset{label/.style={
+lattice,
 text=black,
 font=\labelfont,
 rotate=\labelrot,
@@ -385,12 +395,14 @@ anchor=\labelanchor
 
 %marker (line)
 \tikzset{marker/.style={
+lattice,
 red, densely dashed,
 rotate=\labelrot,
 }}
 
 %rule
 \tikzset{rule/.style={
+lattice,
 scale=0.1*\scal,
 rectangle, draw=black,
 fill=black,
@@ -400,6 +412,7 @@ minimum height=6cm/(10*\scal)
 
 %start
 \tikzset{start/.style={%
+lattice,
 draw=none,
 anchor=center,
 scale=0.1}}

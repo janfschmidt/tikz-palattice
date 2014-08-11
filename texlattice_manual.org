@@ -58,16 +58,17 @@ the lattice environment has 2 optional arguments:
   - \verb+\drawrule{start coordinate/m}[tick distance/m (default: 1)]+ a rule to visualize lattice size.
       coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
 *** Labels
-  - \verb+\shiftlabels+ moves labels to other side of elements (swap with marker labels)
+  - \verb+\turnlabels+ moves labels to other side of elements (swap with marker labels)
   - \verb+\rotatelabels{angle/deg}[anchor (default: automatic)]+ allows rotation of element labels.
      the anchor sets the center of rotation (north, center, south west, ...). west corresponds to labels first character.
-  - \verb+\setlabeldistance{distance/m}+ distance of text labels to element center (default is 0.35)
-  - \verb+\resetlabeldistance+ reset label distance to previous value (e.g. useful for going back to your "global" but non-default setting)
+  - environment \texttt{labeldistance\{distance/m\}} sets distance of text labels to element center for all elements within this environment (default is 0.35)
   - \verb+\setlabelfont{fontsize}+ text label fontsize (default is \verb+\normalsize+)
 *** Colors
   - \verb+\setdriftcolor{color (default black)}+ for all following drifts
   - \verb+\setmarkercolor{color (default red)}+ for all following markers
   - \verb+\setelementcolor{type}{color (default depends on type)}+ define color for one element-type
+  - environment \texttt{fade\{opacity (default: 0.2)\}} sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations.
+    This can also be used to completely hide regions by setting opacity to zero.
 ** Access lattice coordinates
    You can use element coordinates to draw anything you want using pgf/tikz. You can even connect lattices to draw injection/extraction or a complete accelerator facility.
   - \verb+\savecoordinate{name}[position (default: east)]+ saves coordinate of previous element

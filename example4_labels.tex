@@ -12,7 +12,7 @@
 \begin{lattice}[][0.5]
 \drawrule{(-5,-6)}[5]
 
-\shiftlabels
+\turnlabels
 \rotate{-45}
 \marker{start}[0.5]
 
@@ -178,18 +178,18 @@
 \drift{0.22565}
 
 %labels outside ring
-\shiftlabels
+\turnlabels
 \kicker{KV20}{0.1}
-\shiftlabels
+\turnlabels
 
 \drift{1.1357}
 \dipole{M20}{2.875}{15}
 \drift{0.30145}
 
 %labels in other distance to elements
-\setlabeldistance{0.6}
-\quadrupole{QD21}{0.4997}
-\resetlabeldistance %back to previous label distance
+\begin{labeldistance}{0.6}
+  \quadrupole{QD21}{0.4997}
+\end{labeldistance} %back to previous label distance
 
 \drift{0.21015}
 \kicker{KV21}{0.1}
