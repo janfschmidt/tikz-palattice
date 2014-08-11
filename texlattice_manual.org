@@ -1,6 +1,6 @@
 #+TITLE:     TeXlattice - draw accelerator lattices with LaTeX\\\textit{using pgf/tikz}
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
-#+DATE:      v1.0 (\today)
+#+DATE:      v1.1 (\today)
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
 #+LaTeX_CLASS_OPTIONS:[colorlinks]
 \clearpage
