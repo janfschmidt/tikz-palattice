@@ -59,10 +59,12 @@
 \newcommand{\setdriftcolor}[1]{\tikzset{drift/.append style={fill=#1}}}
 \newcommand{\setmarkercolor}[1]{\tikzset{marker/.append style={#1}}}
 
-\newenvironment{fade}[1]{%
-\tikzset{lattice/.append style={opacity=#1}}
+\newenvironmentx{fade}[1][1=0.25]{%
+\tikzset{fade/.style={opacity=#1, color=gray}}
+\tikzset{fadeElement/.style={opacity=#1, color=gray,bottom color=gray}}
 }{%
-\tikzset{lattice/.append style={opacity=1.0}}
+\tikzset{fade/.style={opacity=1.0}}
+\tikzset{fadeElement/.style={opacity=1.0}}
 }
 
 
@@ -293,126 +295,133 @@
 
 
 % ----- styles -----
-%all (for global settings, including drift & labels)
-\tikzset{lattice/.style={
-opacity=1,
+%fade (for global fade setting)
+\tikzset{fade/.style={
+opacity=1
+}}
+\tikzset{fadeElement/.style={
+opacity=1
 }}
 
 %element (for all, except drift)
 \tikzset{element/.style={
-lattice,
 rectangle,rounded corners=\corners,
 line width=0.8pt*10*\scal, draw=black,
-top color=white, bottom color=blue,
+top color=white,
 anchor=west,
 scale=\scal,
 rotate=\angle,
+fadeElement  %must be last to overwrite other settings
 }}
 
 %dipole
 \tikzset{dipole/.style={
-element,
+bottom color=blue,
 minimum height=\elementheight,
+element %must be last to overwrite other settings
 }}
 
 %quadrupole
 \tikzset{quadrupole/.style={
-element,
 bottom color=yellow, 
 minimum height=\elementheight,
+element %must be last to overwrite other settings
 }}
 
 %sextupole
 \tikzset{sextupole/.style={
-element,
 bottom color=violet!70!black, 
 minimum height=6cm,
+element %must be last to overwrite other settings
 }}
 
 %kicker
 \tikzset{kicker/.style={
-element,
 bottom color=orange!90!black, 
 minimum height=4cm,
+element %must be last to overwrite other settings
 }}
 
 %cavity
 \tikzset{cavity/.style={
-element,
 bottom color=brown, 
 minimum height=8cm,
+element %must be last to overwrite other settings
 }}
 
 %solenoid
 \tikzset{solenoid/.style={
-element,
 bottom color=green!70!black, 
 minimum height=\elementheight,
+element %must be last to overwrite other settings
 }}
 
 %source
 \tikzset{source/.style={
-element,
 regular polygon,regular polygon sides=3, shape border rotate=30,
 bottom color=gray, 
 minimum height=8cm,
+element %must be last to overwrite other settings
 }}
 
 %screen
 \tikzset{screen/.style={
-element,
 forbidden sign,
 bottom color=white, 
 minimum height=4cm,
+element %must be last to overwrite other settings
 }}
 
 %valve
 \tikzset{valve/.style={
 gray, ultra thick,
 rotate=\labelrot,
+fade  %must be last to overwrite other settings
 }}
 
 
 
 %drift
 \tikzset{drift/.style={
-lattice,
 scale=0.1*\scal,
 rectangle,
 fill=black,
 anchor=west,
 minimum height=4cm,
-rotate=\angle}}
+rotate=\angle,
+fade  %must be last to overwrite other settings
+}}
 
 %text label
 \tikzset{label/.style={
-lattice,
 text=black,
 font=\labelfont,
 rotate=\labelrot,
-anchor=\labelanchor
+anchor=\labelanchor,
+fade  %must be last to overwrite other settings
 }}
 
 %marker (line)
 \tikzset{marker/.style={
-lattice,
 red, densely dashed,
 rotate=\labelrot,
+fade  %must be last to overwrite other settings
 }}
 
 %rule
 \tikzset{rule/.style={
-lattice,
 scale=0.1*\scal,
 rectangle, draw=black,
 fill=black,
 anchor=west,
-minimum height=6cm/(10*\scal)
+minimum height=6cm/(10*\scal),
+fade  %must be last to overwrite other settings
 }}
 
 %start
 \tikzset{start/.style={%
-lattice,
 draw=none,
 anchor=center,
-scale=0.1}}
+scale=0.1,
+fade  %must be last to overwrite other settings
+}}

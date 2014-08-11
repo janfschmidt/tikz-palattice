@@ -28,6 +28,9 @@ Otherwise read the documentation of your LaTeX distribution.
 * What is missing?
   - The look of the elements can definitely be improved. Feel free to do it! The only constraint is that it must be drawn as a tikz node.
   - More element types can be added easily - please report what you need!
+* Known issues
+  - The fade environment usually sets all colors to gray (in addition to reducing opacity).
+    This does not work if a color was set by \verb+\setelementcolor+, \verb+\setdriftcolor+ or \verb+\setmarkercolor+
 * lattice environment
 To draw a lattice just add
 #+BEGIN_EXAMPLE
@@ -67,7 +70,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\setdriftcolor{color (default black)}+ for all following drifts
   - \verb+\setmarkercolor{color (default red)}+ for all following markers
   - \verb+\setelementcolor{type}{color (default depends on type)}+ define color for one element-type
-  - environment \texttt{fade\{opacity (default: 0.2)\}} sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations.
+  - environment \texttt{fade\{opacity (default: 0.25)\}} sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations.
     This can also be used to completely hide regions by setting opacity to zero.
 ** Access lattice coordinates
    You can use element coordinates to draw anything you want using pgf/tikz. You can even connect lattices to draw injection/extraction or a complete accelerator facility.

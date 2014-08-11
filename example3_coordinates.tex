@@ -91,11 +91,13 @@
     \kicker{SSH1}{0.2}
     \drift{0.3}
     \dipole{M1}{0.2}{-30}
-    \drift{0.2}
-    \dipole{M2}{0.2}{50}
-    \drift{0.2}
-    \dipole{M3}{0.2}{-20}
-    \drift{0.7}
+    \begin{fade} %fade out this part
+      \drift{0.2}
+      \dipole{M2}{0.2}{50}
+      \drift{0.2}
+      \dipole{M3}{0.2}{-20}
+      \drift{0.7}
+    \end{fade}
   \end{lattice}
 \end{subfigure}
 \caption{A figure with two lattices}
