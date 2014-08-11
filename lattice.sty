@@ -22,8 +22,7 @@
 \newdimen\labeldist
 \newdimen\savelabeldist
 \newdimen\corners;
-\newdimen\dipheight;
-\newdimen\quadheight;
+\newdimen\elementheight;
 \newdimen\markerlen;
 \pgfmathsetmacro{\scal}{#2*0.1};
 \def\labelfont{\normalsize};
@@ -161,8 +160,7 @@
 \pgfmathsetmacro{\angle}{\angle+0.5*#3};
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-%\pgfmathsetlength{\dipheight}{#3*(12cm/90)+3cm};
-\pgfmathsetlength{\dipheight}{#4*20cm};
+\pgfmathsetlength{\elementheight}{#4*20cm};
 \node (\j) [dipole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
@@ -173,7 +171,7 @@
 \newcommandx{\quadrupole}[3][3=0.5]{%
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\pgfmathsetlength{\quadheight}{#3*20cm};
+\pgfmathsetlength{\elementheight}{#3*20cm};
 \node (\j) [quadrupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
@@ -207,9 +205,10 @@
 }
 
 %solenoid
-\newcommand{\solenoid}[2]{%
+\newcommandx{\solenoid}[3][3=0.2]{%
 \pgfmathtruncatemacro{\j}{\i+1};
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
+\pgfmathsetlength{\elementheight}{#3*20cm};
 \node (\j) [solenoid, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \pgfmathtruncatemacro{\i}{\j};
@@ -305,14 +304,14 @@ rotate=\angle
 %dipole
 \tikzset{dipole/.style={
 element,
-minimum height=\dipheight,
+minimum height=\elementheight,
 }}
 
 %quadrupole
 \tikzset{quadrupole/.style={
 element,
 bottom color=yellow, 
-minimum height=\quadheight,
+minimum height=\elementheight,
 }}
 
 %sextupole
@@ -340,7 +339,7 @@ minimum height=8cm,
 \tikzset{solenoid/.style={
 element,
 bottom color=green!70!black, 
-minimum height=5cm,
+minimum height=\elementheight,
 }}
 
 %source

@@ -45,7 +45,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\sextupole{name}{length/m}+
   - \verb+\kicker{name}{length/m}+
   - \verb+\cavity{name}{length/m}+
-  - \verb+\solenoid{name}{length/m}+
+  - \verb+\solenoid{name}{length/m}[thickness/m (default 0.2)]+
   - \verb+\source{name}+
   - \verb+\screen{name}+
   - \verb+\valve{name}+
@@ -78,6 +78,7 @@ the lattice environment has 2 optional arguments:
     - ! DON'T use bare numbers as names (e.g. (1)) These are the internal element identifiers.
 * Remarks
   - lengths are set in meter, so you write {1.32} for 1.32m.
+  - beamline with angle 0 goes to the right, positive angles bend counter clockwise.
   - picture scale: for lattice scale=1 an element of 1m length is plotted with 2cm length
   - minimum element length 0.01m (drifts can be shorter)
   - maximum drift length <2.9m (just add a second drift to get a longer one)
