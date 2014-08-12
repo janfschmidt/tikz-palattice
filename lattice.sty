@@ -295,15 +295,15 @@
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#5*20cm};
-\ifthenelse{\equal{#4}{br}}{%
-  \node (\j) [element, draw=none] at (\i.east) {\bendrectangle{#2}{#3}};
-}{}
 \ifthenelse{\equal{#4}{r}}{%
-  \node (\j) [element, draw=none] at (\i.east) {\rectangle{#2}};
-}{}
-\ifthenelse{\equal{#4}{s}}{%
-  \node (\j) [element, draw=none] at (\i.east) {\sector{#2}{#3}};
-}{}
+  \node (\j) [dipolecontainer, draw=none] at (\i.east) {\rectangle{#2}};
+}{% s
+  \ifthenelse{\equal{#4}{s}}{%
+    \node (\j) [dipolecontainer, draw=none] at (\i.east) {\sector{#2}{#3}};
+  }{% br
+    \node (\j) [dipolecontainer, draw=none] at (\i.east) {\bendrectangle{#2}{#3}};
+  }
+}
 \elementlabel{#1};
 \iinc
 \angleinc{0.5*#3}
@@ -422,13 +422,21 @@ rotate=\angle,
 fadeElement  %must be last to overwrite other settings
 }}
 
-%dipole -> special case: element node with dipole draw inside
+%dipole -> special case: "container" node with dipole draw inside
+%dipole "container"
+\tikzset{dipolecontainer/.style={
+anchor=west,
+scale=\scal,
+rotate=\angle,
+}}
 \tikzset{dipole/.style={
 rectangle,
 rounded corners=\corners,
 line width=0.8pt*10*\scal, draw=black,
+top color=white,
 bottom color=blue,
 minimum height=\elementheight,
+fadeElement
 %no element, otherwise e.g. scaled two times...
 }}
 

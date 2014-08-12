@@ -51,6 +51,7 @@ the lattice environment has 2 optional arguments:
     - br for a bend rectangle magnet (parallel entrance/exit surfaces)
     - r for a rectangle magnet
     - s for a sector magnet (entrance/exit surface 90 degree to beampipe)
+    If you use any other letters, also the default (br) is used.
   - \verb+\quadrupole{name}{length/m}[thickness/m (default 0.5)]+
   - \verb+\sextupole{name}{length/m}+
   - \verb+\kicker{name}{length/m}+
