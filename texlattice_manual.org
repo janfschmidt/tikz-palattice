@@ -27,13 +27,15 @@ Otherwise read the documentation of your LaTeX distribution.
   - ifthen
   - xargs
 * What is missing?
-  - The look of the elements can definitely be improved. Feel free to do it! The only constraint is that it must be drawn as a tikz node.
+  - The look of the elements can definitely be improved. Feel free to do it! The only constraint is that it must be drawn as a tikz node. Ok, and one has to adjust the bounding box and center the manet in it...
   - More element types can be added easily - please report what you need!
   - A legend command showing only the element types which are used in the current lattice would be nice,
     but I did not find a way to do it yet (with my limited knowledge about latex...).
 * Known issues
   - The fade environment usually sets all colors to gray (in addition to reducing opacity).
     This does not work if a color was set by \verb+\setelementcolor+, \verb+\setdriftcolor+ or \verb+\setmarkercolor+
+  - the dipoles border thickness depends on the rotation angle. This has something to do with drawing it as path and not as node to realize the curved shapes.
+  - the sector dipoles have a to large bounding box.
 * lattice environment
 To draw a lattice just add
 #+BEGIN_EXAMPLE
@@ -46,7 +48,11 @@ the lattice environment has 2 optional arguments:
 * Within lattice environment
 ** Elements
   - \verb+\drift{length/m}[name (default: none)]+
-  - \verb+\dipole{name}{length/m}{bending angle/deg}[thickness/m (default 0.4)]+
+  - \verb+\dipole{name}{length/m}{bending angle/deg}[type (default: br)][thickness/m (default 0.4)]+
+    the \verb+type+ option allows to select different dipole shapes. It can be:
+    - br for a bend rectangle magnet (parallel entrance/exit surfaces)
+    - r for a rectangle magnet
+    - s for a sector magnet (entrance/exit surface 90 degree to beampipe)
   - \verb+\quadrupole{name}{length/m}[thickness/m (default 0.5)]+
   - \verb+\sextupole{name}{length/m}+
   - \verb+\kicker{name}{length/m}+

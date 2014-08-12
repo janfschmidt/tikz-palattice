@@ -137,14 +137,14 @@
 \pgfmathsetlength{\elementwidth}{0.4*20cm};
 \def\labelanchor{west}
 \matrix[draw=black,anchor=north west] at (legendstart) {
-  \legendentry{dipole}{#2}
-  \legendentry{quadrupole}{#2}
-  \legendentry{sextupole}{#2}
-  \legendentry{kicker}{#2}
-  \legendentry{cavity}{#2}
-  \legendentry{solenoid}{#2}
-  \legendentry{source}{#2}
-  \legendentry{screen}{#2}
+  \legendentry{element,dipole}{Dipole}{#2}
+  \legendentry{quadrupole}{Quadrupole}{#2}
+  \legendentry{sextupole}{Sextupole}{#2}
+  \legendentry{kicker}{Kicker}{#2}
+  \legendentry{cavity}{Cavity}{#2}
+  \legendentry{solenoid}{Solenoid}{#2}
+  \legendentry{source}{Source}{#2}
+  \legendentry{screen}{Screen}{#2}
 };
 \pgfmathsetmacro{\scal}{\savescal};
 }
@@ -152,8 +152,8 @@
 
 
 %---commands for internal use---
-\newcommand{\legendentry}[2]{\node [#1,minimum width=0.4*20cm,scale=#2] {}; \pgfmatrixnextcell
-  \node[label,scale=#2] {#1};\\[2pt]}
+\newcommand{\legendentry}[3]{\node [#1,minimum width=0.4*20cm,scale=#3] {}; \pgfmatrixnextcell
+  \node[label,scale=#3] {#2};\\[2pt]}
 
 \newcommand{\updatelabelanchor}{%
   \pgfmathtruncatemacro\iang{\angle}
@@ -214,6 +214,47 @@
 \newcommand{\angleinc}[1]{\pgfmathparse{\angle+#1} \global\let\angle\pgfmathresult}
 
 
+
+% ----- dipole shapes -----
+\newcommand{\bendrectangle}[2]{%
+  \begin{tikzpicture}
+    \def\winkel{#2}
+    \newdimen\radius
+    \newdimen\bound
+    \pgfmathsetlength{\radius}{(#1*20cm)/sin(\winkel)};
+    \pgfmathsetlength{\bound}{\elementheight/2+\radius*(1-cos(\winkel/2))};
+    \draw[dipole] (0,0) -- ++
+    (0,-\elementheight/2) arc (-90-\winkel/2:-90+\winkel/2:\radius) -- ++(0,\elementheight) arc
+    (-90+\winkel/2:-90-\winkel/2:\radius) -- cycle;
+    \draw [draw=none] (0,0) -- ++ (0,\bound);
+  \end{tikzpicture}
+}
+
+\newcommand{\rectangle}[1]{%
+  \begin{tikzpicture}
+    \node [dipole, minimum width=#1*20cm] at (\i.east) {};
+  \end{tikzpicture}
+}
+
+\newcommand{\sector}[2]{%
+  \begin{tikzpicture}
+    \def\winkel{#2}
+    \newdimen\radius
+    \newdimen\bound
+    \newdimen\ri
+    \newdimen\ra
+    \pgfmathsetlength{\radius}{(#1*20cm)/sin(\winkel)};
+    \pgfmathsetlength{\bound}{0.5*\elementheight*cos(\winkel/2)+2*\radius*(1-cos(\winkel/2))};
+    \pgfmathsetlength{\ri}{\radius-0.5*\elementheight}
+    \pgfmathsetlength{\ra}{\radius+0.5*\elementheight}
+    \draw[dipole, rotate=-0.5*\winkel] (0,0) -- ++
+    (0,-\elementheight/2) arc (-90:(-90+\winkel):\ra) -- ++(\winkel+90:\elementheight) arc
+    ((-90+\winkel):-90:\ri) --++ (0,-\elementheight);
+    \draw [draw=none] (0,0) -- ++ (0,\bound);
+  \end{tikzpicture}
+}
+
+
 % ----- element commands -----
 % drift
 \newcommandx{\drift}[2][2=]{%
@@ -223,13 +264,21 @@
 \iinc
 }
 
-%dipole
-\newcommandx{\dipole}[4][4=0.4]{%
+%dipole (br,r,s)
+\newcommandx{\dipole}[5][4=br, 5=0.4]{%
 \angleinc{0.5*#3}
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\pgfmathsetlength{\elementheight}{#4*20cm};
-\node (\j) [dipole, minimum width=#2*20cm] at (\i.east) {};
+\pgfmathsetlength{\elementheight}{#5*20cm};
+\ifthenelse{\equal{#4}{br}}{%
+  \node (\j) [element, draw=none] at (\i.east) {\bendrectangle{#2}{#3}};
+}{}
+\ifthenelse{\equal{#4}{r}}{%
+  \node (\j) [element, draw=none] at (\i.east) {\rectangle{#2}};
+}{}
+\ifthenelse{\equal{#4}{s}}{%
+  \node (\j) [element, draw=none] at (\i.east) {\sector{#2}{#3}};
+}{}
 \elementlabel{#1};
 \iinc
 \angleinc{0.5*#3}
@@ -340,12 +389,14 @@ rotate=\angle,
 fadeElement  %must be last to overwrite other settings
 }}
 
-%dipole
+%dipole -> special case: element node with dipole draw inside
 \tikzset{dipole/.style={
 rectangle,
+rounded corners=\corners,
+line width=0.8pt*10*\scal, draw=black,
 bottom color=blue,
 minimum height=\elementheight,
-element %must be last to overwrite other settings
+%no element, otherwise e.g. scaled two times...
 }}
 
 %quadrupole
