@@ -1,6 +1,6 @@
 #+TITLE:     TeXlattice - draw accelerator lattices with LaTeX\\\textit{using pgf/tikz}
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
-#+DATE:      v1.1 (\today)
+#+DATE:      v1.2 (\today)
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
 #+LaTeX_CLASS_OPTIONS:[colorlinks]
 \clearpage
@@ -29,8 +29,6 @@ Otherwise read the documentation of your LaTeX distribution.
 * What is missing?
   - The look of the elements can definitely be improved. Feel free to do it! The only constraint is that it must be drawn as a tikz node. Ok, and one has to adjust the bounding box and center the manet in it...
   - More element types can be added easily - please report what you need!
-  - A legend command showing only the element types which are used in the current lattice would be nice,
-    but I did not find a way to do it yet (with my limited knowledge about latex...).
 * Known issues
   - The fade environment usually sets all colors to gray (in addition to reducing opacity).
     This does not work if a color was set by \verb+\setelementcolor+, \verb+\setdriftcolor+ or \verb+\setmarkercolor+
@@ -69,8 +67,10 @@ the lattice environment has 2 optional arguments:
     hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)
   - \verb+\drawrule{start coordinate/m}[tick distance/m (default: 1)]+ a rule to visualize lattice size.
       coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
-  - \verb+\legend{position/m}[scale (default: 1)]+ a legend with all element types. position is north east of legend box.
+  - \verb+\legend{position/m}[scale (default: 1)]+ a legend with all element types that occur in the lattice before this command.
+    position is north east of the legend box.
     the scale option scales the whole box including the text, which has the usual label textsize for scale=1
+  - \verb+\completelegend{position/m}[scale (default: 1)]+ similar to \verb+\legend+, but shows all existing element types.
 *** Labels
   - \verb+\turnlabels+ moves labels to other side of elements (swap with marker labels)
   - \verb+\rotatelabels{angle/deg}[anchor (default: automatic)]+ allows rotation of element labels.

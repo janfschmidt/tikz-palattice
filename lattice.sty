@@ -37,6 +37,15 @@
 \pgfmathtruncatemacro{\i}{0};
 \pgfmathsetmacro{\angle}{0};
 \node (\i) [start] at (0,0) {};
+%for legend: does element occur?
+\newboolean{dip} \setboolean{dip}{false}
+\newboolean{quad} \setboolean{quad}{false}
+\newboolean{sext} \setboolean{sext}{false}
+\newboolean{kick} \setboolean{kick}{false}
+\newboolean{sol} \setboolean{sol}{false}
+\newboolean{cav} \setboolean{cav}{false}
+\newboolean{sourc} \setboolean{sourc}{false}
+\newboolean{scree} \setboolean{scree}{false}
 }{%
 %end
 \endtikzpicture
@@ -128,27 +137,43 @@
 
 
 
-%legend
+%legend (types that occured in the lattice before this command)
 \newcommandx{\legend}[2][2=1]{%
 \coordinate (legendstart) at ($(0,0)!\scal*20!#1$);
 \pgfmathsetmacro{\savescal}{\scal};
+\pgfmathsetmacro{\saveang}{\angle};
 \pgfmathsetmacro{\scal}{0.05};
+\pgfmathsetmacro{\angle}{0};
 \pgfmathsetlength{\elementheight}{0.3*20cm};
 \pgfmathsetlength{\elementwidth}{0.4*20cm};
-\def\labelanchor{west}
+\def\labelanchor{west};
 \matrix[draw=black,anchor=north west] at (legendstart) {
-  \legendentry{element,dipole}{Dipole}{#2}
-  \legendentry{quadrupole}{Quadrupole}{#2}
-  \legendentry{sextupole}{Sextupole}{#2}
-  \legendentry{kicker}{Kicker}{#2}
-  \legendentry{cavity}{Cavity}{#2}
-  \legendentry{solenoid}{Solenoid}{#2}
-  \legendentry{source}{Source}{#2}
-  \legendentry{screen}{Screen}{#2}
+  \ifthenelse{\boolean{dip}}{\legendentry{element,dipole}{Dipole}{#2}}{}
+  \ifthenelse{\boolean{quad}}{\legendentry{quadrupole}{Quadrupole}{#2}}{}
+  \ifthenelse{\boolean{sext}}{\legendentry{sextupole}{Sextupole}{#2}}{}
+  \ifthenelse{\boolean{kick}}{\legendentry{kicker}{Kicker}{#2}}{}
+  \ifthenelse{\boolean{cav}}{\legendentry{cavity}{Cavity}{#2}}{}
+  \ifthenelse{\boolean{sol}}{\legendentry{solenoid}{Solenoid}{#2}}{}
+  \ifthenelse{\boolean{sourc}}{\legendentry{source}{Source}{#2}}{}
+  \ifthenelse{\boolean{scree}}{\legendentry{screen}{Screen}{#2}}{}
+  \node [drift,minimum width=4*20cm,scale=#2] {}; \pgfmatrixnextcell \node[label,scale=#2] {Drift};\\[2pt]
 };
 \pgfmathsetmacro{\scal}{\savescal};
+\pgfmathsetmacro{\angle}{\saveang};
 }
 
+%complete legend (all types)
+\newcommandx{\completelegend}[2][2=1]{%
+ \setboolean{dip}{true}
+ \setboolean{quad}{true}
+ \setboolean{sext}{true}
+ \setboolean{kick}{true}
+ \setboolean{sol}{true}
+ \setboolean{cav}{true}
+ \setboolean{sourc}{true}
+ \setboolean{scree}{true}
+ \legend{#1}[#2]
+}
 
 
 %---commands for internal use---
@@ -282,6 +307,7 @@
 \elementlabel{#1};
 \iinc
 \angleinc{0.5*#3}
+\setboolean{dip}{true}
 }
 
 %quadrupole
@@ -292,6 +318,7 @@
 \node (\j) [quadrupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \iinc
+\setboolean{quad}{true}
 }
 
 %sextupole
@@ -301,6 +328,7 @@
 \node (\j) [sextupole, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \iinc
+\setboolean{sext}{true}
 }
 
 %kicker
@@ -310,6 +338,7 @@
 \node (\j) [kicker, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \iinc
+\setboolean{kick}{true}
 }
 
 %cavity
@@ -319,6 +348,7 @@
 \node (\j) [cavity, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \iinc
+\setboolean{cav}{true}
 }
 
 %solenoid
@@ -329,6 +359,7 @@
 \node (\j) [solenoid, minimum width=#2*20cm] at (\i.east) {};
 \elementlabel{#1};
 \iinc
+\setboolean{sol}{true}
 }
 
 %source
@@ -338,6 +369,7 @@
 \node (\j) [source, minimum width=10cm] at (\i.east) {};
 \elementlabel{#1};
 \iinc
+\setboolean{sourc}{true}
 }
 
 %screen
@@ -347,6 +379,7 @@
 \node (\j) [screen, minimum width=4cm] at (\i.east) {};
 \elementlabel{#1};
 \iinc
+\setboolean{scree}{true}
 }
 
 %valve
