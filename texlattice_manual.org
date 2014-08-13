@@ -69,7 +69,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\drawrule{start coordinate/m}[tick distance/m (default: 1)]+ a rule to visualize lattice size.
       coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
   - \verb+\legend{position/m}[scale (default: 1)]+ a legend with all element types that occur in the lattice before this command.
-    position is north east of the legend box.
+    position is north west (upper left corner) of the legend box.
     the scale option scales the whole box including the text, which has the usual label textsize for scale=1
   - \verb+\completelegend{position/m}[scale (default: 1)]+ similar to \verb+\legend+, but shows all existing element types.
 *** Labels

@@ -12,6 +12,7 @@
 \RequirePackage{siunitx}
 \RequirePackage{xargs}
 \usetikzlibrary{shapes,calc,positioning}
+\usetikzlibrary{scopes}
 
 
 
@@ -36,7 +37,8 @@
 \pgfmathsetlength{\savelabeldist}{\scal*20cm*0.35};
 \pgfmathtruncatemacro{\i}{0};
 \pgfmathsetmacro{\angle}{0};
-\node (\i) [start] at (0,0) {};
+\node (node\i) [start] at (0,0) {};
+\declareeast
 %for legend: does element occur?
 \newboolean{dip} \setboolean{dip}{false}
 \newboolean{quad} \setboolean{quad}{false}
@@ -231,12 +233,14 @@
 
 \newcommand{\elementlabel}[1]{%
   \updatelabelanchor
-  \path [draw=none] (\j.center) --+ (\angle\labelang:\labeldist) node[label] {#1};
+  \path [draw=none] (center\j) --+ (\angle\labelang:\labeldist) node[label] {#1};
 }
 
 \newcommand{\jinc}{\pgfmathparse{int(\i+1)} \global\let\j\pgfmathresult}
 \newcommand{\iinc}{\global\let\i\j}
 \newcommand{\angleinc}[1]{\pgfmathparse{\angle+#1} \global\let\angle\pgfmathresult}
+\newcommand{\declareeast}{\coordinate (center\j) at (node\j.east);}
+\newcommand{\declarecenter}{\coordinate (center\j) at (\j.center);}
 
 
 
@@ -257,7 +261,7 @@
 
 \newcommand{\rectangle}[1]{%
   \begin{tikzpicture}
-    \node [dipole, minimum width=#1*20cm] at (\i.east) {};
+    \node [dipole, minimum width=#1*20cm] at (\i) {};
   \end{tikzpicture}
 }
 
@@ -275,7 +279,7 @@
     \draw[dipole, rotate=-0.5*\winkel] (0,0) -- ++
     (0,-\elementheight/2) arc (-90:(-90+\winkel):\ra) -- ++(\winkel+90:\elementheight) arc
     ((-90+\winkel):-90:\ri) --++ (0,-\elementheight);
-    \draw [draw=none] (0,0) -- ++ (0,\bound);
+    %\draw [draw=none] (0,0) -- ++ (0,\bound);
   \end{tikzpicture}
 }
 
@@ -284,9 +288,11 @@
 % drift
 \newcommandx{\drift}[2][2=]{%
 \jinc
-\node (\j) [drift,minimum width=10*#1*20cm] at (\i.east) {};
+%vorher: \node (\j) [drift,minimum width=10*#1*20cm] at (\i.east) {};
+\draw[cyan, very thick] (east\i) --++ (\angle:#1*10cm*\scal) node[] (center\j) {x} --++
+(\angle:#1*10cm*\scal) node[] (east\j) {o};
 \elementlabel{#2};
-\iinc
+\iinc;
 }
 
 %dipole (br,r,s)
@@ -295,13 +301,22 @@
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#5*20cm};
-\ifthenelse{\equal{#4}{r}}{%
-  \node (\j) [dipolecontainer, draw=none] at (\i.east) {\rectangle{#2}};
+\ifthenelse{\equal{#4}{r}}{% r
+  \node (node\j) [dipolecontainer, draw=none] at (east\i) {\rectangle{#2}};
+\declareeast
+\declarecenter
 }{% s
   \ifthenelse{\equal{#4}{s}}{%
-    \node (\j) [dipolecontainer, draw=none] at (\i.east) {\sector{#2}{#3}};
+    \newdimen\radius
+    \pgfmathsetlength{\radius}{(#2*20cm*\scal)/sin(#3)};
+    \draw[red,very thick] (\i) arc (-90+\angle-0.5*#3:(-90+\angle):\radius) node[]
+    (center\j) {x} arc (-90+\angle:(-90+\angle+0.5*#3):\radius) node[] (\j) {o};
+    \node [dipolecontainer, draw=red, anchor=center] at (center\j) {\sector{#2}{#3}};
+    %vorher: \node [dipolecontainer, draw=none] at (\i.east) {\sector{#2}{#3}};
   }{% br
-    \node (\j) [dipolecontainer, draw=none] at (\i.east) {\bendrectangle{#2}{#3}};
+    \node [dipolecontainer, draw=none] at (east\i) {\bendrectangle{#2}{#3}};
+    \declareeast
+    \declarecenter
   }
 }
 \elementlabel{#1};
@@ -315,7 +330,9 @@
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#3*20cm};
-\node (\j) [quadrupole, minimum width=#2*20cm] at (\i.east) {};
+\node (node\j) [quadrupole, minimum width=#2*20cm] at (east\i) {};
+\declareeast
+\declarecenter
 \elementlabel{#1};
 \iinc
 \setboolean{quad}{true}
@@ -325,7 +342,9 @@
 \newcommand{\sextupole}[2]{%
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\node (\j) [sextupole, minimum width=#2*20cm] at (\i.east) {};
+\node (node\j) [sextupole, minimum width=#2*20cm] at (east\i) {};
+\declareeast
+\declarecenter
 \elementlabel{#1};
 \iinc
 \setboolean{sext}{true}
@@ -335,7 +354,9 @@
 \newcommand{\kicker}[2]{%
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\node (\j) [kicker, minimum width=#2*20cm] at (\i.east) {};
+\node (node\j) [kicker, minimum width=#2*20cm] at (east\i) {};
+\declareeast
+\declarecenter
 \elementlabel{#1};
 \iinc
 \setboolean{kick}{true}
@@ -345,7 +366,9 @@
 \newcommand{\cavity}[2]{%
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\node (\j) [cavity, minimum width=#2*20cm] at (\i.east) {};
+\node (node\j) [cavity, minimum width=#2*20cm] at (east\i) {};
+\declareeast
+\declarecenter
 \elementlabel{#1};
 \iinc
 \setboolean{cav}{true}
@@ -356,7 +379,9 @@
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#3*20cm};
-\node (\j) [solenoid, minimum width=#2*20cm] at (\i.east) {};
+\node (node\j) [solenoid, minimum width=#2*20cm] at (east\i) {};
+\declareeast
+\declarecenter
 \elementlabel{#1};
 \iinc
 \setboolean{sol}{true}
@@ -366,7 +391,9 @@
 \newcommand{\source}[1]{%
 \jinc
 \pgfmathsetlength{\corners}{1mm};
-\node (\j) [source, minimum width=10cm] at (\i.east) {};
+\node (node\j) [source, minimum width=10cm] at (east\i) {};
+\declareeast
+\declarecenter
 \elementlabel{#1};
 \iinc
 \setboolean{sourc}{true}
@@ -376,7 +403,9 @@
 \newcommand{\screen}[1]{%
 \jinc
 \pgfmathsetlength{\corners}{0mm};
-\node (\j) [screen, minimum width=4cm] at (\i.east) {};
+\node (node\j) [screen, minimum width=4cm] at (east\i) {};
+\declareeast
+\declarecenter
 \elementlabel{#1};
 \iinc
 \setboolean{scree}{true}
@@ -385,9 +414,9 @@
 %valve
 \newcommand{\valve}[1]{%
 \updatemarkerlabelanchor
-\draw [valve] (\i.east) --+ (\angle-90:1.4cm*\scal); % half length (=> 10cm)
-\draw [valve] (\i.east) --+ (\angle+90:1.4cm*\scal);
-\draw [draw=none] (\i.east) --+ (\angle\marklabelang:\labeldist) node[label] {#1};
+\draw [valve] (east\i) --+ (\angle-90:1.4cm*\scal); % half length (=> 10cm)
+\draw [valve] (east\i) --+ (\angle+90:1.4cm*\scal);
+\draw [draw=none] (east\i) --+ (\angle\marklabelang:\labeldist) node[label] {#1};
 }
 
 
@@ -395,9 +424,9 @@
 \newcommandx{\marker}[2][2=0.35]{%
 \pgfmathsetlength{\markerlen}{#2*20cm*\scal};
 \updatemarkerlabelanchor
-\draw [marker] (\i.east) --+ (\angle-90:\markerlen); % half length (=> 10cm)
-\draw [marker] (\i.east) --+ (\angle+90:\markerlen);
-\draw [draw=none] (\i.east) --+ (\angle\marklabelang:\markerlen+0.5*\labeldist) node[label] {#1};
+\draw [marker] (east\i) --+ (\angle-90:\markerlen); % half length (=> 10cm)
+\draw [marker] (east\i) --+ (\angle+90:\markerlen);
+\draw [draw=none] (east\i) --+ (\angle\marklabelang:\markerlen+0.5*\labeldist) node[label] {#1};
 }
 
 
