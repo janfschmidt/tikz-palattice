@@ -36,9 +36,10 @@
 \pgfmathsetlength{\labeldist}{\scal*20cm*0.35};
 \pgfmathsetlength{\savelabeldist}{\scal*20cm*0.35};
 \pgfmathtruncatemacro{\i}{0};
+\pgfmathtruncatemacro{\j}{0};
 \pgfmathsetmacro{\angle}{0};
-\node (node\i) [start] at (0,0) {};
-\declareeast
+\node (nodeeast0) [start] at (0,0) {};
+\coordinate (east\j) at (nodeeast\j.center); %\declarecoords ("east" only
 %for legend: does element occur?
 \newboolean{dip} \setboolean{dip}{false}
 \newboolean{quad} \setboolean{quad}{false}
@@ -68,7 +69,7 @@
 
 %---color settings---
 \newcommand{\setelementcolor}[2]{\tikzset{#1/.append style={bottom color=#2}}}
-\newcommand{\setdriftcolor}[1]{\tikzset{drift/.append style={fill=#1}}}
+\newcommand{\setdriftcolor}[1]{\tikzset{drift/.append style={#1}}}
 \newcommand{\setmarkercolor}[1]{\tikzset{marker/.append style={#1}}}
 
 \newenvironmentx{fade}[1][1=0.25]{%
@@ -239,8 +240,8 @@
 \newcommand{\jinc}{\pgfmathparse{int(\i+1)} \global\let\j\pgfmathresult}
 \newcommand{\iinc}{\global\let\i\j}
 \newcommand{\angleinc}[1]{\pgfmathparse{\angle+#1} \global\let\angle\pgfmathresult}
-\newcommand{\declareeast}{\coordinate (center\j) at (node\j.east);}
-\newcommand{\declarecenter}{\coordinate (center\j) at (\j.center);}
+\newcommand{\declarecoords}{\coordinate (east\j) at (nodeeast\j.center); \coordinate (center\j) at (nodecenter\j.center);}
+
 
 
 
@@ -261,7 +262,7 @@
 
 \newcommand{\rectangle}[1]{%
   \begin{tikzpicture}
-    \node [dipole, minimum width=#1*20cm] at (\i) {};
+    \node [dipole, minimum width=#1*20cm] at (0,0) {};
   \end{tikzpicture}
 }
 
@@ -289,40 +290,45 @@
 \newcommandx{\drift}[2][2=]{%
 \jinc
 %vorher: \node (\j) [drift,minimum width=10*#1*20cm] at (\i.east) {};
-\draw[cyan, very thick] (east\i) --++ (\angle:#1*10cm*\scal) node[] (center\j) {x} --++
-(\angle:#1*10cm*\scal) node[] (east\j) {o};
+\draw[drift] (east\i) --++ (\angle:#1*10cm*\scal) node[draw=red] (nodecenter\j) {x} --++
+(\angle:#1*10cm*\scal) node[draw=red] (nodeeast\j) {o};
+\declarecoords
 \elementlabel{#2};
 \iinc;
 }
 
 %dipole (br,r,s)
+% fehlt:
+% 1. längen drifts unter dipolen anpassen
+% 2. anchor dipolcontainer anpassen (oder dipol "zeichnungen)
 \newcommandx{\dipole}[5][4=br, 5=0.4]{%
-\angleinc{0.5*#3}
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#5*20cm};
+\draw[drift] (east\i) --++ (\angle:#2*10cm*\scal) node[draw=red] (nodecenter\j) {D};
+\angleinc{#3}
+\draw[drift] (nodecenter\j) --++ (\angle:#2*10cm*\scal) node[draw=red] (nodeeast\j) {o};
+
+\angleinc{-0.5*#3}
 \ifthenelse{\equal{#4}{r}}{% r
-  \node (node\j) [dipolecontainer, draw=none] at (east\i) {\rectangle{#2}};
-\declareeast
-\declarecenter
+  \node [dipolecontainer, draw=red, anchor=center] at (nodecenter\j) {\rectangle{#2}};
 }{% s
   \ifthenelse{\equal{#4}{s}}{%
-    \newdimen\radius
-    \pgfmathsetlength{\radius}{(#2*20cm*\scal)/sin(#3)};
-    \draw[red,very thick] (\i) arc (-90+\angle-0.5*#3:(-90+\angle):\radius) node[]
-    (center\j) {x} arc (-90+\angle:(-90+\angle+0.5*#3):\radius) node[] (\j) {o};
-    \node [dipolecontainer, draw=red, anchor=center] at (center\j) {\sector{#2}{#3}};
-    %vorher: \node [dipolecontainer, draw=none] at (\i.east) {\sector{#2}{#3}};
+    %\newdimen\radius
+    %\pgfmathsetlength{\radius}{(#2*20cm*\scal)/sin(#3)};
+    % \draw[red,very thick] (\i) arc (-90+\angle-0.5*#3:(-90+\angle):\radius) node[]
+    % (center\j) {x} arc (-90+\angle:(-90+\angle+0.5*#3):\radius) node[] (\j) {o};
+    \node [dipolecontainer, draw=red, anchor=center] at (nodecenter\j) {\sector{#2}{#3}};
   }{% br
-    \node [dipolecontainer, draw=none] at (east\i) {\bendrectangle{#2}{#3}};
-    \declareeast
-    \declarecenter
+    \node [dipolecontainer, draw=red] at (nodecenter\j) {\bendrectangle{#2}{#3}};
   }
 }
+
+\declarecoords
 \elementlabel{#1};
 \iinc
-\angleinc{0.5*#3}
 \setboolean{dip}{true}
+\angleinc{0.5*#3}
 }
 
 %quadrupole
@@ -330,21 +336,22 @@
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#3*20cm};
-\node (node\j) [quadrupole, minimum width=#2*20cm] at (east\i) {};
-\declareeast
-\declarecenter
+\draw[drift] (east\i) --++ (\angle:#2*10cm*\scal) node[draw=red] (nodecenter\j) {x} --++
+(\angle:#2*10cm*\scal) node[draw=red] (nodeeast\j) {o};
+\declarecoords
 \elementlabel{#1};
-\iinc
+\iinc;
+\node [quadrupole, minimum width=#2*20cm, anchor=center] at (nodecenter\j) {};
 \setboolean{quad}{true}
 }
+
 
 %sextupole
 \newcommand{\sextupole}[2]{%
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (node\j) [sextupole, minimum width=#2*20cm] at (east\i) {};
-\declareeast
-\declarecenter
+\declarecoords
 \elementlabel{#1};
 \iinc
 \setboolean{sext}{true}
@@ -355,8 +362,7 @@
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (node\j) [kicker, minimum width=#2*20cm] at (east\i) {};
-\declareeast
-\declarecenter
+\declarecoords
 \elementlabel{#1};
 \iinc
 \setboolean{kick}{true}
@@ -367,8 +373,7 @@
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \node (node\j) [cavity, minimum width=#2*20cm] at (east\i) {};
-\declareeast
-\declarecenter
+\declarecoords
 \elementlabel{#1};
 \iinc
 \setboolean{cav}{true}
@@ -380,8 +385,7 @@
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#3*20cm};
 \node (node\j) [solenoid, minimum width=#2*20cm] at (east\i) {};
-\declareeast
-\declarecenter
+\declarecoords
 \elementlabel{#1};
 \iinc
 \setboolean{sol}{true}
@@ -392,8 +396,7 @@
 \jinc
 \pgfmathsetlength{\corners}{1mm};
 \node (node\j) [source, minimum width=10cm] at (east\i) {};
-\declareeast
-\declarecenter
+\declarecoords
 \elementlabel{#1};
 \iinc
 \setboolean{sourc}{true}
@@ -404,8 +407,7 @@
 \jinc
 \pgfmathsetlength{\corners}{0mm};
 \node (node\j) [screen, minimum width=4cm] at (east\i) {};
-\declareeast
-\declarecenter
+\declarecoords
 \elementlabel{#1};
 \iinc
 \setboolean{scree}{true}
@@ -454,7 +456,7 @@ fadeElement  %must be last to overwrite other settings
 %dipole -> special case: "container" node with dipole draw inside
 %dipole "container"
 \tikzset{dipolecontainer/.style={
-anchor=west,
+anchor=center,
 scale=\scal,
 rotate=\angle,
 }}
@@ -536,12 +538,12 @@ fade  %must be last to overwrite other settings
 
 %drift
 \tikzset{drift/.style={
-scale=0.1*\scal,
-rectangle,
-fill=black,
-anchor=west,
-minimum height=4cm,
-rotate=\angle,
+%scale=0.1*\scal,
+%rectangle,
+draw=black,
+%anchor=west,
+%minimum height=4cm,
+%rotate=\angle,
 fade  %must be last to overwrite other settings
 }}
 
