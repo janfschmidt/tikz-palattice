@@ -46,12 +46,12 @@ the lattice environment has 2 optional arguments:
 * Within lattice environment
 ** Elements
   - \verb+\drift{length/m}[name (default: none)]+
-  - \verb+\dipole{name}{length/m}{bending angle/deg}[type (default: br)][thickness/m (default 0.4)]+
+  - \verb+\dipole{name}{(arc) length/m}{bending angle/deg}[type (default: br)][thickness/m (default 0.4)]+
     the \verb+type+ option allows to select different dipole shapes. It can be:
     - br for a bend rectangle magnet (parallel entrance/exit surfaces)
     - r for a rectangle magnet
     - s for a sector magnet (entrance/exit surface 90 degree to beampipe)
-    If you use any other letters, also the default (br) is used.
+    If you use any other letters, also the default (s) is used.
   - \verb+\quadrupole{name}{length/m}[thickness/m (default 0.5)]+
   - \verb+\sextupole{name}{length/m}+
   - \verb+\kicker{name}{length/m}+

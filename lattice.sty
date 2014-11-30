@@ -245,45 +245,6 @@
 
 
 
-% ----- dipole shapes -----
-\newcommand{\bendrectangle}[2]{%
-  \begin{tikzpicture}
-    \def\winkel{#2}
-    \newdimen\radius
-    \newdimen\bound
-    \pgfmathsetlength{\radius}{(#1*20cm)/sin(\winkel)};
-    \pgfmathsetlength{\bound}{\elementheight/2+\radius*(1-cos(\winkel/2))};
-    \draw[dipole] (0,0) -- ++
-    (0,-\elementheight/2) arc (-90-\winkel/2:-90+\winkel/2:\radius) -- ++(0,\elementheight) arc
-    (-90+\winkel/2:-90-\winkel/2:\radius) -- cycle;
-    \draw [draw=none] (0,0) -- ++ (0,\bound);
-  \end{tikzpicture}
-}
-
-\newcommand{\rectangle}[1]{%
-  \begin{tikzpicture}
-    \node [dipole, minimum width=#1*20cm] at (0,0) {};
-  \end{tikzpicture}
-}
-
-\newcommand{\sector}[2]{%
-  \begin{tikzpicture}
-    \def\winkel{#2}
-    \newdimen\radius
-    \newdimen\bound
-    \newdimen\ri
-    \newdimen\ra
-    \pgfmathsetlength{\radius}{(#1*20cm)/sin(\winkel)};
-    \pgfmathsetlength{\bound}{0.5*\elementheight*cos(\winkel/2)+2*\radius*(1-cos(\winkel/2))};
-    \pgfmathsetlength{\ri}{\radius-0.5*\elementheight}
-    \pgfmathsetlength{\ra}{\radius+0.5*\elementheight}
-    \draw[dipole, rotate=-0.5*\winkel] (0,0) -- ++
-    (0,-\elementheight/2) arc (-90:(-90+\winkel):\ra) -- ++(\winkel+90:\elementheight) arc
-    ((-90+\winkel):-90:\ri) --++ (0,-\elementheight);
-    %\draw [draw=none] (0,0) -- ++ (0,\bound);
-  \end{tikzpicture}
-}
-
 
 % ----- element commands -----
 % drift
@@ -298,32 +259,41 @@
 }
 
 %dipole (br,r,s)
-% fehlt:
-% 1. längen drifts unter dipolen anpassen
-% 2. anchor dipolcontainer anpassen (oder dipol "zeichnungen)
-\newcommandx{\dipole}[5][4=br, 5=0.4]{%
+\newcommandx{\dipole}[5][4=s, 5=0.4]{%
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\pgfmathsetlength{\elementheight}{#5*20cm};
-\draw[drift] (east\i) --++ (\angle:#2*10cm*\scal) node[draw=red] (nodecenter\j) {D};
-\angleinc{#3}
-\draw[drift] (nodecenter\j) --++ (\angle:#2*10cm*\scal) node[draw=red] (nodeeast\j) {o};
+\pgfmathsetlength{\elementheight}{#5*20cm*\scal};
+\def\winkel{#3}
+\newdimen\radius
+\newdimen\ri
+\newdimen\ra
+\pgfmathsetlength{\radius}{(#2*20cm*\scal)/rad(\winkel)}; % bogenlänge
+\pgfmathsetlength{\ri}{\radius-0.5*\elementheight}
+\pgfmathsetlength{\ra}{\radius+0.5*\elementheight}
 
-\angleinc{-0.5*#3}
-\ifthenelse{\equal{#4}{r}}{% r
-  \node [dipolecontainer, draw=red, anchor=center] at (nodecenter\j) {\rectangle{#2}};
-}{% s
+\draw[drift,rotate=\angle] (east\i) arc (-90:(-90+\winkel/2):\radius) node[draw=red] (nodecenter\j) {D};
+\draw[drift,rotate=\angle] (nodecenter\j) arc ((-90+\winkel/2):(-90+\winkel):\radius) node[draw=red] (nodeeast\j) {o};
+
+\angleinc{0.5*#3}
+% [r]ectangle
+\ifthenelse{\equal{#4}{r}}{
+\newdimen\straightlength
+\pgfmathsetlength{\straightlength}{sin(\winkel/2)*2*\radius} % sekante des kreisbogens
+  \draw[dipole,rotate=\angle] (east\i) --++ (0,-\elementheight/2) --++ (\straightlength,0) --++
+  (0,\elementheight) --++ (-\straightlength,0) --++ (0,-\elementheight/2);
+}{
+% [s]ector
   \ifthenelse{\equal{#4}{s}}{%
-    %\newdimen\radius
-    %\pgfmathsetlength{\radius}{(#2*20cm*\scal)/sin(#3)};
-    % \draw[red,very thick] (\i) arc (-90+\angle-0.5*#3:(-90+\angle):\radius) node[]
-    % (center\j) {x} arc (-90+\angle:(-90+\angle+0.5*#3):\radius) node[] (\j) {o};
-    \node [dipolecontainer, draw=red, anchor=center] at (nodecenter\j) {\sector{#2}{#3}};
-  }{% br
-    \node [dipolecontainer, draw=red] at (nodecenter\j) {\bendrectangle{#2}{#3}};
+    \draw[dipole, rotate=\angle-0.5*\winkel] (east\i) -- ++
+    (0,-\elementheight/2) arc (-90:(-90+\winkel):\ra) -- ++(\winkel+90:\elementheight) arc
+    ((-90+\winkel):-90:\ri) --++ (0,-\elementheight);
+  }{
+ % [b]end[r]ectangle
+    \draw[dipole, rotate=\angle] (east\i) -- ++
+    (0,-\elementheight/2) arc (-90-\winkel/2:-90+\winkel/2:\radius) -- ++(0,\elementheight) arc
+    (-90+\winkel/2:-90-\winkel/2:\radius) -- cycle;
   }
 }
-
 \declarecoords
 \elementlabel{#1};
 \iinc
@@ -335,13 +305,14 @@
 \newcommandx{\quadrupole}[3][3=0.5]{%
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\pgfmathsetlength{\elementheight}{#3*20cm};
+\pgfmathsetlength{\elementheight}{#3*20cm*\scal};
 \draw[drift] (east\i) --++ (\angle:#2*10cm*\scal) node[draw=red] (nodecenter\j) {x} --++
 (\angle:#2*10cm*\scal) node[draw=red] (nodeeast\j) {o};
+\draw[quadrupole] (east\i) --++ (0,\elementheight/2) --++ (#2*20cm*\scal,0) --++
+(0,-\elementheight) --++ (-#2*20cm*\scal,0) --++ (0,\elementheight/2);
 \declarecoords
 \elementlabel{#1};
 \iinc;
-\node [quadrupole, minimum width=#2*20cm, anchor=center] at (nodecenter\j) {};
 \setboolean{quad}{true}
 }
 
@@ -448,34 +419,22 @@ rounded corners=\corners,
 line width=0.8pt*10*\scal, draw=black,
 top color=white,
 anchor=west,
-scale=\scal,
 rotate=\angle,
 fadeElement  %must be last to overwrite other settings
 }}
 
-%dipole -> special case: "container" node with dipole draw inside
-%dipole "container"
-\tikzset{dipolecontainer/.style={
-anchor=center,
-scale=\scal,
-rotate=\angle,
-}}
+%dipole
 \tikzset{dipole/.style={
-rectangle,
 rounded corners=\corners,
 line width=0.8pt*10*\scal, draw=black,
 top color=white,
 bottom color=blue,
-minimum height=\elementheight,
 fadeElement
-%no element, otherwise e.g. scaled two times...
 }}
 
 %quadrupole
 \tikzset{quadrupole/.style={
-rectangle,
 bottom color=yellow, 
-minimum height=\elementheight,
 element %must be last to overwrite other settings
 }}
 
