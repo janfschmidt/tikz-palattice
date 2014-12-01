@@ -53,9 +53,9 @@ the lattice environment has 2 optional arguments:
     - s for a sector magnet (entrance/exit surface 90 degree to beampipe)
     If you use any other letters, also the default (s) is used.
   - \verb+\quadrupole{name}{length/m}[thickness/m (default 0.5)]+
-  - \verb+\sextupole{name}{length/m}+
-  - \verb+\kicker{name}{length/m}+
-  - \verb+\cavity{name}{length/m}+
+  - \verb+\sextupole{name}{length/m}[thickness/m (default 0.x)]+
+  - \verb+\kicker{name}{length/m}[thickness/m (default 0.x)]+
+  - \verb+\cavity{name}{length/m}[thickness/m (default 0.x)]+
   - \verb+\solenoid{name}{length/m}[thickness/m (default 0.2)]+
   - \verb+\source{name}+
   - \verb+\screen{name}+
@@ -88,10 +88,9 @@ the lattice environment has 2 optional arguments:
    You can use element coordinates to draw anything you want using pgf/tikz. You can even connect lattices to draw injection/extraction or a complete accelerator facility.
   - \verb+\savecoordinate{name}[position (default: east)]+ saves coordinate of previous element
      to access it later.
-    - position specifies the exact place of the element (north, center, south west, ...). Here east is always downstream and west upstream.
+    - position specifies the exact place of the element. East (default) and center are available. East is always downstream.
     - you can use all tikz/pgf commands within lattice environment to draw anything.
     - You can also connect multiple lattices. use tikz overlay option (1. argument of lattice) and \verb+\start+. See example 3.
-    - ! DON'T use bare numbers as names (e.g. (1)) These are the internal element identifiers.
 * Remarks
   - lengths are set in meter, so you write {1.32} for 1.32m.
   - beamline with angle 0 goes to the right, positive angles bend counter clockwise.

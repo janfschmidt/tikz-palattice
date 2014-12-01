@@ -60,10 +60,12 @@
 \newcommand{\rotate}[1]{\pgfmathsetmacro{\angle}{\angle+#1};}
 \newcommand{\start}[1]{%
   \tikzset{x=2cm,y=2cm}
-  \node (0) [start] at #1 {};
+  \node (nodeeast0) [start] at #1 {};
+  \coordinate (east\j) at (nodeeast\j.center);
   \tikzset{x=1cm,y=1cm}
 }
-\newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (\i.#2);}
+\newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (#2\i);}
+%\newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (\i.#2);}
 
 
 
