@@ -180,7 +180,7 @@
 
 
 %---commands for internal use---
-\newcommand{\legendentry}[3]{\node [#1,minimum width=0.4*20cm,scale=#3] {}; \pgfmatrixnextcell
+\newcommand{\legendentry}[3]{\node [#1,minimum width=2cm,scale=#3] {}; \pgfmatrixnextcell
   \node[label,scale=#3] {#2};\\[2pt]}
 
 \newcommand{\updatelabelanchor}{%
@@ -250,9 +250,8 @@
 % drift
 \newcommandx{\drift}[2][2=]{%
 \jinc
-%vorher: \node (\j) [drift,minimum width=10*#1*20cm] at (\i.east) {};
-\draw[drift] (east\i) --++ (\angle:#1*10cm*\scal) node[draw=red] (nodecenter\j) {x} --++
-(\angle:#1*10cm*\scal) node[draw=red] (nodeeast\j) {o};
+\draw[drift] (east\i) --++ (\angle:#1*10cm*\scal) node[] (nodecenter\j) {} --++
+(\angle:#1*10cm*\scal) node[] (nodeeast\j) {};
 \declarecoords
 \elementlabel{#2};
 \iinc;
@@ -271,8 +270,8 @@
 \pgfmathsetlength{\ri}{\radius-0.5*\elementheight}
 \pgfmathsetlength{\ra}{\radius+0.5*\elementheight}
 
-\draw[drift,rotate=\angle] (east\i) arc (-90:(-90+\winkel/2):\radius) node[draw=red] (nodecenter\j) {D};
-\draw[drift,rotate=\angle] (nodecenter\j) arc ((-90+\winkel/2):(-90+\winkel):\radius) node[draw=red] (nodeeast\j) {o};
+\draw[drift,rotate=\angle] (east\i) arc (-90:(-90+\winkel/2):\radius) node[] (nodecenter\j) {};
+\draw[drift,rotate=\angle] (nodecenter\j) arc ((-90+\winkel/2):(-90+\winkel):\radius) node[] (nodeeast\j) {};
 
 \angleinc{0.5*#3}
 % [r]ectangle
@@ -301,51 +300,52 @@
 \angleinc{0.5*#3}
 }
 
+%rectangle-element (used for quad,sext,kicker,cavity,...)
+\newcommandx{\rectangleelement}[4]{%
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
+\pgfmathsetlength{\elementheight}{#3*20cm*\scal};
+\draw[drift] (east\i) --++ (\angle:#2*10cm*\scal) node[] (nodecenter\j) {} --++
+(\angle:#2*10cm*\scal) node[] (nodeeast\j) {};
+\draw[#4] (east\i) --++ (0,\elementheight/2) --++ (#2*20cm*\scal,0) --++
+(0,-\elementheight) --++ (-#2*20cm*\scal,0) --++ (0,\elementheight/2);
+}
+
 %quadrupole
 \newcommandx{\quadrupole}[3][3=0.5]{%
 \jinc
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\pgfmathsetlength{\elementheight}{#3*20cm*\scal};
-\draw[drift] (east\i) --++ (\angle:#2*10cm*\scal) node[draw=red] (nodecenter\j) {x} --++
-(\angle:#2*10cm*\scal) node[draw=red] (nodeeast\j) {o};
-\draw[quadrupole] (east\i) --++ (0,\elementheight/2) --++ (#2*20cm*\scal,0) --++
-(0,-\elementheight) --++ (-#2*20cm*\scal,0) --++ (0,\elementheight/2);
+\rectangleelement{#1}{#2}{#3}{quadrupole}
 \declarecoords
-\elementlabel{#1};
-\iinc;
+\elementlabel{#1}
+\iinc
 \setboolean{quad}{true}
 }
 
-
 %sextupole
-\newcommand{\sextupole}[2]{%
+\newcommandx{\sextupole}[3][3=0.3]{%
 \jinc
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\node (node\j) [sextupole, minimum width=#2*20cm] at (east\i) {};
+\rectangleelement{#1}{#2}{#3}{sextupole}
 \declarecoords
-\elementlabel{#1};
+\elementlabel{#1}
 \iinc
 \setboolean{sext}{true}
 }
 
 %kicker
-\newcommand{\kicker}[2]{%
+\newcommandx{\kicker}[3][3=0.25]{%
 \jinc
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\node (node\j) [kicker, minimum width=#2*20cm] at (east\i) {};
+\rectangleelement{#1}{#2}{#3}{kicker}
 \declarecoords
-\elementlabel{#1};
+\elementlabel{#1}
 \iinc
 \setboolean{kick}{true}
 }
 
 %cavity
-\newcommand{\cavity}[2]{%
+\newcommandx{\cavity}[3][3=0.45]{%
 \jinc
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\node (node\j) [cavity, minimum width=#2*20cm] at (east\i) {};
+\rectangleelement{#1}{#2}{#3}{cavity}
 \declarecoords
-\elementlabel{#1};
+\elementlabel{#1}
 \iinc
 \setboolean{cav}{true}
 }
@@ -440,41 +440,32 @@ element %must be last to overwrite other settings
 
 %sextupole
 \tikzset{sextupole/.style={
-rectangle,
 bottom color=violet!70!black, 
-minimum height=6cm,
 element %must be last to overwrite other settings
 }}
 
 %kicker
 \tikzset{kicker/.style={
-rectangle,
 bottom color=orange!90!black, 
-minimum height=4cm,
 element %must be last to overwrite other settings
 }}
 
 %cavity
 \tikzset{cavity/.style={
-rectangle,
 bottom color=brown, 
-minimum height=8cm,
 element %must be last to overwrite other settings
 }}
 
 %solenoid
 \tikzset{solenoid/.style={
-rectangle,
 bottom color=green!70!black, 
-minimum height=\elementheight,
 element %must be last to overwrite other settings
 }}
 
 %source
 \tikzset{source/.style={
-regular polygon,regular polygon sides=3, shape border rotate=30,
+%regular polygon,regular polygon sides=3, shape border rotate=30,
 bottom color=gray, 
-minimum height=8cm,
 element %must be last to overwrite other settings
 }}
 
@@ -482,7 +473,6 @@ element %must be last to overwrite other settings
 \tikzset{screen/.style={
 forbidden sign,
 bottom color=white, 
-minimum height=4cm,
 element %must be last to overwrite other settings
 }}
 
@@ -497,12 +487,7 @@ fade  %must be last to overwrite other settings
 
 %drift
 \tikzset{drift/.style={
-%scale=0.1*\scal,
-%rectangle,
-draw=black,
-%anchor=west,
-%minimum height=4cm,
-%rotate=\angle,
+line width=0.8pt*10*\scal, draw=black,
 fade  %must be last to overwrite other settings
 }}
 
