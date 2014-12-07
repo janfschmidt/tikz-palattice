@@ -37,7 +37,8 @@
 \pgfmathsetlength{\savelabeldist}{\scal*20cm*0.35};
 \pgfmathtruncatemacro{\i}{0};
 \pgfmathtruncatemacro{\j}{0};
-\pgfmathsetmacro{\angle}{0};
+%\pgfmathsetmacro{\angle}{0};
+\global\def\angle{0}
 \node (nodeeast0) [start] at (0,0) {};
 \coordinate (east\j) at (nodeeast\j.center); %\declarecoords ("east" only
 %for legend: does element occur?
@@ -57,7 +58,7 @@
 
 
 %---general settings---
-\newcommand{\rotate}[1]{\pgfmathsetmacro{\angle}{\angle+#1};}
+\newcommand{\rotate}[1]{\pgfmathparse{\angle+#1} \global\let\angle\pgfmathresult}
 \newcommand{\start}[1]{%
   \tikzset{x=2cm,y=2cm}
   \node (nodeeast0) [start] at #1 {};
@@ -65,7 +66,6 @@
   \tikzset{x=1cm,y=1cm}
 }
 \newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (#2\i);}
-%\newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (\i.#2);}
 
 
 
@@ -272,6 +272,7 @@
 \pgfmathsetlength{\ri}{\radius-0.5*\elementheight}
 \pgfmathsetlength{\ra}{\radius+0.5*\elementheight}
 
+% draw bend beampipe
 \draw[drift,rotate=\angle] (east\i) arc (-90:(-90+\winkel/2):\radius) node[] (nodecenter\j) {};
 \draw[drift,rotate=\angle] (nodecenter\j) arc ((-90+\winkel/2):(-90+\winkel):\radius) node[] (nodeeast\j) {};
 
@@ -355,33 +356,41 @@
 %solenoid
 \newcommandx{\solenoid}[3][3=0.2]{%
 \jinc
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\pgfmathsetlength{\elementheight}{#3*20cm};
-\node (node\j) [solenoid, minimum width=#2*20cm] at (east\i) {};
+\rectangleelement{#1}{#2}{#3}{solenoid}
 \declarecoords
-\elementlabel{#1};
+\elementlabel{#1}
 \iinc
 \setboolean{sol}{true}
 }
 
 %source
-\newcommand{\source}[1]{%
+\newcommandx{\source}[3][3=0.5]{%
 \jinc
-\pgfmathsetlength{\corners}{1mm};
-\node (node\j) [source, minimum width=10cm] at (east\i) {};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
+\pgfmathsetlength{\elementheight}{#3*20cm*\scal};
+\draw[drift] (east\i) --++ (\angle:#2*10cm*\scal) node[] (nodecenter\j) {} --++
+(\angle:#2*10cm*\scal) node[] (nodeeast\j) {};
+\draw[source] (east\i) --++ (0,\elementheight/2) --++ (#2*20cm*\scal,-\elementheight/2)
+--++ (-#2*20cm*\scal,-\elementheight/2) --++ (0,\elementheight/2);
 \declarecoords
-\elementlabel{#1};
+\elementlabel{#1}
 \iinc
 \setboolean{sourc}{true}
 }
 
 %screen
-\newcommand{\screen}[1]{%
+\newcommandx{\screen}[2][2=0.2]{%
 \jinc
-\pgfmathsetlength{\corners}{0mm};
-\node (node\j) [screen, minimum width=4cm] at (east\i) {};
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
+\newdimen\radius
+\pgfmathsetlength{\radius}{#2*20cm*\scal/2};
+\draw[drift] (east\i) --++ (\angle:#2*10cm*\scal) node[] (nodecenter\j) {} --++
+(\angle:#2*10cm*\scal) node[] (nodeeast\j) {};
+\draw[screen] (nodecenter\j.center) circle (\radius);
+\draw[screen] (nodecenter\j.center) --++ (45:\radius);
+\draw[screen] (nodecenter\j.center) --++ (45+180:\radius);
 \declarecoords
-\elementlabel{#1};
+\elementlabel{#1}
 \iinc
 \setboolean{scree}{true}
 }
@@ -389,9 +398,11 @@
 %valve
 \newcommand{\valve}[1]{%
 \updatemarkerlabelanchor
-\draw [valve] (east\i) --+ (\angle-90:1.4cm*\scal); % half length (=> 10cm)
-\draw [valve] (east\i) --+ (\angle+90:1.4cm*\scal);
+\jinc
+\rectangleelement{#1}{0.05}{0.15}{valve}
+\declarecoords
 \draw [draw=none] (east\i) --+ (\angle\marklabelang:\labeldist) node[label] {#1};
+\iinc
 }
 
 
@@ -466,23 +477,22 @@ element %must be last to overwrite other settings
 
 %source
 \tikzset{source/.style={
-%regular polygon,regular polygon sides=3, shape border rotate=30,
 bottom color=gray, 
 element %must be last to overwrite other settings
 }}
 
 %screen
 \tikzset{screen/.style={
-forbidden sign,
 bottom color=white, 
 element %must be last to overwrite other settings
 }}
 
 %valve
 \tikzset{valve/.style={
-gray, ultra thick,
-rotate=\labelrot,
-fade  %must be last to overwrite other settings
+bottom color=gray, 
+element,
+top color=gray,
+draw=none
 }}
 
 
@@ -505,7 +515,6 @@ fade  %must be last to overwrite other settings
 %marker (line)
 \tikzset{marker/.style={
 red, densely dashed,
-rotate=\labelrot,
 fade  %must be last to overwrite other settings
 }}
 
