@@ -1,6 +1,6 @@
 #+TITLE:     TeXlattice - draw accelerator lattices with LaTeX\\\textit{using pgf/tikz}
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
-#+DATE:      v1.2 (\today)
+#+DATE:      v2.0 (\today)
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
 #+LaTeX_CLASS_OPTIONS:[colorlinks]
 \clearpage
@@ -27,13 +27,11 @@ Otherwise read the documentation of your LaTeX distribution.
   - ifthen
   - xargs
 * What is missing?
-  - The look of the elements can definitely be improved. Feel free to do it! The only constraint is that it must be drawn as a tikz node. Ok, and one has to adjust the bounding box and center the manet in it...
-  - More element types can be added easily - please report what you need!
+  - The look of the elements can be improved. Feel free to do it!
+  - More element types can be added
+  - ...
 * Known issues
-  - The fade environment usually sets all colors to gray (in addition to reducing opacity).
-    This does not work if a color was set by \verb+\setelementcolor+, \verb+\setdriftcolor+ or \verb+\setmarkercolor+
-  - the dipoles border thickness depends on the rotation angle. This has something to do with drawing it as path and not as node to realize the curved shapes.
-  - the sector dipoles have a to large bounding box.
+  - known issues have been fixed with v2.0, but I am sure there are more...
 * lattice environment
 To draw a lattice just add
 #+BEGIN_EXAMPLE
@@ -80,10 +78,12 @@ the lattice environment has 2 optional arguments:
   - environment \texttt{labeldistance\{distance/m\}} sets distance of text labels to element center for all elements within this environment (default is 0.35)
   - \verb+\setlabelfont{fontsize}+ text label fontsize (default is \verb+\normalsize+)
 *** Colors
-  - \verb+\setdriftcolor{color (default black)}+ for all following drifts
-  - \verb+\setmarkercolor{color (default red)}+ for all following markers
-  - \verb+\setelementcolor{type}{color (default depends on type)}+ define color for one element-type
-  - environment \texttt{fade\{opacity (default: 0.25)\}} sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations.
+The color can be changed at any point in the lattice. A setting is valid until the next color setting comand.
+  - \verb+\setlinecolor{type}{color}+ for type drift and marker.
+  - \verb+\setelementcolor{type}{color}+ for all element types.
+  - \verb+\resetlinecolor{type}+ reset to default color.
+  - \verb+\resetelementcolor{type}+ reset to default color.
+  - environment \texttt{fade\{opacity (default: 0.25)\}} sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations. Also sets all colors to gray.
     This can also be used to completely hide regions by setting opacity to zero.
 ** Access lattice coordinates
    You can use element coordinates to draw anything you want using pgf/tikz. You can even connect lattices to draw injection/extraction or a complete accelerator facility.
@@ -96,7 +96,5 @@ the lattice environment has 2 optional arguments:
   - lengths are set in meter, so you write {1.32} for 1.32m.
   - beamline with angle 0 goes to the right, positive angles bend counter clockwise.
   - picture scale: for lattice scale=1 an element of 1m length is plotted with 2cm length
-  - minimum element length 0.01m (drifts can be shorter)
-  - maximum drift length <2.9m (just add a second drift to get a longer one)
   - maximum rule length < 3x29m
   - if you refer to a coordinate from another lattice (another tikzpicture) you have to compile twice

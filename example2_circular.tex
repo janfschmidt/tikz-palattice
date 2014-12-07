@@ -7,28 +7,29 @@
 \begin{document}
 
 \begin{lattice}
-  %\setdriftcolor{red}
+  \setlinecolor{drift}{red}
 
-  \drift{1}[drift1]
-  % \dipole{M1}{2}{45}[r]
-  % \drift{1}
-  % \dipole{M2}{2}{45}[s]
-  % \drift{1}
-  % \dipole{M3}{2}{45}
-  % \drift{1}
-  % \dipole{M4}{2}{45}
-  % \drift{1}
+  \drift{1}
+  \dipole{M1}{2}{45}[r]
+  \drift{1}
+  \dipole{M2}{2}{45}[br]
+  \drift{1}
+  \setelementcolor{dipole}{green!50!black}
+  \dipole{M3}{2}{45}
+  \drift{1}
+  \dipole{M4}{2}{45}
+  \drift{1}
 
-  % \setelementcolor{dipole}{green!50!black}
-  % \dipole{M5}{2}{45}
-  % \drift{1}
-  % \dipole{M6}{2}{45}
-  % \drift{1}
-  % \dipole{M7}{2}{45}
-  % \drift{1}
-  % \dipole{M8}{2}{45}
+  \dipole{M5}{2}{45}
+  \drift{1}
+  \dipole{M6}{2}{45}
+  \drift{1}
+  \resetelementcolor{dipole}
+  \dipole{M7}{2}{45}
+  \drift{1}
+  \dipole{M8}{2}{45}
 
-  %\drawrule{(1,-0.5)}
+  \drawrule{(1,-0.5)}
 \end{lattice}
 
 \end{document}

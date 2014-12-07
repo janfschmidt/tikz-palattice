@@ -49,6 +49,7 @@
 \newboolean{cav} \setboolean{cav}{false}
 \newboolean{sourc} \setboolean{sourc}{false}
 \newboolean{scree} \setboolean{scree}{false}
+\newboolean{valv} \setboolean{valv}{false}
 }{%
 %end
 \endtikzpicture
@@ -69,16 +70,17 @@
 
 
 %---color settings---
-\newcommand{\setelementcolor}[2]{\tikzset{#1/.append style={bottom color=#2}}}
-\newcommand{\setdriftcolor}[1]{\tikzset{drift/.append style={#1}}}
-\newcommand{\setmarkercolor}[1]{\tikzset{marker/.append style={#1}}}
+\newcommand{\setelementcolor}[2]{\tikzset{#1/.append style={bottom color=#2, fadeElement}}}
+\newcommand{\resetelementcolor}[1]{\tikzset{#1/.style={default_#1}}}
+\newcommand{\setlinecolor}[2]{\tikzset{#1/.append style={#2, fade}}}
+\newcommand{\resetlinecolor}[1]{\tikzset{#1/.style={default_#1}}}
 
 \newenvironmentx{fade}[1][1=0.25]{%
 \tikzset{fade/.style={opacity=#1, color=gray}}
-\tikzset{fadeElement/.style={opacity=#1, color=gray,bottom color=gray}}
+\tikzset{fadeElement/.style={fade, color=gray,bottom color=gray}}
 }{%
 \tikzset{fade/.style={opacity=1.0}}
-\tikzset{fadeElement/.style={opacity=1.0}}
+\tikzset{fadeElement/.style={fade}}
 }
 
 
@@ -146,30 +148,42 @@
 \coordinate (legendstart) at ($(0,0)!\scal*20!#1$);
 \pgfmathsetmacro{\savescal}{\scal}
 \pgfmathsetmacro{\saveang}{\angle}
-\pgfmathsetmacro{\scal}{0.05*#2}
+\pgfmathsetmacro{\scal}{0.05}
 \pgfmathsetmacro{\angle}{-90}
 \def\h{0.4}
 \def\l{0.3}
 \def\dist{0.18}
 \turnlabels
-\setdriftcolor{draw=none}
+\tikzset{drift/.append style={draw=none}}
 \savecoordinate{_here_}
 \coordinate (east\j) at (legendstart);
 \coordinate (legendstart') at ($(legendstart) + (-\h*\scal*15,\dist*\scal*15)$);
-\edef\points{(legendstart')}
-\ifthenelse{\boolean{dip}}{\rotate{-1}\dipole{Dipole}{\l}{2}[s][\h]\rotate{-1}\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
-\ifthenelse{\boolean{quad}}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
-\ifthenelse{\boolean{sext}}{\sextupole{Sextupole}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
-\ifthenelse{\boolean{kick}}{\kicker{Kicker}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
-\ifthenelse{\boolean{cav}}{\cavity{Cavity}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
-\ifthenelse{\boolean{sol}}{\solenoid{Solenoid}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
-\ifthenelse{\boolean{sourc}}{\source{Source}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
-\ifthenelse{\boolean{scree}}{\screen{Screen}[\l]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
-\node[draw=black, rounded corners, fit=\points] {};
+\coordinate (legendstart'') at ($(legendstart) + (\h*\scal*15,\dist*\scal*15)$);
+\edef\points{(legendstart') (legendstart'')}
+\begin{scope}[scale=#2, every node/.style={scale=#2}]
+  \ifthenelse{\boolean{dip}}{\rotate{-1}\dipole{Dipole}{\l}{2}[s][\h]\rotate{-1}\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}
+  \ifthenelse{\boolean{quad}}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}
+  \ifthenelse{\boolean{sext}}{\sextupole{Sextupole}{\l}[\h]\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}
+  \ifthenelse{\boolean{kick}}{\kicker{Kicker}{\l}[\h]\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}
+  \ifthenelse{\boolean{cav}}{\cavity{Cavity}{\l}[\h]\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}
+  \ifthenelse{\boolean{sol}}{\solenoid{Solenoid}{\l}[\h]\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}
+  \ifthenelse{\boolean{sourc}}{\source{Source}{\l}[\h]\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}
+  \ifthenelse{\boolean{scree}}{\screen{Screen}[\l]\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}
+  \ifthenelse{\boolean{valv}}{\drift{\dist}\turnlabels\valve{Valve}\turnlabels\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{} \node[draw=black, rounded corners, fit=\points] {};
+\end{scope}
 \pgfmathsetmacro{\scal}{\savescal}
 \pgfmathsetmacro{\angle}{\saveang}
+\tikzset{drift/.append style={draw=black}}
 \turnlabels
-\setdriftcolor{draw=black}
 \coordinate (east\j) at (_here_);
 }
 
@@ -183,20 +197,12 @@
  \setboolean{cav}{true}
  \setboolean{sourc}{true}
  \setboolean{scree}{true}
+ \setboolean{valv}{true}
  \legend{#1}[#2]
 }
 
 
 %---commands for internal use---
-% \newcommand{\nextlegendentry}[2]{%
-%   \jinc
-%   \draw[draw=none] (east\i) --++ (180:#1) --++ (-90:#2) node[] (nodeeast\j) {};
-% \declarecoords
-% \iinc;
-% }
-% \newcommand{\legendentry}[3]{\node [#1,minimum width=2cm,scale=#3] {}; \pgfmatrixnextcell
-%   \node[label,scale=#3] {#2};\\[2pt]}
-
 \newcommand{\updatelabelanchor}{%
   \pgfmathtruncatemacro\iang{\angle}
   % handle angle not in [0,360] ([-720,+1080] handled)
@@ -288,22 +294,24 @@
 \draw[drift,rotate=\angle] (east\i) arc (-90:(-90+\winkel/2):\radius) node[] (nodecenter\j) {};
 \draw[drift,rotate=\angle] (nodecenter\j) arc ((-90+\winkel/2):(-90+\winkel):\radius) node[] (nodeeast\j) {};
 
-\angleinc{0.5*#3}
 % [r]ectangle
 \ifthenelse{\equal{#4}{r}}{
+\angleinc{0.5*#3}
 \newdimen\straightlength
 \pgfmathsetlength{\straightlength}{sin(\winkel/2)*2*\radius} % sekante des kreisbogens
-  \draw[dipole,rotate=\angle] (east\i) --++ (0,-\elementheight/2) --++ (\straightlength,0) --++
+  \draw[dipole] (east\i) --++ (0,-\elementheight/2) --++ (\straightlength,0) --++
   (0,\elementheight) --++ (-\straightlength,0) --++ (0,-\elementheight/2);
 }{
 % [s]ector
   \ifthenelse{\equal{#4}{s}}{%
-    \draw[dipole, rotate=\angle-0.5*\winkel] (east\i) -- ++
+    \draw[dipole] (east\i) -- ++
     (0,-\elementheight/2) arc (-90:(-90+\winkel):\ra) -- ++(\winkel+90:\elementheight) arc
     ((-90+\winkel):-90:\ri) --++ (0,-\elementheight);
+    \angleinc{0.5*\winkel}
   }{
  % [b]end[r]ectangle
-    \draw[dipole, rotate=\angle] (east\i) -- ++
+    \angleinc{0.5*#3}
+    \draw[dipole] (east\i) -- ++
     (0,-\elementheight/2) arc (-90-\winkel/2:-90+\winkel/2:\radius) -- ++(0,\elementheight) arc
     (-90+\winkel/2:-90-\winkel/2:\radius) -- cycle;
   }
@@ -312,7 +320,7 @@
 \elementlabel{#1};
 \iinc
 \setboolean{dip}{true}
-\angleinc{0.5*#3}
+\angleinc{0.5*\winkel}
 }
 
 %rectangle-element (used for quad,sext,kicker,cavity,...)
@@ -409,12 +417,14 @@
 
 %valve
 \newcommand{\valve}[1]{%
-\updatemarkerlabelanchor
+\turnlabels
 \jinc
 \rectangleelement{#1}{0.05}{0.15}{valve}
 \declarecoords
-\draw [draw=none] (east\i) --+ (\angle\marklabelang:\labeldist) node[label] {#1};
+\elementlabel{#1}
 \iinc
+\setboolean{valv}{true}
+\turnlabels
 }
 
 
@@ -435,7 +445,7 @@
 opacity=1
 }}
 \tikzset{fadeElement/.style={
-opacity=1
+fade
 }}
 
 %element (for all, except drift)
@@ -449,70 +459,85 @@ fadeElement  %must be last to overwrite other settings
 }}
 
 %dipole
-\tikzset{dipole/.style={
-rounded corners=\corners,
-line width=0.8pt*10*\scal, draw=black,
-top color=white,
+\tikzset{default_dipole/.style={
 bottom color=blue,
-fadeElement
+element
+},
+dipole/.style={default_dipole
 }}
 
 %quadrupole
-\tikzset{quadrupole/.style={
+\tikzset{default_quadrupole/.style={
 bottom color=yellow, 
-element %must be last to overwrite other settings
+element
+},
+quadrupole/.style={default_quadrupole
 }}
 
 %sextupole
-\tikzset{sextupole/.style={
+\tikzset{default_sextupole/.style={
 bottom color=violet!70!black, 
-element %must be last to overwrite other settings
+element
+},
+sextupole/.style={default_sextupole
 }}
 
 %kicker
-\tikzset{kicker/.style={
+\tikzset{default_kicker/.style={
 bottom color=orange!90!black, 
-element %must be last to overwrite other settings
+element
+},
+kicker/.style={default_kicker
 }}
 
 %cavity
-\tikzset{cavity/.style={
+\tikzset{default_cavity/.style={
 bottom color=brown, 
-element %must be last to overwrite other settings
+element
+},
+cavity/.style={default_cavity
 }}
 
 %solenoid
-\tikzset{solenoid/.style={
+\tikzset{default_solenoid/.style={
 bottom color=green!70!black, 
-element %must be last to overwrite other settings
+element
+},
+solenoid/.style={default_solenoid
 }}
 
 %source
-\tikzset{source/.style={
+\tikzset{default_source/.style={
 bottom color=gray, 
-element %must be last to overwrite other settings
-}}
+element
+},
+source/.style={default_source}}
 
 %screen
-\tikzset{screen/.style={
+\tikzset{default_screen/.style={
 bottom color=white, 
-element %must be last to overwrite other settings
+element
+},
+screen/.style={default_screen
 }}
 
 %valve
-\tikzset{valve/.style={
+\tikzset{default_valve/.style={
 bottom color=gray, 
 element,
 top color=gray,
 draw=none
-}}
+},
+valve/.style={default_valve}}
 
 
 
 %drift
-\tikzset{drift/.style={
+\tikzset{default_drift/.style={
 line width=0.8pt*10*\scal, draw=black,
 fade  %must be last to overwrite other settings
+},
+drift/.style={default_drift
 }}
 
 %text label
@@ -525,9 +550,11 @@ fade  %must be last to overwrite other settings
 }}
 
 %marker (line)
-\tikzset{marker/.style={
+\tikzset{default_marker/.style={
 red, densely dashed,
 fade  %must be last to overwrite other settings
+},
+marker/.style={default_marker
 }}
 
 %rule
