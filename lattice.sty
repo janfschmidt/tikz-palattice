@@ -11,7 +11,7 @@
 \RequirePackage{ifthen}
 \RequirePackage{siunitx}
 \RequirePackage{xargs}
-\usetikzlibrary{shapes,calc,positioning}
+\usetikzlibrary{calc,positioning,fit}
 \usetikzlibrary{scopes}
 
 
@@ -144,30 +144,33 @@
 %legend (types that occured in the lattice before this command)
 \newcommandx{\legend}[2][2=1]{%
 \coordinate (legendstart) at ($(0,0)!\scal*20!#1$);
-\pgfmathsetmacro{\savescal}{\scal};
-\pgfmathsetmacro{\saveang}{\angle};
-\pgfmathsetmacro{\scal}{0.05};
-\pgfmathsetmacro{\angle}{-90};
+\pgfmathsetmacro{\savescal}{\scal}
+\pgfmathsetmacro{\saveang}{\angle}
+\pgfmathsetmacro{\scal}{0.05*#2}
+\pgfmathsetmacro{\angle}{-90}
 \def\h{0.4}
 \def\l{0.3}
-\def\dist{0.15}
-\def\labelanchor{west};
+\def\dist{0.18}
 \turnlabels
 \setdriftcolor{draw=none}
 \savecoordinate{_here_}
 \coordinate (east\j) at (legendstart);
-\ifthenelse{\boolean{dip}}{\rotate{-1}\dipole{Dipole}{\l}{2}[s][\h]\rotate{-1}\drift{\dist}}{}
-\ifthenelse{\boolean{quad}}{\quadrupole{Quadrupole}{\l}[\h]\drift{\dist}}{}
-\ifthenelse{\boolean{sext}}{\sextupole{Sextupole}{\l}[\h]\drift{\dist}}{}
-\ifthenelse{\boolean{kick}}{\kicker{Kicker}{\l}[\h]\drift{\dist}}{}
-\ifthenelse{\boolean{cav}}{\cavity{Cavity}{\l}[\h]\drift{\dist}}{}
-\ifthenelse{\boolean{sol}}{\solenoid{Solenoid}{\l}[\h]\drift{\dist}}{}
-\ifthenelse{\boolean{sourc}}{\source{Source}{\l}[\h]\drift{\dist}}{}
-\ifthenelse{\boolean{scree}}{\screen{Screen}[\l]\drift{\dist}}{}
-\pgfmathsetmacro{\scal}{\savescal};
-\pgfmathsetmacro{\angle}{\saveang};
-\coordinate (east\j) at (_here_);
+\coordinate (legendstart') at ($(legendstart) + (-\h*\scal*15,\dist*\scal*15)$);
+\edef\points{(legendstart')}
+\ifthenelse{\boolean{dip}}{\rotate{-1}\dipole{Dipole}{\l}{2}[s][\h]\rotate{-1}\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
+\ifthenelse{\boolean{quad}}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
+\ifthenelse{\boolean{sext}}{\sextupole{Sextupole}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
+\ifthenelse{\boolean{kick}}{\kicker{Kicker}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
+\ifthenelse{\boolean{cav}}{\cavity{Cavity}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
+\ifthenelse{\boolean{sol}}{\solenoid{Solenoid}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
+\ifthenelse{\boolean{sourc}}{\source{Source}{\l}[\h]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
+\ifthenelse{\boolean{scree}}{\screen{Screen}[\l]\xdef\points{(elementlabel\j) \points}\drift{\dist}}{}
+\node[draw=black, rounded corners, fit=\points] {};
+\pgfmathsetmacro{\scal}{\savescal}
+\pgfmathsetmacro{\angle}{\saveang}
+\turnlabels
 \setdriftcolor{draw=black}
+\coordinate (east\j) at (_here_);
 }
 
 %complete legend (all types)
@@ -185,14 +188,14 @@
 
 
 %---commands for internal use---
-\newcommand{\nextlegendentry}[2]{%
-  \jinc
-  \draw[draw=none] (east\i) --++ (180:#1) --++ (-90:#2) node[] (nodeeast\j) {};
-\declarecoords
-\iinc;
-}
-\newcommand{\legendentry}[3]{\node [#1,minimum width=2cm,scale=#3] {}; \pgfmatrixnextcell
-  \node[label,scale=#3] {#2};\\[2pt]}
+% \newcommand{\nextlegendentry}[2]{%
+%   \jinc
+%   \draw[draw=none] (east\i) --++ (180:#1) --++ (-90:#2) node[] (nodeeast\j) {};
+% \declarecoords
+% \iinc;
+% }
+% \newcommand{\legendentry}[3]{\node [#1,minimum width=2cm,scale=#3] {}; \pgfmatrixnextcell
+%   \node[label,scale=#3] {#2};\\[2pt]}
 
 \newcommand{\updatelabelanchor}{%
   \pgfmathtruncatemacro\iang{\angle}
@@ -245,7 +248,7 @@
 
 \newcommand{\elementlabel}[1]{%
   \updatelabelanchor
-  \path [draw=none] (center\j) --+ (\angle\labelang:\labeldist) node[label] {#1};
+  \path [draw=none] (center\j) --+ (\angle\labelang:\labeldist) node[label] (elementlabel\j) {#1};
 }
 
 \newcommand{\jinc}{\pgfmathparse{int(\i+1)} \global\let\j\pgfmathresult}
