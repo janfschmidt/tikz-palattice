@@ -178,8 +178,9 @@
   \ifthenelse{\boolean{scree}}{\screen{Screen}[\l]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
   \ifthenelse{\boolean{valv}}{\drift{\dist}\turnlabels\valve{Valve}\turnlabels\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{} \node[draw=black, rounded corners, fit=\points] {};
+      \points}\drift{\dist}}{}
 \end{scope}
+\node[draw=black, rounded corners, fit=\points] {};
 \pgfmathsetmacro{\scal}{\savescal}
 \pgfmathsetmacro{\angle}{\saveang}
 \tikzset{drift/.append style={draw=black}}

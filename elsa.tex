@@ -1,24 +1,44 @@
 \documentclass[a0paper,landscape]{scrartcl}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[scale=0.95]{geometry}
 \usepackage{lattice} % by Jan Schmidt <schmidt@physik.uni-bonn.de>
 
 \def\scale{0.5}
 
 \begin{document}
+\thispagestyle{empty}
 
 \begin{figure}
-%Booster
+\centering
+
+%LINAC2
 \begin{lattice}[][\scale]
+\drawrule{(50,-8)}[5]
+\rotate{180}
+\start{(0,0)}
+\source{PolQ}{1}
+\drift{3}
+\cavity{MUELL}{3}
+\drift{2}
+\dipole{M90}{0.2}{-90}[r][0.2]
+\drift{15}
+\savecoordinate{BoosterInj}
+\begin{fade}[0]
+  \drift{30}
+\end{fade}
+\end{lattice}
+
+%Booster
+\begin{lattice}[overlay][\scale]
 \rotate{-90}
 \setelementcolor{dipole}{green!50!black}
 \turnlabels
-\start{(0,0)}
+\start{(BoosterInj)}
 \marker{Start}[0.5]
 
 \begin{labeldistance}{0.5}
 \turnlabels
-\drift{0.46725}
 \kicker{INJSEPT}{0.88}
 \savecoordinate{links}
 \drift{0.44725}
@@ -73,6 +93,7 @@
 \dipole{M11}{4.0056}{30}[s][0.6]
 \drift{1.7945}
 \dipole{M12}{4.0056}{30}[s][0.6]
+\drift{0.46725}
 \end{labeldistance}
 
 \path (links) -- (rechts) node[midway,font=\Huge,scale=2,align=center] {Booster Synchrotron\\{\Large \SIrange[range-units=single]{0.5}{1.2}{\GeV}}};
@@ -91,7 +112,6 @@
 % Stretcherring
 \begin{lattice}[overlay][\scale]
 \start{(ELSA_inject)}
-\drawrule{(0,-5)}[5]
 
 \turnlabels
 \rotate{-60}
@@ -302,7 +322,10 @@
 \dipole{M22}{2.875}{15}
 \drift{0.30115}
 \quadrupole{QD23}{0.4997}
-\drift{1.46115}
+\drift{0.5}
+\savecoordinate{ELSA_extract}
+\drift{0.5}
+\drift{0.46115}
 \dipole{M23}{2.875}{15}
 \drift{0.30165}
 \quadrupole{QF24}{0.4997}
@@ -353,12 +376,38 @@
 \drift{1.0}
 
 % legend shows all element types occuring before this commmand
-\legend{(34,38)}[1.5]
+\turnlabels
+\legend{(34,55)}[1.5]
 
 %title - aligned between M29 and QF14 via \savecoordinate
 \draw[draw=none] (links) -- (rechts) node[midway, font=\Huge,scale=2, align=center]
 {ELSA Stretcherring\\{\Large\SIrange[range-units=single]{0.5}{3.2}{\GeV}}};
 \end{lattice}
+
+
+%Extraktion + CB
+\begin{lattice}[overlay][\scale]
+  \rotate{185}
+  \start{(ELSA_extract)}
+  \drift{2}
+  \solenoid{Solenoid}{2}
+  \drift{1}
+  \dipole{MB1}{0.6}{15}[r][0.8]
+  \savecoordinate{MB1}
+  \drift{2}
+  \dipole{MB3}{0.4}{5}[r][0.6]
+  \drift{10}
+\end{lattice}
+
+%BGO
+\begin{lattice}[overlay][\scale]
+  \rotate{175}
+  \start{(MB1)}
+  \drift{1}
+  \dipole{MB2}{0.4}{-5}[r][0.6]
+  \drift{7}
+\end{lattice}
+
 \end{figure}
 
 \end{document}
