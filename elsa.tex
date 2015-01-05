@@ -3,9 +3,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage[scale=0.95]{geometry}
 \usepackage{lattice} % by Jan Schmidt <schmidt@physik.uni-bonn.de>
+\sisetup{range-phrase=\,-\,}
 
 \def\scale{0.5}
-
+\newcommand{\latticeconfig}{\setlinecolor{drift}{red!70!black}}
 \begin{document}
 \thispagestyle{empty}
 
@@ -14,110 +15,230 @@
 
 %LINAC2
 \begin{lattice}[][\scale]
-\drawrule{(50,-8)}[5]
+%lengths and positions not precise!
+\def\quadl{0.2}
+\latticeconfig
+\drawrule{(58,-10)}[5][0.1]
 \rotate{180}
+\turnlabels
 \start{(0,0)}
 \source{PolQ}{1}
-\drift{3}
-\cavity{MUELL}{3}
-\drift{2}
-\dipole{M90}{0.2}{-90}[r][0.2]
-\drift{15}
-\savecoordinate{BoosterInj}
+\drift{2.5}
+\drift{0.5} % wand
+\drift{1}
+\savecoordinate{L2label}
+\cavity{MUELL}{3.85}
+\drift{0.35}
+\quadrupole{Q1}{\quadl}
+\drift{0.5}
+\quadrupole{Q2}{\quadl}
+\drift{0.35}
+\quadrupole{Q3}{\quadl}
+\drift{0.3}
+\dipole{M90}{0.5}{-90}
+\drift{0.3}
+\quadrupole{Q4}{\quadl}
+\drift{0.75}
+\quadrupole{Q5}{\quadl}
+\drift{1.9}
+\quadrupole{Q6}{\quadl}
+\drift{3.55}
+\quadrupole{Q7}{\quadl}
+\drift{2.1}
+\kicker{KD}{\quadl}
+\drift{2.1}
+\kicker{}{0.4} % M3
+\savecoordinate{M3}[center]
+\drift{0.4}
+\quadrupole{}{\quadl}
+\drift{3.5}
+\savecoordinate{BoosterInj}[center]
 \begin{fade}[0]
   \drift{30}
 \end{fade}
+%text
+\node[font=\huge,scale=2, align=center, anchor=north, yshift=-1cm] at (L2label)
+{LINAC 2\\{\Large \SI{26}{\MeV}}};
+\end{lattice}
+
+%LINAC1
+\begin{lattice}[overlay][\scale]
+%lattice backwards to set start at M3
+%lengths and positions not precise!
+\def\quadl{0.2}
+\latticeconfig
+\rotate{180}
+\start{(M3)}
+\drift{0.44}
+\turnlabels
+\quadrupole{Q6}{\quadl}
+\turnlabels
+\drift{0.2}
+\quadrupole{Q5}{\quadl}
+\drift{0.35}
+\dipole{M2}{0.3}{45}
+\drift{1.1}
+\dipole{M1}{0.3}{45}
+\savecoordinate{M1}[center]
+\drift{0.58}
+\quadrupole{Q4}{\quadl}
+\drift{0.36}
+\quadrupole{Q3}{\quadl}
+\drift{0.58}
+\quadrupole{Q2}{\quadl}
+\drift{0.38}
+\cavity{}{0.67}[0.3] %EKS
+\drift{0.1}
+\dipole{EKS}{0.2}{0}
+\rotate{60}
+\drift{0.15}
+\rotate{-60}
+\dipole{}{0.2}{0}
+\rotate{-60}
+\drift{0.15}
+\rotate{60}
+\dipole{}{0.2}{0}
+\drift{0.07}
+\quadrupole{}{\quadl}
+\drift{0.13}
+\quadrupole{}{\quadl}
+\drift{0.16}
+\savecoordinate{L1label}
+\cavity{}{2.73}
+\drift{0.35}
+\dipole{}{0.35}{0}
+\drift{0.17}
+\drift{0.9}
+\rotate{180}
+\source{}{0.9}
+%text
+\node[font=\huge,scale=2, align=center, xshift=-1cm, anchor=east] at (L1label)
+{LINAC 1\\{\Large \SI{20}{\MeV}}};
+\end{lattice}
+
+%LINAC1-Bestrahlungsplatz
+\begin{lattice}[overlay][\scale]
+\def\quadl{0.2}
+\latticeconfig
+\start{(M1)}
+\rotate{90}
+\drift{0.37}
+\quadrupole{}{\quadl}
+\drift{0.2}
+\quadrupole{}{\quadl}
+\drift{0.7}
+\drift{0.25}
+\savecoordinate{bestrahlung}
+\def\bestrl{0.25}
+\drift{\bestrl}
+\draw [fill=none] (bestrahlung) +(-\bestrl,-\bestrl) rectangle +(\bestrl,\bestrl);
 \end{lattice}
 
 %Booster
 \begin{lattice}[overlay][\scale]
-\rotate{-90}
+\latticeconfig
+\rotate{90}
 \setelementcolor{dipole}{green!50!black}
 \turnlabels
 \start{(BoosterInj)}
-\marker{Start}[0.5]
+%\marker{Start}[0.5]
 
 \begin{labeldistance}{0.5}
 \turnlabels
 \kicker{INJSEPT}{0.88}
 \savecoordinate{links}
 \drift{0.44725}
-\dipole{M1}{4.0056}{30}[s][0.6]
+\dipole{M1}{4.0056}{-30}[s][0.6]
 \drift{1.7945}
-\dipole{M2}{4.0056}{30}[s][0.6]
+\dipole{M2}{4.0056}{-30}[s][0.6]
 \drift{0.35975}
 \kicker{B1}{0.3875}
 \drift{0.3}
 \kicker{K1}{0.3875}
 \drift{0.35975}
-\dipole{M3}{4.0056}{30}[s][0.6]
+\dipole{M3}{4.0056}{-30}[s][0.6]
 \drift{0.35975}
 \kicker{B2}{0.3875}
 \drift{0.3}
 \kicker{S1}{0.3875}
 \drift{0.35975}
-\dipole{M4}{4.0056}{30}[s][0.6]
+\dipole{M4}{4.0056}{-30}[s][0.6]
 \drift{0.4295}
 \kicker{VC1}{0.13}
 \drift{0.245}
 \kicker{S2}{0.63}
 \drift{0.36}
-\dipole{M5}{4.0056}{30}[s][0.6]
+\dipole{M5}{4.0056}{-30}[s][0.6]
 \drift{0.34225}
 \kicker{S3}{1.08}
+\savecoordinate{Booster_extract}[center]
 \drift{0.37225}
-\dipole{M6}{4.0056}{30}[s][0.6]
+\dipole{M6}{4.0056}{-30}[s][0.6]
 \drift{0.38725}
 \kicker{VC2}{0.13}
 \drift{0.315}
 \kicker{B3}{0.6}
 \savecoordinate{rechts}
 \drift{0.36225}
-\dipole{M7}{4.0056}{30}[s][0.6]
+\dipole{M7}{4.0056}{-30}[s][0.6]
 \drift{0.49225}
 \kicker{VC3}{0.13}
 \drift{0.295}
-\savecoordinate{Booster_extract}
 \kicker{K2}{0.45}
 \drift{0.42725}
-\dipole{M8}{4.0056}{30}[s][0.6]
+\dipole{M8}{4.0056}{-30}[s][0.6]
 \drift{0.86225}
 \kicker{K3}{0.45}
 \drift{0.48225}
-\dipole{M9}{4.0056}{30}[s][0.6]
+\dipole{M9}{4.0056}{-30}[s][0.6]
 \drift{0.44725}
 \cavity{DORIS}{0.9}
 \drift{0.44725}
-\dipole{M10}{4.0056}{30}[s][0.6]
+\dipole{M10}{4.0056}{-30}[s][0.6]
 \drift{1.7945}
-\dipole{M11}{4.0056}{30}[s][0.6]
+\dipole{M11}{4.0056}{-30}[s][0.6]
 \drift{1.7945}
-\dipole{M12}{4.0056}{30}[s][0.6]
+\dipole{M12}{4.0056}{-30}[s][0.6]
 \drift{0.46725}
 \end{labeldistance}
 
-\path (links) -- (rechts) node[midway,font=\Huge,scale=2,align=center] {Booster Synchrotron\\{\Large \SIrange[range-units=single]{0.5}{1.2}{\GeV}}};
+\path (links) -- (rechts) node[midway,font=\Huge,scale=2, align=center] {Booster Synchrotron\\{\Large \SIrange[range-units=single]{0.5}{1.2}{\GeV}}};
 \end{lattice}
 
 
 % Transferkanal Booster->ELSA
 \begin{lattice}[overlay][\scale]
-  \start{(Booster_extract)}
-\rotate{-40}
-\drift{6}
+\latticeconfig
+\start{(Booster_extract)}
+\rotate{-47}
+\drift{2}
+\kicker{}{0.25}
+\drift{0.16}
+\quadrupole{}{0.48}
+\drift{0.16}
+\kicker{}{0.25}
+\drift{1.4}
+\kicker{}{0.25}
+\drift{0.16}
+\quadrupole{}{0.48}
+\drift{3.67}
+\quadrupole{}{0.48}
+\drift{0.16}
+\kicker{}{0.25}
+\drift{1.9}
 \savecoordinate{ELSA_inject}
 \end{lattice}
 
 
 % Stretcherring
 \begin{lattice}[overlay][\scale]
+\latticeconfig
 \start{(ELSA_inject)}
 
 \turnlabels
 \rotate{-60}
 
 % "end" put at beginning to start at injection
-\drift{0.40015}
 \quadrupole{QD31}{0.4997}
 \drift{0.30115}
 \dipole{M31}{2.875}{15}
@@ -138,7 +259,7 @@
 \drift{0.12625}
 
 % usual start
-\marker{start}[0.5]
+%\marker{start}[0.5]
 \drift{0.03415}
 \quadrupole{QD1}{0.4997}
 \drift{0.19515}
@@ -197,11 +318,18 @@
 %labels rotated (with manually set anchor)
 \rotatelabels{-70}[east]
 \quadrupole{QD7}{0.4997}
-\drift{0.19415}
-\kicker{KV07}{0.1}
-\rotatelabels{0}
 
-\drift{1.1672}
+\drift{0.41215}
+\kicker{MSE23}{0.90027}%{-4.86172}
+\savecoordinate{ELSA_extract_neu}[center]
+\drift{0.04893}
+
+% deleted due to "neue Extraktion"
+%\drift{0.19415}
+%\kicker{KV07}{0.1} 
+\rotatelabels{0}
+%\drift{1.1672}
+
 \dipole{M7}{2.875}{15}
 \drift{0.30145}
 \quadrupole{QF8}{0.4997}
@@ -322,10 +450,12 @@
 \dipole{M22}{2.875}{15}
 \drift{0.30115}
 \quadrupole{QD23}{0.4997}
-\drift{0.5}
+
+\drift{0.21}
+\kicker{MSE23}{0.9}%{-5.00994}
 \savecoordinate{ELSA_extract}
-\drift{0.5}
-\drift{0.46115}
+\drift{0.3}
+
 \dipole{M23}{2.875}{15}
 \drift{0.30165}
 \quadrupole{QF24}{0.4997}
@@ -374,6 +504,7 @@
 \drift{1.56882}
 \kicker{KV30}{0.1}
 \drift{1.0}
+\drift{0.40015}
 
 % legend shows all element types occuring before this commmand
 \turnlabels
@@ -387,25 +518,127 @@
 
 %Extraktion + CB
 \begin{lattice}[overlay][\scale]
-  \rotate{185}
-  \start{(ELSA_extract)}
-  \drift{2}
-  \solenoid{Solenoid}{2}
-  \drift{1}
-  \dipole{MB1}{0.6}{15}[r][0.8]
-  \savecoordinate{MB1}
-  \drift{2}
-  \dipole{MB3}{0.4}{5}[r][0.6]
-  \drift{10}
+\latticeconfig
+\rotate{195-5.00994}
+\start{(ELSA_extract)}
+\drift{0.2}
+%\dipole{M23}{0.9}{1.60428}
+\drift{0.9}
+\rotate{1.60428}
+\drift{1.08}
+\rotatelabels{90}[west]
+\kicker{SSV1}{0.34}
+\drift{0.1}
+\kicker{SSH1}{0.34}
+\drift{0.36}
+\quadrupole{QF1}{0.4749}
+\drift{2.77}
+\quadrupole{QD1}{0.4749}
+\drift{0.25}
+\kicker{SSH2}{0.34}
+\drift{0.1}
+\kicker{SSV2}{0.34}
+\drift{0.6}
+\rotatelabels{0}
+\turnlabels
+\dipole{MB1}{1.08}{10.7716}
+\savecoordinate{MB1}
+\drift{0.41}
+\quadrupole{QN1}{0.3}
+\drift{0.93}
+\quadrupole{QN2}{0.3}
+\drift{0.33}
+\dipole{MB3}{1.08012}{2.92208}
+\drift{0.42}
+\kicker{SSH3}{0.34}
+\drift{1.61}
+\quadrupole{QF2}{0.4749}
+\drift{2.218}
+\rotatelabels{0}[west]
+\kicker{SSV3}{0.2}
+\rotatelabels{0}
+\drift{0.242}
+\quadrupole{QD2}{0.4749}
+\drift{1.6515}
+\begin{labeldistance}{1}
+  %\setelementcolor{dipole}{red}
+  \dipole{Tagger}{1.26}{8.99544}[r][1.2]
+  %\resetelementcolor{dipole}
+  \drift{1.34}
+  \dipole{M5}{1.26}{6.1994}[r][1.2]
+\end{labeldistance}
+
+\drift{2.8525}
+\drift{2.8525}
+\savecoordinate{CBlabel}
+\drift{2.8525}
+\drift{2.8525}
+%title
+\node[font=\Large,scale=2, anchor=east, yshift=0.7cm] at (CBlabel) {Crystal Barrel};
+\node[font=\Huge,scale=2, align=center, yshift=3.5cm,xshift=-1.5cm, text width=6cm] at (CBlabel)
+{Hadronenphysik- Experimente};
 \end{lattice}
 
 %BGO
 \begin{lattice}[overlay][\scale]
+  \latticeconfig
   \rotate{175}
   \start{(MB1)}
-  \drift{1}
+  \drift{0.94}
   \dipole{MB2}{0.4}{-5}[r][0.6]
-  \drift{7}
+  \drift{1}
+  \quadrupole{QF2}{0.4749}
+  \drift{1.23}
+  \rotatelabels{90}[west]
+  \kicker{SSH3}{0.38}
+  \drift{0.087}
+  \kicker{SSV3}{0.33}
+  \rotatelabels{0}
+  \drift{1.8}
+  \quadrupole{QD2}{0.4749}
+  \drift{0.95}
+  \setelementcolor{dipole}{red}
+  \begin{labeldistance}{0.7}
+    \dipole{Tagger}{1.34}{0}[r][1]
+  \end{labeldistance}
+
+  \resetelementcolor{dipole}
+  \drift{5.95}
+  \dipole{}{1.61}{0}[r][3.64] %spektrometer
+  \savecoordinate{BGOlabel}
+  \drift{3.13}
+  % title
+  \node[font=\Large,scale=2, anchor=east, yshift=-0.7cm, xshift=-0.3cm] at (BGOlabel) {BGO-OD};
+\end{lattice}
+
+%neue externe Strahlführung
+\begin{lattice}[overlay][\scale]
+  \latticeconfig
+\rotate{15.4}
+\start{(ELSA_extract_neu)}
+
+\drift{1.578}
+\drift{1.578}
+\quadrupole{QF1}{0.5}
+\drift{2.06505}
+\drift{2.06505}
+\drift{2.06505}
+\quadrupole{QD1}{0.4997}
+\drift{0.89515}
+\begin{labeldistance}{1.2}
+  \dipole{MB}{1.50274}{-12}[r][2]
+\end{labeldistance}
+
+\drift{0.89415}
+\quadrupole{QF2}{0.4997}
+\drift{2.1063}
+\quadrupole{QD2}{0.4997}
+\drift{2.77607}
+\savecoordinate{NEWSFlabel}
+\drift{2.77607}
+  % title
+  \node[font=\Large,scale=2, anchor=center, yshift=1.5cm, text width=4cm] at (NEWSFlabel)
+  {Messplatz für\\{Detektortests}\\{(im Aufbau)}};
 \end{lattice}
 
 \end{figure}
