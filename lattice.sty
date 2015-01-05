@@ -111,33 +111,20 @@
 
 
 % rule (maßstab)
-\newcommandx{\drawrule}[2][2=1]{%
-  \coordinate (rulestart) at ($(0,0)!\scal*20!#1$);
-  \node (rule11) [rule,minimum width=#2*20cm] at (rulestart) {};
-  \foreach \a in {2,3,...,10} {%
-    \pgfmathtruncatemacro{\b}{\a-1}
-    \node (rule1\a) [rule,minimum width=#2*20cm] at (rule1\b.east) {};
-  }
-  \node (rule21) [rule,fill=white,draw=none,minimum width=#2*20cm] at (rule110.east) {};
-  \foreach \a in {2,3,...,10} {%
-    \pgfmathtruncatemacro{\b}{\a-1}
-    \node (rule2\a) [rule,fill=white,draw=none,minimum width=#2*20cm] at (rule2\b.east) {};
-  }
-  \node (rule31) [rule,minimum width=#2*20cm] at (rule210.east) {};
-  \foreach \a in {2,3,...,10} {%
-    \pgfmathtruncatemacro{\b}{\a-1}
-    \node (rule3\a) [rule,minimum width=#2*20cm] at (rule3\b.east) {};
-  }
-  \draw [black] (rule11.south west) -- (rule310.south east);
-  \draw [black] (rule11.north west) -- (rule310.north east);
-  \draw [black, thick] (rule11.west) --+ (-90:1mm); % half length
-  \draw [black, thick] (rule11.west) --+ (90:1mm);
-  \foreach \x in {1,2,3} {%
+\newcommandx{\drawrule}[3][2=1, 3=0.06]{%
+  \coordinate (rule0) at ($(0,0)!\scal*20!#1$);
+  \draw[rule] (rule0) --++(#2*20cm*\scal,0) coordinate (rule1) --++(0,#3*20cm*\scal)
+  --++(-#2*20cm*\scal,0) --++(0,-#3*20cm*\scal);
+ \draw[rule,fill=white] (rule1) --++(#2*20cm*\scal,0) coordinate (rule2) --++(0,#3*20cm*\scal)
+  --++(-#2*20cm*\scal,0) --++(0,-#3*20cm*\scal);
+  \draw[rule] (rule2) --++(#2*20cm*\scal,0) coordinate (rule3) --++(0,#3*20cm*\scal)
+  --++(-#2*20cm*\scal,0) --++(0,-#3*20cm*\scal);
+  \foreach \x in {0,1,2,3} {%
     \pgfmathsetmacro{\len}{#2*\x}
-    \path [draw=none] (rule\x10.south east) --+ (-90:0.06*\labeldist/\scal) node[label, anchor=center]
+    \path [draw=none] (rule\x) --+ (-90:0.06*\labeldist/\scal) node[label, anchor=center]
     {\SI[zero-decimal-to-integer]{\len}{\meter}};
-    \draw [black,thick] (rule\x10.east) --+ (-90:1mm); % half length
-    \draw [black,thick] (rule\x10.east) --+ (90:1mm);
+    \draw [black,line width=30pt*#3*10*\scal] (rule\x) --+ (-90:1mm);
+    \draw [black,line width=30pt*#3*10*\scal] (rule\x) --+ (90:#3*20cm*\scal+1mm);
   }
 }
 
@@ -278,52 +265,6 @@
 \iinc;
 }
 
-%dipole (br,r,s)
-\newcommandx{\dipole}[5][4=s, 5=0.4]{%
-\jinc
-\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
-\pgfmathsetlength{\elementheight}{#5*20cm*\scal};
-\def\winkel{#3}
-\newdimen\radius
-\newdimen\ri
-\newdimen\ra
-\pgfmathsetlength{\radius}{(#2*20cm*\scal)/rad(\winkel)}; % bogenlänge
-\pgfmathsetlength{\ri}{\radius-0.5*\elementheight}
-\pgfmathsetlength{\ra}{\radius+0.5*\elementheight}
-
-% draw bend beampipe
-\draw[drift,rotate=\angle] (east\i) arc (-90:(-90+\winkel/2):\radius) node[] (nodecenter\j) {};
-\draw[drift,rotate=\angle] (nodecenter\j) arc ((-90+\winkel/2):(-90+\winkel):\radius) node[] (nodeeast\j) {};
-
-% [r]ectangle
-\ifthenelse{\equal{#4}{r}}{
-\angleinc{0.5*#3}
-\newdimen\straightlength
-\pgfmathsetlength{\straightlength}{sin(\winkel/2)*2*\radius} % sekante des kreisbogens
-  \draw[dipole] (east\i) --++ (0,-\elementheight/2) --++ (\straightlength,0) --++
-  (0,\elementheight) --++ (-\straightlength,0) --++ (0,-\elementheight/2);
-}{
-% [s]ector
-  \ifthenelse{\equal{#4}{s}}{%
-    \draw[dipole] (east\i) -- ++
-    (0,-\elementheight/2) arc (-90:(-90+\winkel):\ra) -- ++(\winkel+90:\elementheight) arc
-    ((-90+\winkel):-90:\ri) --++ (0,-\elementheight);
-    \angleinc{0.5*\winkel}
-  }{
- % [b]end[r]ectangle
-    \angleinc{0.5*#3}
-    \draw[dipole] (east\i) -- ++
-    (0,-\elementheight/2) arc (-90-\winkel/2:-90+\winkel/2:\radius) -- ++(0,\elementheight) arc
-    (-90+\winkel/2:-90-\winkel/2:\radius) -- cycle;
-  }
-}
-\declarecoords
-\elementlabel{#1};
-\iinc
-\setboolean{dip}{true}
-\angleinc{0.5*\winkel}
-}
-
 %rectangle-element (used for quad,sext,kicker,cavity,...)
 \newcommandx{\rectangleelement}[4]{%
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
@@ -333,6 +274,59 @@
 \draw[#4] (east\i) --++ (0,\elementheight/2) --++ (#2*20cm*\scal,0) --++
 (0,-\elementheight) --++ (-#2*20cm*\scal,0) --++ (0,\elementheight/2);
 }
+
+
+%dipole (br,r,s)
+\newcommandx{\dipole}[5][4=s, 5=0.4]{%
+\jinc
+\pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
+\pgfmathsetlength{\elementheight}{#5*20cm*\scal};
+\def\winkel{#3}
+\ifthenelse{\equal{#3}{0}}{
+  \rectangleelement{#1}{#2}{#5}{dipole}
+}{
+  \newdimen\radius
+  \newdimen\ri
+  \newdimen\ra
+  \pgfmathsetlength{\radius}{(#2*20cm*\scal)/rad(\winkel)}; % bogenlänge
+  \pgfmathsetlength{\ri}{\radius-0.5*\elementheight}
+  \pgfmathsetlength{\ra}{\radius+0.5*\elementheight}
+
+  % draw bend beampipe
+  \draw[drift,rotate=\angle] (east\i) arc (-90:(-90+\winkel/2):\radius) node[] (nodecenter\j) {};
+  \draw[drift,rotate=\angle] (nodecenter\j) arc ((-90+\winkel/2):(-90+\winkel):\radius) node[] (nodeeast\j) {};
+  
+  % [r]ectangle
+  \ifthenelse{\equal{#4}{r}}{
+    \angleinc{0.5*#3}
+    \newdimen\straightlength
+    \pgfmathsetlength{\straightlength}{sin(\winkel/2)*2*\radius} % sekante des kreisbogens
+    \draw[dipole] (east\i) --++ (0,-\elementheight/2) --++ (\straightlength,0) --++
+    (0,\elementheight) --++ (-\straightlength,0) --++ (0,-\elementheight/2);
+  }{
+    % [s]ector
+    \ifthenelse{\equal{#4}{s}}{%
+      \draw[dipole] (east\i) -- ++
+      (0,-\elementheight/2) arc (-90:(-90+\winkel):\ra) -- ++(\winkel+90:\elementheight) arc
+      ((-90+\winkel):-90:\ri) --++ (0,-\elementheight);
+      \angleinc{0.5*\winkel}
+    }{
+      % [b]end[r]ectangle
+      \angleinc{0.5*#3}
+      \draw[dipole] (east\i) -- ++
+      (0,-\elementheight/2) arc (-90-\winkel/2:-90+\winkel/2:\radius) -- ++(0,\elementheight) arc
+      (-90+\winkel/2:-90-\winkel/2:\radius) -- cycle;
+    }
+  }
+}
+
+\declarecoords
+\elementlabel{#1};
+\iinc
+\setboolean{dip}{true}
+\angleinc{0.5*\winkel}
+}
+
 
 %quadrupole
 \newcommandx{\quadrupole}[3][3=0.5]{%
@@ -560,11 +554,9 @@ marker/.style={default_marker
 
 %rule
 \tikzset{rule/.style={
-scale=0.1*\scal,
-rectangle, draw=black,
+line width=0.8pt*10*\scal,
+draw=black,
 fill=black,
-anchor=west,
-minimum height=6cm/(10*\scal),
 fade  %must be last to overwrite other settings
 }}
 
