@@ -126,6 +126,7 @@
 % rule (maßstab)
 \newcommandx{\drawrule}[3][2=1, 3=0.06]{%
   \coordinate (rule0) at ($(0,0)!\scal*20!#1$);
+  \tikzset{rule/.append style={line width=20pt*#3*10*\scal}}
   \draw[rule] (rule0) --++(#2*20cm*\scal,0) coordinate (rule1) --++(0,#3*20cm*\scal)
   --++(-#2*20cm*\scal,0) --++(0,-#3*20cm*\scal);
  \draw[rule,fill=white] (rule1) --++(#2*20cm*\scal,0) coordinate (rule2) --++(0,#3*20cm*\scal)
@@ -135,7 +136,7 @@
   \foreach \x in {0,1,2,3} {%
     \pgfmathsetmacro{\len}{#2*\x}
     \path [draw=none] (rule\x) --+ (-90:0.06*\labeldist/\scal) node[label, anchor=center]
-    {\SI[zero-decimal-to-integer]{\len}{\meter}};
+    {\SI[zero-decimal-to-integer, round-mode=places, round-precision=1]{\len}{\meter}};
     \draw [black,line width=30pt*#3*10*\scal] (rule\x) --+ (-90:1mm);
     \draw [black,line width=30pt*#3*10*\scal] (rule\x) --+ (90:#3*20cm*\scal+1mm);
   }
@@ -177,7 +178,7 @@
       \points}\drift{\dist}}{}
   \iftoggle{scree}{\screen{Screen}[\l]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \iftoggle{valv}{\drift{\dist}\turnlabels\valve{Valve}\turnlabels\xdef\points{(elementlabel\j)
+  \iftoggle{valv}{\drift{\dist}\valve{Valve}\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
 \end{scope}
 \node[draw=black, rounded corners, fit=\points] {};
@@ -426,15 +427,13 @@
 }
 
 %valve
-\newcommand{\valve}[1]{%
-\turnlabels
+\newcommandx{\valve}[2][2=0.01]{%
 \jinc
-\rectangleelement{#1}{0.05}{0.15}{valve}
+\rectangleelement{#1}{#2}{0.15}{valve}
 \declarecoords
 \elementlabel{#1}
 \iinc
 \global\settoggle{valv}{true}
-\turnlabels
 }
 
 
@@ -569,7 +568,6 @@ marker/.style={default_marker
 
 %rule
 \tikzset{rule/.style={
-line width=0.8pt*10*\scal,
 draw=black,
 fill=black,
 fade  %must be last to overwrite other settings
