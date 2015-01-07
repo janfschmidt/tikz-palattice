@@ -11,6 +11,7 @@
 \RequirePackage{ifthen}
 \RequirePackage{siunitx}
 \RequirePackage{xargs}
+\RequirePackage{etoolbox}
 \usetikzlibrary{calc,positioning,fit}
 \usetikzlibrary{scopes}
 
@@ -20,6 +21,8 @@
 \newenvironmentx{lattice}[2][1=, 2=1]{%
 %begin
 \tikzpicture[node distance=0mm, remember picture, #1]
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
 \newdimen\labeldist
 \newdimen\savelabeldist
 \newdimen\corners;
@@ -31,8 +34,8 @@
 \def\labelang{-90};
 \def\marklabelang{+90};
 \def\labelrot{0};
-\newboolean{userlabelanchor}
-\setboolean{userlabelanchor}{false}
+\providetoggle{userlabelanchor}
+\settoggle{userlabelanchor}{false}
 \pgfmathsetlength{\labeldist}{\scal*20cm*0.35};
 \pgfmathsetlength{\savelabeldist}{\scal*20cm*0.35};
 \pgfmathtruncatemacro{\i}{0};
@@ -41,15 +44,25 @@
 \node (nodeeast0) [start] at (0,0) {};
 \coordinate (east\j) at (nodeeast\j.center); %\declarecoords ("east" only
 %for legend: does element occur?
-\newboolean{dip} \setboolean{dip}{false}
-\newboolean{quad} \setboolean{quad}{false}
-\newboolean{sext} \setboolean{sext}{false}
-\newboolean{kick} \setboolean{kick}{false}
-\newboolean{sol} \setboolean{sol}{false}
-\newboolean{cav} \setboolean{cav}{false}
-\newboolean{sourc} \setboolean{sourc}{false}
-\newboolean{scree} \setboolean{scree}{false}
-\newboolean{valv} \setboolean{valv}{false}
+% \newboolean{dip} \setboolean{dip}{false}
+% \newboolean{quad} \setboolean{quad}{false}
+% \newboolean{sext} \setboolean{sext}{false}
+% \newboolean{kick} \setboolean{kick}{false}
+% \newboolean{sol} \setboolean{sol}{false}
+% \newboolean{cav} \setboolean{cav}{false}
+% \newboolean{sourc} \setboolean{sourc}{false}
+% \newboolean{scree} \setboolean{scree}{false}
+% \newboolean{valv} \setboolean{valv}{false}
+
+\global\providetoggle{dip} \global\settoggle{dip}{false}
+\global\providetoggle{quad} \global\settoggle{quad}{false}
+\global\providetoggle{sext} \global\settoggle{sext}{false}
+\global\providetoggle{kick} \global\settoggle{kick}{false}
+\global\providetoggle{sol} \global\settoggle{sol}{false}
+\global\providetoggle{cav} \global\settoggle{cav}{false}
+\global\providetoggle{sourc} \global\settoggle{sourc}{false}
+\global\providetoggle{scree} \global\settoggle{scree}{false}
+\global\providetoggle{valv} \global\settoggle{valv}{false}
 }{%
 %end
 \endtikzpicture
@@ -102,9 +115,9 @@
 \newcommandx{\rotatelabels}[2][2=notset]{%
   \def\labelrot{#1}
   \ifthenelse{\equal{#2}{notset}}{%
-    \setboolean{userlabelanchor}{false}
+    \settoggle{userlabelanchor}{false}
   }{%
-    \setboolean{userlabelanchor}{true}
+    \settoggle{userlabelanchor}{true}
     \def\labelanchor{#2}}
 }
 
@@ -148,23 +161,23 @@
 \coordinate (legendstart'') at ($(legendstart) + (\h*\scal*15,\dist*\scal*15)$);
 \edef\points{(legendstart') (legendstart'')}
 \begin{scope}[scale=#2, every node/.style={scale=#2}]
-  \ifthenelse{\boolean{dip}}{\rotate{-1}\dipole{Dipole}{\l}{2}[s][\h]\rotate{-1}\xdef\points{(elementlabel\j)
+  \iftoggle{dip}{\rotate{-1}\dipole{Dipole}{\l}{2}[s][\h]\rotate{-1}\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \ifthenelse{\boolean{quad}}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{quad}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \ifthenelse{\boolean{sext}}{\sextupole{Sextupole}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{sext}{\sextupole{Sextupole}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \ifthenelse{\boolean{kick}}{\kicker{Kicker}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{kick}{\kicker{Kicker}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \ifthenelse{\boolean{cav}}{\cavity{Cavity}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{cav}{\cavity{Cavity}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \ifthenelse{\boolean{sol}}{\solenoid{Solenoid}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{sol}{\solenoid{Solenoid}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \ifthenelse{\boolean{sourc}}{\source{Source}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{sourc}{\source{Source}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \ifthenelse{\boolean{scree}}{\screen{Screen}[\l]\xdef\points{(elementlabel\j)
+  \iftoggle{scree}{\screen{Screen}[\l]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
-  \ifthenelse{\boolean{valv}}{\drift{\dist}\turnlabels\valve{Valve}\turnlabels\xdef\points{(elementlabel\j)
+  \iftoggle{valv}{\drift{\dist}\turnlabels\valve{Valve}\turnlabels\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}
 \end{scope}
 \node[draw=black, rounded corners, fit=\points] {};
@@ -177,15 +190,15 @@
 
 %complete legend (all types)
 \newcommandx{\completelegend}[2][2=1]{%
- \setboolean{dip}{true}
- \setboolean{quad}{true}
- \setboolean{sext}{true}
- \setboolean{kick}{true}
- \setboolean{sol}{true}
- \setboolean{cav}{true}
- \setboolean{sourc}{true}
- \setboolean{scree}{true}
- \setboolean{valv}{true}
+ \settoggle{dip}{true}
+ \settoggle{quad}{true}
+ \settoggle{sext}{true}
+ \settoggle{kick}{true}
+ \settoggle{sol}{true}
+ \settoggle{cav}{true}
+ \settoggle{sourc}{true}
+ \settoggle{scree}{true}
+ \settoggle{valv}{true}
  \legend{#1}[#2]
 }
 
@@ -199,7 +212,7 @@
   \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
   \ifthenelse{\iang>360}{\pgfmathtruncatemacro\iang{\iang-360}}{}
   % set label anchor according to angle
-  \ifthenelse{\boolean{userlabelanchor}}{}{%  %if labelanchor is set by user just use the set value
+  \iftoggle{userlabelanchor}{}{%  %if labelanchor is set by user just use the set value
     \ifthenelse{\labelang = -90}{%
       \def\labelanchor{north};
       \ifthenelse{\iang > 30}{\def\labelanchor{west}}{}
@@ -258,8 +271,10 @@
 % drift
 \newcommandx{\drift}[2][2=]{%
 \jinc
-\draw[drift] (east\i) --++ (\angle:#1*10cm*\scal) node[] (nodecenter\j) {} --++
-(\angle:#1*10cm*\scal) node[] (nodeeast\j) {};
+\begin{pgfonlayer}{background}
+  \draw[drift] (east\i) --++ (\angle:#1*10cm*\scal) node[] (nodecenter\j) {} --++
+  (\angle:#1*10cm*\scal) node[] (nodeeast\j) {};
+\end{pgfonlayer}{background}
 \declarecoords
 \elementlabel{#2};
 \iinc;
@@ -323,7 +338,7 @@
 \declarecoords
 \elementlabel{#1};
 \iinc
-\setboolean{dip}{true}
+\global\settoggle{dip}{true}
 \angleinc{0.5*\winkel}
 }
 
@@ -335,7 +350,7 @@
 \declarecoords
 \elementlabel{#1}
 \iinc
-\setboolean{quad}{true}
+\global\settoggle{quad}{true}
 }
 
 %sextupole
@@ -345,7 +360,7 @@
 \declarecoords
 \elementlabel{#1}
 \iinc
-\setboolean{sext}{true}
+\global\settoggle{sext}{true}
 }
 
 %kicker
@@ -355,7 +370,7 @@
 \declarecoords
 \elementlabel{#1}
 \iinc
-\setboolean{kick}{true}
+\global\settoggle{kick}{true}
 }
 
 %cavity
@@ -365,7 +380,7 @@
 \declarecoords
 \elementlabel{#1}
 \iinc
-\setboolean{cav}{true}
+\global\settoggle{cav}{true}
 }
 
 %solenoid
@@ -375,7 +390,7 @@
 \declarecoords
 \elementlabel{#1}
 \iinc
-\setboolean{sol}{true}
+\global\settoggle{sol}{true}
 }
 
 %source
@@ -390,7 +405,7 @@
 \declarecoords
 \elementlabel{#1}
 \iinc
-\setboolean{sourc}{true}
+\global\settoggle{sourc}{true}
 }
 
 %screen
@@ -407,7 +422,7 @@
 \declarecoords
 \elementlabel{#1}
 \iinc
-\setboolean{scree}{true}
+\global\settoggle{scree}{true}
 }
 
 %valve
@@ -418,7 +433,7 @@
 \declarecoords
 \elementlabel{#1}
 \iinc
-\setboolean{valv}{true}
+\global\settoggle{valv}{true}
 \turnlabels
 }
 
