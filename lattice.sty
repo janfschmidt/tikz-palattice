@@ -43,17 +43,6 @@
 \global\def\angle{0}
 \node (nodeeast0) [start] at (0,0) {};
 \coordinate (east\j) at (nodeeast\j.center); %\declarecoords ("east" only
-%for legend: does element occur?
-% \newboolean{dip} \setboolean{dip}{false}
-% \newboolean{quad} \setboolean{quad}{false}
-% \newboolean{sext} \setboolean{sext}{false}
-% \newboolean{kick} \setboolean{kick}{false}
-% \newboolean{sol} \setboolean{sol}{false}
-% \newboolean{cav} \setboolean{cav}{false}
-% \newboolean{sourc} \setboolean{sourc}{false}
-% \newboolean{scree} \setboolean{scree}{false}
-% \newboolean{valv} \setboolean{valv}{false}
-
 \global\providetoggle{dip} \global\settoggle{dip}{false}
 \global\providetoggle{quad} \global\settoggle{quad}{false}
 \global\providetoggle{sext} \global\settoggle{sext}{false}
@@ -153,8 +142,6 @@
     \draw [black,line width=30pt*#3*10*\scal] (rule\x) --+ (90:#3*20cm*\scal+1mm);
   }
 }
-
-
 
 %legend (types that occured in the lattice before this command)
 \newcommandx{\legend}[2][2=1]{%

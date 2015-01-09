@@ -27,13 +27,14 @@ Otherwise read the documentation of your LaTeX distribution.
   - ifthen
   - xargs
 * What is missing?
-  - The look of the elements can be improved. Feel free to do it!
+  - manually adding (and maybe changing?) legend entries
+  - The look of the elements can be improved
   - More element types can be added
   - ...
 * Known issues
   - no error handling implemented
   - no dedicated scoping of internal macros (use of lattice with documentclass standalone recommended)
-  - please report any bugs...
+  - please report bugs...
 * lattice environment
 To draw a lattice just add
 #+BEGIN_EXAMPLE
