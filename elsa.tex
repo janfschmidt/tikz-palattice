@@ -1,27 +1,27 @@
-\documentclass[a0paper,landscape]{scrartcl}
+\documentclass[tikz]{standalone}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[scale=0.95]{geometry}
+%\usepackage[scale=0.95]{geometry}
 \usepackage{lattice} % by Jan Schmidt <schmidt@physik.uni-bonn.de>
 \sisetup{range-phrase=\,-\,}
 
 \def\scale{0.5}
-\newcommand{\latticeconfig}{\setlinecolor{drift}{red!70!black}}
+\newcommand{\driftcolor}{\setlinecolor{drift}{red!70!black}}
+
+
 \begin{document}
-\thispagestyle{empty}
-
-\begin{figure}
-\centering
-
-%LINAC2
 \begin{lattice}[][\scale]
-%lengths and positions not precise!
 \def\quadl{0.2}
-\latticeconfig
+\driftcolor
 \drawrule{(58,-10)}[5][0.1]
-\rotate{180}
+\setangle{180}
 \turnlabels
 \start{(0,0)}
+
+%-----------------------------------
+%LINAC2
+%lengths and positions not precise!
+%-----------------------------------
 \source{PolQ}{1}
 \drift{2.5}
 \drift{0.5} % wand
@@ -51,35 +51,35 @@
 \savecoordinate{M3}[center]
 \drift{0.4}
 \quadrupole{}{\quadl}
-\drift{3.5}
+\drift{6}
 \savecoordinate{BoosterInj}[center]
-\begin{fade}[0]
-  \drift{30}
-\end{fade}
+% \begin{fade}[0]
+%   \drift{30}
+% \end{fade}
 %text
 \node[font=\huge,scale=2, align=center, anchor=north, yshift=-1cm] at (L2label)
 {LINAC 2\\{\Large \SI{26}{\MeV}}};
-\end{lattice}
 
+
+%-----------------------------------
 %LINAC1
-\begin{lattice}[overlay][\scale]
 %lattice backwards to set start at M3
 %lengths and positions not precise!
-\def\quadl{0.2}
-\latticeconfig
-\rotate{180}
-\start{(M3)}
+%-----------------------------------
+\goto{M3}
+\setangle{-180}
 \drift{0.44}
-\turnlabels
 \quadrupole{Q6}{\quadl}
-\turnlabels
 \drift{0.2}
+\turnlabels
 \quadrupole{Q5}{\quadl}
+\turnlabels
 \drift{0.35}
 \dipole{M2}{0.3}{45}
 \drift{1.1}
 \dipole{M1}{0.3}{45}
 \savecoordinate{M1}[center]
+\turnlabels
 \drift{0.58}
 \quadrupole{Q4}{\quadl}
 \drift{0.36}
@@ -114,35 +114,35 @@
 %text
 \node[font=\huge,scale=2, align=center, xshift=-1cm, anchor=east] at (L1label)
 {LINAC 1\\{\Large \SI{20}{\MeV}}};
-\end{lattice}
 
+
+%-----------------------------
 %LINAC1-Bestrahlungsplatz
-\begin{lattice}[overlay][\scale]
-\def\quadl{0.2}
-\latticeconfig
-\start{(M1)}
-\rotate{90}
+%-----------------------------
+\goto{M1}
+\setangle{90}
+\drift{0.25}
 \drift{0.37}
 \quadrupole{}{\quadl}
 \drift{0.2}
 \quadrupole{}{\quadl}
 \drift{0.7}
-\drift{0.25}
 \savecoordinate{bestrahlung}
 \def\bestrl{0.25}
 \drift{\bestrl}
 \draw [fill=none] (bestrahlung) +(-\bestrl,-\bestrl) rectangle +(\bestrl,\bestrl);
-\end{lattice}
+%text
+\node[font=\Large,scale=2, align=center, xshift=-5mm, yshift=5mm, anchor=east, text width=2.5cm] at (bestrahlung)
+{Bestrahlungs\-platz};
 
+
+%-----------------------------
 %Booster
-\begin{lattice}[overlay][\scale]
-\latticeconfig
-\rotate{90}
+%-----------------------------
 \setelementcolor{dipole}{green!50!black}
 \turnlabels
-\start{(BoosterInj)}
+\goto{BoosterInj}
 %\marker{Start}[0.5]
-
 \begin{labeldistance}{0.5}
 \turnlabels
 \kicker{INJSEPT}{0.88}
@@ -201,16 +201,17 @@
 \dipole{M12}{4.0056}{-30}[s][0.6]
 \drift{0.46725}
 \end{labeldistance}
-
+\resetelementcolor{dipole}
+%title
 \path (links) -- (rechts) node[midway,font=\Huge,scale=2, align=center] {Booster Synchrotron\\{\Large \SIrange[range-units=single]{0.5}{1.2}{\GeV}}};
-\end{lattice}
 
 
+
+%-----------------------------
 % Transferkanal Booster->ELSA
-\begin{lattice}[overlay][\scale]
-\latticeconfig
-\start{(Booster_extract)}
-\rotate{-47}
+%-----------------------------
+\goto{Booster_extract}
+\setangle{-47}
 \drift{2}
 \kicker{}{0.25}
 \drift{0.16}
@@ -227,16 +228,14 @@
 \kicker{}{0.25}
 \drift{1.9}
 \savecoordinate{ELSA_inject}
-\end{lattice}
 
 
+
+%-----------------------------
 % Stretcherring
-\begin{lattice}[overlay][\scale]
-\latticeconfig
-\start{(ELSA_inject)}
-
-\turnlabels
-\rotate{-60}
+%-----------------------------
+\goto{ELSA_inject}
+\setangle{-60}
 
 % "end" put at beginning to start at injection
 \quadrupole{QD31}{0.4997}
@@ -506,25 +505,26 @@
 \drift{1.0}
 \drift{0.40015}
 
-% legend shows all element types occuring before this commmand
-\turnlabels
-\legend{(34,55)}[1.5]
-
 %title - aligned between M29 and QF14 via \savecoordinate
 \draw[draw=none] (links) -- (rechts) node[midway, font=\Huge,scale=2, align=center]
 {ELSA Stretcherring\\{\Large\SIrange[range-units=single]{0.5}{3.2}{\GeV}}};
-\end{lattice}
 
 
+
+
+%-----------------------
 %Extraktion + CB
-\begin{lattice}[overlay][\scale]
-\latticeconfig
-\rotate{195-5.00994}
-\start{(ELSA_extract)}
+%-----------------------
+\goto{ELSA_extract}
+\turnlabels
+%\setangle{195-5.00994}
+\rotate{-5}
 \drift{0.2}
+%----
 %\dipole{M23}{0.9}{1.60428}
 \drift{0.9}
 \rotate{1.60428}
+%----
 \drift{1.08}
 \rotatelabels{90}[west]
 \kicker{SSV1}{0.34}
@@ -541,14 +541,14 @@
 \drift{0.6}
 \rotatelabels{0}
 \turnlabels
-\dipole{MB1}{1.08}{10.7716}
-\savecoordinate{MB1}
-\drift{0.41}
+\dipole{MB1}{1.08}{10.7716}[r][0.6]
+\savecoordinate{MB1}[center]
+\drift{0.5}
 \quadrupole{QN1}{0.3}
 \drift{0.93}
 \quadrupole{QN2}{0.3}
-\drift{0.33}
-\dipole{MB3}{1.08012}{2.92208}
+\drift{0.5}
+\dipole{MB3}{1.08012}{2.92208}[r][0.6]
 \drift{0.42}
 \kicker{SSH3}{0.34}
 \drift{1.61}
@@ -560,32 +560,41 @@
 \drift{0.242}
 \quadrupole{QD2}{0.4749}
 \drift{1.6515}
+\savecoordinate{CBphotons}
 \begin{labeldistance}{1}
-  %\setelementcolor{dipole}{red}
+  \setelementcolor{dipole}{red}
   \dipole{Tagger}{1.26}{8.99544}[r][1.2]
-  %\resetelementcolor{dipole}
+  \resetelementcolor{dipole}
   \drift{1.34}
   \dipole{M5}{1.26}{6.1994}[r][1.2]
 \end{labeldistance}
-
 \drift{2.8525}
 \drift{2.8525}
 \savecoordinate{CBlabel}
 \drift{2.8525}
-\drift{2.8525}
-%title
-\node[font=\Large,scale=2, anchor=east, yshift=0.7cm] at (CBlabel) {Crystal Barrel};
-\node[font=\Huge,scale=2, align=center, yshift=3.5cm,xshift=-1.5cm, text width=6cm] at (CBlabel)
-{Hadronenphysik- Experimente};
-\end{lattice}
+\drift{4.8525}
 
-%BGO
-\begin{lattice}[overlay][\scale]
-  \latticeconfig
-  \rotate{175}
-  \start{(MB1)}
+%Photon-Beamline
+\goto{CBphotons}
+\setlinecolor{drift}{black}
+\drift{18}
+\driftcolor
+
+%title
+\node[font=\Large,scale=2, anchor=east, yshift=1.5cm] at (CBlabel) {Crystal Barrel};
+\node[font=\Huge,scale=2, align=center, yshift=3.8cm,xshift=-1.8cm, text width=6cm] at (CBlabel)
+{Hadronenphysik- Experimente};
+
+
+%-------------------
+%BGO-OD
+%-------------------
+  \goto{MB1}
+  \setangle{175}
+  \turnlabels
+  \drift{0.5}
   \drift{0.94}
-  \dipole{MB2}{0.4}{-5}[r][0.6]
+  \dipole{MB2}{1}{-5}[r][0.6]
   \drift{1}
   \quadrupole{QF2}{0.4749}
   \drift{1.23}
@@ -601,46 +610,48 @@
   \begin{labeldistance}{0.7}
     \dipole{Tagger}{1.34}{0}[r][1]
   \end{labeldistance}
-
   \resetelementcolor{dipole}
-  \drift{5.95}
+
+  % photon beamline
+  \setlinecolor{drift}{black}
+  \drift{6.95}
   \dipole{}{1.61}{0}[r][3.64] %spektrometer
   \savecoordinate{BGOlabel}
   \drift{3.13}
+  \resetlinecolor{drift}
   % title
   \node[font=\Large,scale=2, anchor=east, yshift=-0.7cm, xshift=-0.3cm] at (BGOlabel) {BGO-OD};
-\end{lattice}
 
+
+%-----------------------------
 %neue externe Strahlführung
-\begin{lattice}[overlay][\scale]
-  \latticeconfig
-\rotate{15.4}
-\start{(ELSA_extract_neu)}
-
+%-----------------------------
+\goto{ELSA_extract_neu}
+\setangle{15.4}
 \drift{1.578}
 \drift{1.578}
-\quadrupole{QF1}{0.5}
+\quadrupole{QF1}{0.5}[0.3]
 \drift{2.06505}
 \drift{2.06505}
 \drift{2.06505}
-\quadrupole{QD1}{0.4997}
+\quadrupole{QD1}{0.4997}[0.3]
 \drift{0.89515}
 \begin{labeldistance}{1.2}
   \dipole{MB}{1.50274}{-12}[r][2]
 \end{labeldistance}
-
 \drift{0.89415}
-\quadrupole{QF2}{0.4997}
+\quadrupole{QF2}{0.4997}[0.3]
 \drift{2.1063}
-\quadrupole{QD2}{0.4997}
+\quadrupole{QD2}{0.4997}[0.3]
 \drift{2.77607}
 \savecoordinate{NEWSFlabel}
 \drift{2.77607}
   % title
   \node[font=\Large,scale=2, anchor=center, yshift=1.5cm, text width=4cm] at (NEWSFlabel)
   {Messplatz für\\{Detektortests}\\{(im Aufbau)}};
+
+%---------------------------
+% legend shows all element types occuring before this commmand
+\legend{(62,46)}[2]
 \end{lattice}
-
-\end{figure}
-
 \end{document}

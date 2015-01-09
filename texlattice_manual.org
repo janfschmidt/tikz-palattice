@@ -31,12 +31,15 @@ Otherwise read the documentation of your LaTeX distribution.
   - More element types can be added
   - ...
 * Known issues
-  - known issues have been fixed with v2.0, but I am sure there are more...
+  - scaling the legend does not scale the legend box margin correctly and can shift the elements
+  - no error handling implemented
+  - no dedicated scoping of internal macros (use of lattice with documentclass standalone recommended)
+  - please report any bugs...
 * lattice environment
 To draw a lattice just add
 #+BEGIN_EXAMPLE
 \usepackage{lattice}
-#+END_EXAMPLEo
+#+END_EXAMPLE
 to your preambel and use the lattice environment.
 the lattice environment has 2 optional arguments:
   1. \verb+[tikz options]+ give any options for the tikzpicture (e.g. overlay)
@@ -60,7 +63,10 @@ the lattice environment has 2 optional arguments:
   - \verb+\valve{name}+
   - \verb+\marker{name}[length/m (default 0.35)]+ a line perpendicular to beamline of given length
 ** Modify your lattice/elements
-  - \verb+\rotate{angle/deg}+ "bends" the beamline. e.g. to set starting angle
+  - \verb+\rotate{angle/deg}+ "bends" the beamline., offset from current angle
+  - \verb+\setangle{angle/deg}+ "bends" the beamline., set absolute angle
+  - \verb+\goto{coordinate name}+ sets current position and angle to values saved with \verb+\savecoordinate+
+    hint: e.g. use to draw injection/extraction
   - \verb+\start{coordinate/m}+ sets starting point of lattice. use before first element
     coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
     hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)

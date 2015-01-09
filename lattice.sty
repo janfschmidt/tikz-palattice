@@ -72,13 +72,25 @@
 
 %---general settings---
 \newcommand{\rotate}[1]{\pgfmathparse{\angle+#1} \global\let\angle\pgfmathresult}
+\newcommand{\setangle}[1]{\pgfmathparse{#1} \global\let\angle\pgfmathresult}
 \newcommand{\start}[1]{%
   \tikzset{x=2cm,y=2cm}
   \node (nodeeast0) [start] at #1 {};
   \coordinate (east\j) at (nodeeast\j.center);
   \tikzset{x=1cm,y=1cm}
 }
-\newcommandx{\savecoordinate}[2][2=east]{\coordinate (#1) at (#2\i);}
+
+\newcommandx{\savecoordinate}[2][2=east]{%
+\global\csedef{angle#1}{\angle}
+\coordinate (#1) at (#2\i);
+}
+
+\newcommand{\goto}[1]{%
+\coordinate (east\j) at (#1);
+%\node[fill=yellow] at (Septum) {\csuse{angle#1}};
+\pgfmathparse{\csuse{angle#1}} \global\let\angle\pgfmathresult
+%\expandafter\global\csname angle#1\endcsname{\angle}
+}
 
 
 
