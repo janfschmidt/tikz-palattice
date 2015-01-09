@@ -170,28 +170,28 @@
 \tikzset{drift/.append style={draw=none}}
 \savecoordinate{_here_}
 \coordinate (east\j) at (legendstart);
-\coordinate (legendstart') at ($(legendstart) + (-\h*\scal*15,\dist*\scal*15)$);
-\coordinate (legendstart'') at ($(legendstart) + (\h*\scal*15,\dist*\scal*15)$);
+\coordinate (legendstart') at ($(legendstart) + (-\h*\scal*15*#2,\dist*\scal*15*#2)$);
+\coordinate (legendstart'') at ($(legendstart) + (\h*\scal*15*#2,\dist*\scal*15*#2)$);
 \edef\points{(legendstart') (legendstart'')}
 \begin{scope}[scale=#2, every node/.style={scale=#2}]
   \iftoggle{dip}{\rotate{-1}\dipole{Dipole}{\l}{2}[s][\h]\rotate{-1}\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
   \iftoggle{quad}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
   \iftoggle{sext}{\sextupole{Sextupole}{\l}[\h]\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
   \iftoggle{kick}{\kicker{Kicker}{\l}[\h]\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
   \iftoggle{cav}{\cavity{Cavity}{\l}[\h]\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
   \iftoggle{sol}{\solenoid{Solenoid}{\l}[\h]\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
   \iftoggle{sourc}{\source{Source}{\l}[\h]\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
   \iftoggle{scree}{\screen{Screen}[\l]\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
   \iftoggle{valv}{\drift{\dist}\valve{Valve}\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}
+      \points}\drift{\dist}}{}%
 \end{scope}
 \node[draw=black, rounded corners, fit=\points] {};
 \pgfmathsetmacro{\scal}{\savescal}

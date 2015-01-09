@@ -1,6 +1,6 @@
 #+TITLE:     TeXlattice - draw accelerator lattices with LaTeX\\\textit{using pgf/tikz}
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
-#+DATE:      v2.0 (\today)
+#+DATE:      v2.1 (\today)
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
 #+LaTeX_CLASS_OPTIONS:[colorlinks]
 \clearpage
@@ -31,7 +31,6 @@ Otherwise read the documentation of your LaTeX distribution.
   - More element types can be added
   - ...
 * Known issues
-  - scaling the legend does not scale the legend box margin correctly and can shift the elements
   - no error handling implemented
   - no dedicated scoping of internal macros (use of lattice with documentclass standalone recommended)
   - please report any bugs...
