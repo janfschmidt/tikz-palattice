@@ -4,7 +4,7 @@ e1 = example1_linear
 e2 = example2_circular
 e3 = example3_coordinates
 e4 = example4_labels
-e5 = example5_bosy
+e5 = elsa
 
 allexamples: $(e1).pdf $(e2).pdf $(e3).pdf $(e4).pdf $(e5).pdf
 .PHONY: allexamples
@@ -31,4 +31,4 @@ install:
 	mktexlsr
 
 clean:
-	rm example*.pdf
+	rm $(e1).pdf $(e2).pdf $(e3).pdf $(e4).pdf $(e5).pdf

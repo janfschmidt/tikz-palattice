@@ -58,6 +58,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\kicker{name}{length/m}[thickness/m (default 0.x)]+
   - \verb+\cavity{name}{length/m}[thickness/m (default 0.x)]+
   - \verb+\solenoid{name}{length/m}[thickness/m (default 0.2)]+
+  - \verb+\beamdump{name}{length/m}[thickness/m (default 0.5)]+
   - \verb+\source{name}{length/m}[thickness/m (default 0.5)]+
   - \verb+\screen{name}[length/m (default 0.2)]+
   - \verb+\valve{name}+

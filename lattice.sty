@@ -14,15 +14,14 @@
 \RequirePackage{etoolbox}
 \usetikzlibrary{calc,positioning,fit}
 \usetikzlibrary{scopes}
-
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
 
 
 %---lattice environment---
 \newenvironmentx{lattice}[2][1=, 2=1]{%
 %begin
 \tikzpicture[node distance=0mm, remember picture, #1]
-\pgfdeclarelayer{background}
-\pgfsetlayers{background,main}
 \newdimen\labeldist
 \newdimen\savelabeldist
 \newdimen\corners;
@@ -393,6 +392,16 @@
 \global\settoggle{sol}{true}
 }
 
+%beamdump
+\newcommandx{\beamdump}[3][3=0.5]{%
+\jinc
+\rectangleelement{#1}{#2}{#3}{beamdump}
+\declarecoords
+\elementlabel{#1}
+\iinc
+%\global\settoggle{}{true} no legend for beamdump
+}
+
 %source
 \newcommandx{\source}[3][3=0.5]{%
 \jinc
@@ -512,6 +521,14 @@ bottom color=green!70!black,
 element
 },
 solenoid/.style={default_solenoid
+}}
+
+%beamdump
+\tikzset{default_beamdump/.style={
+bottom color=gray, 
+element
+},
+beamdump/.style={default_beamdump
 }}
 
 %source
