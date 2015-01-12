@@ -13,6 +13,7 @@
 \begin{lattice}[][\scale]
 \def\quadl{0.2}
 \driftcolor
+\setelementcolor{solenoid}{cyan}
 \drawrule{(58,-7)}[5][0.1]
 \setangle{180}
 \turnlabels
@@ -22,12 +23,15 @@
 %LINAC2
 %lengths and positions not precise!
 %-----------------------------------
-\source{PolQ}{1}
+\turnlabels
+\source{Quelle pol. $e^-$}{1}
+\turnlabels
 \drift{2.5}
 \drift{0.5} % wand
-\drift{1}
+\source{}{0.2}
+\drift{0.8}
 \savecoordinate{L2label}
-\cavity{MUELL}{3.85}
+\cavity{}{3.85}
 \drift{0.35}
 \quadrupole{Q1}{\quadl}
 \drift{0.5}
@@ -108,9 +112,9 @@
 \drift{0.35}
 \dipole{}{0.35}{0}
 \drift{0.17}
-\drift{0.9}
+\drift{1.3}
 \rotate{180}
-\source{}{0.9}
+\source{}{0.5}
 %text
 \node[font=\huge,scale=2, align=center, xshift=-1cm, anchor=east] at (L1label)
 {LINAC 1\\{\Large \SI{20}{\MeV}}};
@@ -132,7 +136,7 @@
 \drift{\bestrl}
 \draw [fill=none] (bestrahlung) +(-\bestrl,-\bestrl) rectangle +(\bestrl,\bestrl);
 %text
-\node[font=\Large,scale=2, align=center, xshift=-5mm, yshift=5mm, anchor=east, text width=2.5cm] at (bestrahlung)
+\node[font=\Large,scale=2, align=center, yshift=5mm, anchor=east, text width=3cm] at (bestrahlung)
 {Bestrahlungs\-platz};
 
 

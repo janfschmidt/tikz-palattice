@@ -30,6 +30,7 @@
 \newdimen\markerlen;
 \pgfmathsetmacro{\scal}{#2*0.1};
 \def\labelfont{\normalsize};
+\def\labelcolor{black};
 \def\labelang{-90};
 \def\marklabelang{+90};
 \def\labelrot{0};
@@ -106,6 +107,7 @@
 }
 
 \newcommand{\setlabelfont}[1]{\def\labelfont{#1}}
+\newcommand{\setlabelcolor}[1]{\def\labelcolor{#1}}
 
 \newcommand{\turnlabels}{%
 \ifthenelse{\labelang = -90}{%
@@ -567,7 +569,7 @@ drift/.style={default_drift
 
 %text label
 \tikzset{label/.style={
-text=black,
+text=\labelcolor,
 font=\labelfont,
 rotate=\labelrot,
 anchor=\labelanchor,

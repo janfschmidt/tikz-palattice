@@ -85,6 +85,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\setlabelfont{fontsize}+ text label fontsize (default is \verb+\normalsize+)
 *** Colors
 The color can be changed at any point in the lattice. A setting is valid until the next color setting comand.
+  - \verb+\setlabelcolor{color}+ for textlabels (set to white to hide labels).
   - \verb+\setlinecolor{type}{color}+ for type drift and marker.
   - \verb+\setelementcolor{type}{color}+ for all element types.
   - \verb+\resetlinecolor{type}+ reset to default color.
