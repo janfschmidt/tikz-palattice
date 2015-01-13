@@ -6,10 +6,11 @@
 
 \begin{document}
 \begin{lattice}[][0.5]
-\drawrule{(-9,-11)}[5]
+\drawrule{(-9,-11)}[5][3][0.2]
 
 \turnlabels
-\rotate{-45}
+\setlabeldistance{0.5}
+\rotate{-35}
 \marker{start}[0.5]
 
 \drift{0.03415}
@@ -38,7 +39,7 @@
 \drift{1.84183}
 
 % labels rotated (with manually set anchor)
-\rotatelabels{60}[west]
+\rotatelabels{65}[west]
 \quadrupole{QF4}{0.4997}
 \drift{0.13665}
 \sextupole{SF4}{0.287}
@@ -67,12 +68,14 @@
 \dipole{M6}{2.875}{15}
 \drift{0.30145}
 
-%labels rotated (with manually set anchor)
-\rotatelabels{-70}[east]
+%labels rotated (with manually set anchor) within scope (forget changes after scope)
+\begin{scope}
+\rotatelabels{-65}[east]
 \quadrupole{QD7}{0.4997}
 \drift{0.19415}
 \kicker{KV07}{0.1}
-\rotatelabels{0}
+\end{scope}
+
 
 \drift{1.1672}
 \dipole{M7}{2.875}{15}
@@ -139,7 +142,12 @@
 \drift{0.93725}
 \quadrupole{TJQD16}{0.5515}[0.2]
 \drift{0.1614}
+
+% turn labels to other side
+\turnlabels
 \quadrupole{QD17}{0.4997}
+\turnlabels
+
 \drift{0.10615}
 \kicker{KV17}{0.1}
 \drift{0.244}
@@ -157,31 +165,38 @@
 \dipole{M18}{2.875}{15}
 \drift{0.30145}
 
-%labels rotated (anchor automatic)
-\rotatelabels{50} \quadrupole{QD19}{0.4997} \drift{0.13665} \sextupole{SD19}{0.287}
-\drift{0.1965} \kicker{KV19}{0.1} \rotatelabels{0}
-
+%labels rotated (with manually set anchor) within scope (forget changes after scope)
+\begin{scope}
+\rotatelabels{65}[east]
+\quadrupole{QD19}{0.4997}
+\drift{0.13665}
+\sextupole{SD19}{0.287}
+\drift{0.1965}
+\kicker{KV19}{0.1}
+\end{scope}
 
 \drift{1.747}
 \drift{1.747}
 \sextupole{SF19}{0.287}
 \drift{0.13665}
-\quadrupole{QF20}{0.4997}
-\drift{0.22565}
 
-%labels outside ring
+% turn labels to other side within scope (no second \turnlabels needed)
+\begin{scope}
 \turnlabels
+\quadrupole{QF20}{0.4997}
+\end{scope}
+
+\drift{0.22565}
 \kicker{KV20}{0.1}
-\turnlabels
 
 \drift{1.1357}
 \dipole{M20}{2.875}{15}
 \drift{0.30145}
 
 %labels in other distance to elements
-\begin{labeldistance}{0.6}
+\begin{labeldistance}{0.8}
   \quadrupole{QD21}{0.4997}
-\end{labeldistance} %back to previous label distance
+\end{labeldistance} %back to previous label distance (same as \setlabeldistance within scope)
 
 \drift{0.21015}
 \kicker{KV21}{0.1}
@@ -264,10 +279,10 @@
 \drift{0.12625}
 
 % legend shows all element types occuring before this commmand
-\legend{(34,38)}[1.5]
+\legend{(35,38)}[2]
 
 %title - aligned between M29 and QF14 via \savecoordinate
-\draw[draw=none] (links) -- (rechts) node[midway, font=\Huge,scale=2, align=center]
-{ELSA Stretcherring\\{\Large\SIrange[range-units=single]{0.5}{3.2}{\GeV}}};
+\draw[draw=none] (links) -- (rechts) node[midway, font=\bfseries\Huge,scale=2, align=center]
+{ELSA Stretcherring\\{\SIrange[range-units=single,detect-weight=true]{0.5}{3.2}{\GeV}}};
 \end{lattice}
 \end{document}

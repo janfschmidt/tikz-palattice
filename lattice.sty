@@ -18,6 +18,8 @@
 \pgfsetlayers{background,main}
 
 
+
+
 %---lattice environment---
 \newenvironmentx{lattice}[2][1=, 2=1]{%
 %begin
@@ -84,7 +86,8 @@
 
 
 %---color settings---
-\newcommand{\setelementcolor}[2]{\tikzset{#1/.append style={bottom color=#2, fadeElement}}}
+\newcommandx{\setelementcolor}[3][3=white]{%
+\tikzset{#1/.append style={bottom color=#2, top color=#3, fadeElement}}}
 \newcommand{\resetelementcolor}[1]{\tikzset{#1/.style={default_#1}}}
 \newcommand{\setlinecolor}[2]{\tikzset{#1/.append style={#2, fade}}}
 \newcommand{\resetlinecolor}[1]{\tikzset{#1/.style={default_#1}}}
@@ -106,6 +109,10 @@
   \pgfmathsetlength{\labeldist}{\savelabeldist};
 }
 
+\newcommand{\setlabeldistance}[1]{%
+\pgfmathsetlength{\savelabeldist}{\labeldist}
+\pgfmathsetlength{\labeldist}{\scal*20cm*#1};}
+\newcommand{\resetlabeldistance}{\pgfmathsetlength{\labeldist}{\savelabeldist};}
 \newcommand{\setlabelfont}[1]{\def\labelfont{#1}}
 \newcommand{\setlabelcolor}[1]{\def\labelcolor{#1}}
 
@@ -126,21 +133,21 @@
 
 
 % rule (maßstab)
-\newcommandx{\drawrule}[3][2=1, 3=0.06]{%
+\newcommandx{\drawrule}[4][2=1, 3=1, 4=0.06]{%
   \coordinate (rule0) at ($(0,0)!\scal*20!#1$);
-  \tikzset{rule/.append style={line width=20pt*#3*10*\scal}}
-  \draw[rule] (rule0) --++(#2*20cm*\scal,0) coordinate (rule1) --++(0,#3*20cm*\scal)
-  --++(-#2*20cm*\scal,0) --++(0,-#3*20cm*\scal);
- \draw[rule,fill=white] (rule1) --++(#2*20cm*\scal,0) coordinate (rule2) --++(0,#3*20cm*\scal)
-  --++(-#2*20cm*\scal,0) --++(0,-#3*20cm*\scal);
-  \draw[rule] (rule2) --++(#2*20cm*\scal,0) coordinate (rule3) --++(0,#3*20cm*\scal)
-  --++(-#2*20cm*\scal,0) --++(0,-#3*20cm*\scal);
+  \tikzset{rule/.append style={line width=20pt*#4*10*\scal}}
+  \draw[rule] (rule0) --++(#2*20cm*\scal,0) coordinate (rule1) --++(0,#4*20cm*\scal)
+  --++(-#2*20cm*\scal,0) --++(0,-#4*20cm*\scal);
+ \draw[rule,fill=white] (rule1) --++(#2*20cm*\scal,0) coordinate (rule2) --++(0,#4*20cm*\scal)
+  --++(-#2*20cm*\scal,0) --++(0,-#4*20cm*\scal);
+  \draw[rule] (rule2) --++(#2*20cm*\scal,0) coordinate (rule3) --++(0,#4*20cm*\scal)
+  --++(-#2*20cm*\scal,0) --++(0,-#4*20cm*\scal);
   \foreach \x in {0,1,2,3} {%
     \pgfmathsetmacro{\len}{#2*\x}
-    \path [draw=none] (rule\x) --+ (-90:0.06*\labeldist/\scal) node[label, anchor=center]
+    \path [draw=none] (rule\x) --+ (-90:0.06*\labeldist/\scal) node[label, black, scale=#3, anchor=north]
     {\SI[zero-decimal-to-integer, round-mode=places, round-precision=1]{\len}{\meter}};
-    \draw [black,line width=30pt*#3*10*\scal] (rule\x) --+ (-90:1mm);
-    \draw [black,line width=30pt*#3*10*\scal] (rule\x) --+ (90:#3*20cm*\scal+1mm);
+    \draw [black,line width=30pt*#4*10*\scal] (rule\x) --+ (-90:1mm);
+    \draw [black,line width=30pt*#4*10*\scal] (rule\x) --+ (90:#4*20cm*\scal+1mm);
   }
 }
 
@@ -162,7 +169,8 @@
 \coordinate (legendstart'') at ($(legendstart) + (\h*\scal*15*#2,\dist*\scal*15*#2)$);
 \edef\points{(legendstart') (legendstart'')}
 \begin{scope}[scale=#2, every node/.style={scale=#2}]
-  \iftoggle{dip}{\rotate{-1}\dipole{Dipole}{\l}{2}[s][\h]\rotate{-1}\xdef\points{(elementlabel\j)
+\setlabelcolor{black}
+  \iftoggle{dip}{\dipole{Dipole}{\l}{0}[s][\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
   \iftoggle{quad}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
@@ -293,7 +301,7 @@
 
 
 %dipole (br,r,s)
-\newcommandx{\dipole}[5][4=s, 5=0.4]{%
+\newcommandx{\dipole}[5][4=s, 5=0.6]{%
 \jinc
 \pgfmathsetlength{\corners}{(#2)>=0.4 ? (1mm*10*\scal) : 0mm};
 \pgfmathsetlength{\elementheight}{#5*20cm*\scal};
@@ -458,6 +466,8 @@
 
 
 
+
+
 % ----- styles -----
 %fade (for global fade setting)
 \tikzset{fade/.style={
@@ -480,73 +490,75 @@ fadeElement  %must be last to overwrite other settings
 %dipole
 \tikzset{default_dipole/.style={
 bottom color=blue,
-element
+element,
 },
-dipole/.style={default_dipole
-}}
+dipole/.style={default_dipole}
+}
+
 
 %quadrupole
 \tikzset{default_quadrupole/.style={
 bottom color=yellow, 
 element
 },
-quadrupole/.style={default_quadrupole
-}}
+quadrupole/.style={default_quadrupole}
+}
 
 %sextupole
 \tikzset{default_sextupole/.style={
 bottom color=violet!70!black, 
 element
 },
-sextupole/.style={default_sextupole
-}}
+sextupole/.style={default_sextupole}
+}
 
 %kicker
 \tikzset{default_kicker/.style={
 bottom color=orange!90!black, 
 element
 },
-kicker/.style={default_kicker
-}}
+kicker/.style={default_kicker}
+}
 
 %cavity
 \tikzset{default_cavity/.style={
 bottom color=brown, 
 element
 },
-cavity/.style={default_cavity
-}}
+cavity/.style={default_cavity}
+}
 
 %solenoid
 \tikzset{default_solenoid/.style={
 bottom color=green!70!black, 
 element
 },
-solenoid/.style={default_solenoid
-}}
+solenoid/.style={default_solenoid}
+}
 
 %beamdump
 \tikzset{default_beamdump/.style={
 bottom color=gray, 
 element
 },
-beamdump/.style={default_beamdump
-}}
+beamdump/.style={default_beamdump}
+}
 
 %source
 \tikzset{default_source/.style={
 bottom color=gray, 
 element
 },
-source/.style={default_source}}
+source/.style={default_source}
+}
 
 %screen
 \tikzset{default_screen/.style={
 bottom color=white, 
 element
 },
-screen/.style={default_screen
-}}
+screen/.style={default_screen}
+}
 
 %valve
 \tikzset{default_valve/.style={
@@ -555,7 +567,8 @@ element,
 top color=gray,
 draw=none
 },
-valve/.style={default_valve}}
+valve/.style={default_valve}
+}
 
 
 
@@ -564,8 +577,8 @@ valve/.style={default_valve}}
 line width=0.8pt*10*\scal, draw=black,
 fade  %must be last to overwrite other settings
 },
-drift/.style={default_drift
-}}
+drift/.style={default_drift}
+}
 
 %text label
 \tikzset{label/.style={
@@ -581,8 +594,8 @@ fade  %must be last to overwrite other settings
 red, densely dashed,
 fade  %must be last to overwrite other settings
 },
-marker/.style={default_marker
-}}
+marker/.style={default_marker}
+}
 
 %rule
 \tikzset{rule/.style={

@@ -47,7 +47,7 @@ the lattice environment has 2 optional arguments:
 * Within lattice environment
 ** Elements
   - \verb+\drift{length/m}[name (default: none)]+
-  - \verb+\dipole{name}{arc length/m}{bending angle/deg}[type (default: s)][thickness/m (default 0.4)]+
+  - \verb+\dipole{name}{arc length/m}{bending angle/deg}[type (default: s)][thickness/m (default 0.6)]+
     the \verb+type+ option allows to select different dipole shapes. It can be:
     - br for a bend rectangle magnet (parallel entrance/exit surfaces)
     - r for a rectangle magnet
@@ -71,8 +71,7 @@ the lattice environment has 2 optional arguments:
   - \verb+\start{coordinate/m}+ sets starting point of lattice. use before first element
     coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
     hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)
-  - \verb+\drawrule{start coord/m}[tick distance/m (default: 1)][height/m (default:0.1)]+ a rule to visualize lattice size.
-      coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+  - \verb+\drawrule{position/m}[tick distance/m (default: 1)]+...\\ \verb+[scale (default: 1)][height/m (default:0.1)]+\\  a rule to visualize lattice size. coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
   - \verb+\legend{position/m}[scale (default: 1)]+ a legend with all element types that occur in the lattice before this command.
     position is north west (upper left corner) of the legend box.
     the scale option scales the whole box including the text, which has the usual label textsize for scale=1
@@ -82,15 +81,17 @@ the lattice environment has 2 optional arguments:
   - \verb+\rotatelabels{angle/deg}[anchor (default: automatic)]+ allows rotation of element labels.
      the anchor sets the center of rotation (north, center, south west, ...). west corresponds to labels first character.
   - environment \texttt{labeldistance\{distance/m\}} sets distance of text labels to element center for all elements within this environment (default is 0.35)
+  - \verb+\setlabeldistance{fontsize}+ sets distance of text labels to element center for following elements (default is 0.35)
+  - \verb+\resetlabeldistance{fontsize}+ resets distance of text labels to element center for following elements to default 0.35
   - \verb+\setlabelfont{fontsize}+ text label fontsize (default is \verb+\normalsize+)
 *** Colors
 The color can be changed at any point in the lattice. A setting is valid until the next color setting comand.
   - \verb+\setlabelcolor{color}+ for textlabels (set to white to hide labels).
   - \verb+\setlinecolor{type}{color}+ for type drift and marker.
-  - \verb+\setelementcolor{type}{color}+ for all element types.
+  - \verb+\setelementcolor{type}{color}[gradient color (default: white)]+ for all element types. set gradient color = color to "disable" gradient
   - \verb+\resetlinecolor{type}+ reset to default color.
   - \verb+\resetelementcolor{type}+ reset to default color.
-  - environment \texttt{fade\{opacity (default: 0.25)\}} sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations. Also sets all colors to gray.
+  - environment \verb+\begin{fade}[opacity (default: 0.25)]+ sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations. Also sets all colors to gray.
     This can also be used to completely hide regions by setting opacity to zero.
 ** Access lattice coordinates
    You can use element coordinates to draw anything you want using pgf/tikz. You can even connect lattices to draw injection/extraction or a complete accelerator facility.
@@ -98,10 +99,12 @@ The color can be changed at any point in the lattice. A setting is valid until t
      to access it later.
     - position specifies the exact place of the element. East (default) and center are available. East is always downstream.
     - you can use all tikz/pgf commands within lattice environment to draw anything.
-    - You can also connect multiple lattices. use tikz overlay option (1. argument of lattice) and \verb+\start+. See example 3.
+    - You can use this to connect multiple beamlines within a lattice environment with \verb+\goto{name}+
+    - You can use this to connect multiple lattices with \verb+\start{name}+. use tikz overlay option (1. argument of lattice)
+    - see example 3
 * Remarks
   - lengths are set in meter, so you write {1.32} for 1.32m.
   - beamline with angle 0 goes to the right, positive angles bend counter clockwise.
+  - settings (colors, font, rotatelabel,...) changed within a \verb+scope+ environment are set back to the previous values outside of \verb+scope+
   - picture scale: for lattice scale=1 an element of 1m length is plotted with 2cm length
-  - maximum rule length < 3x29m
   - if you refer to a coordinate from another lattice (another tikzpicture) you have to compile twice

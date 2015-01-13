@@ -10,24 +10,26 @@
   \setlinecolor{drift}{red}
 
   \drift{1}
-  \dipole{M1}{2}{45}[r]
+  \dipole{M1}{2}{45}
   \drift{1}
-  \dipole{M2}{2}{45}[br]
+  \dipole{M2}{2}{45}
   \drift{1}
-  \setelementcolor{dipole}{green!50!black}
+  \setelementcolor{dipole}{green!50!black} % change color of all following dipoles
   \dipole{M3}{2}{45}
   \drift{1}
   \dipole{M4}{2}{45}
   \drift{1}
-
-  \dipole{M5}{2}{45}
+  \begin{scope}                        % color change only applied within scope
+    \setelementcolor{dipole}{red}[red] % optional 3rd argument sets top color -> no (visible) color gradient
+    \dipole{M5}{2}{45}
+  \end{scope}
   \drift{1}
   \dipole{M6}{2}{45}
   \drift{1}
-  \resetelementcolor{dipole}
-  \dipole{M7}{2}{45}
+  \resetelementcolor{dipole} % reset color of following dipoles to default
+  \dipole{M7}{2}{45}[r]      % rectangle dipole type
   \drift{1}
-  \dipole{M8}{2}{45}
+  \dipole{M8}{2}{45}[br]     % bend rectangle dipole type
 
   \drawrule{(1,-0.5)}
 \end{lattice}
