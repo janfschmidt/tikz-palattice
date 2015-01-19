@@ -54,9 +54,10 @@ the lattice environment has 2 optional arguments:
     - s for a sector magnet (entrance/exit surface 90 degree to beampipe)
     If you use any other letters, also the default (s) is used.
   - \verb+\quadrupole{name}{length/m}[thickness/m (default 0.5)]+
-  - \verb+\sextupole{name}{length/m}[thickness/m (default 0.x)]+
-  - \verb+\kicker{name}{length/m}[thickness/m (default 0.x)]+
-  - \verb+\cavity{name}{length/m}[thickness/m (default 0.x)]+
+  - \verb+\sextupole{name}{length/m}[thickness/m (default 0.3)]+
+  - \verb+\corrector{name}{length/m}[thickness/m (default 0.25)]+
+  - \verb+\kicker{name}{length/m}[thickness/m (default 0.25)]+
+  - \verb+\cavity{name}{length/m}[thickness/m (default 0.45)]+
   - \verb+\solenoid{name}{length/m}[thickness/m (default 0.2)]+
   - \verb+\beamdump{name}{length/m}[thickness/m (default 0.5)]+
   - \verb+\source{name}{length/m}[thickness/m (default 0.5)]+

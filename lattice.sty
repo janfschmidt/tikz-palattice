@@ -49,6 +49,7 @@
 \global\providetoggle{quad} \global\settoggle{quad}{false}
 \global\providetoggle{sext} \global\settoggle{sext}{false}
 \global\providetoggle{kick} \global\settoggle{kick}{false}
+\global\providetoggle{correct} \global\settoggle{correct}{false}
 \global\providetoggle{sol} \global\settoggle{sol}{false}
 \global\providetoggle{cav} \global\settoggle{cav}{false}
 \global\providetoggle{sourc} \global\settoggle{sourc}{false}
@@ -176,6 +177,8 @@
       \points}\drift{\dist}}{}%
   \iftoggle{sext}{\sextupole{Sextupole}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
+  \iftoggle{correct}{\corrector{Corrector}{\l}[\h]\xdef\points{(elementlabel\j)
+      \points}\drift{\dist}}{}%
   \iftoggle{kick}{\kicker{Kicker}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
   \iftoggle{cav}{\cavity{Cavity}{\l}[\h]\xdef\points{(elementlabel\j)
@@ -203,6 +206,7 @@
  \settoggle{quad}{true}
  \settoggle{sext}{true}
  \settoggle{kick}{true}
+ \settoggle{correct}{true}
  \settoggle{sol}{true}
  \settoggle{cav}{true}
  \settoggle{sourc}{true}
@@ -382,6 +386,16 @@
 \global\settoggle{kick}{true}
 }
 
+% corrector
+\newcommandx{\corrector}[3][3=0.25]{%
+\jinc
+\rectangleelement{#1}{#2}{#3}{corrector}
+\declarecoords
+\elementlabel{#1}
+\iinc
+\global\settoggle{correct}{true}
+}
+
 %cavity
 \newcommandx{\cavity}[3][3=0.45]{%
 \jinc
@@ -514,10 +528,18 @@ sextupole/.style={default_sextupole}
 
 %kicker
 \tikzset{default_kicker/.style={
-bottom color=orange!90!black, 
+bottom color=red!90!black, 
 element
 },
 kicker/.style={default_kicker}
+}
+
+%corrector
+\tikzset{default_corrector/.style={
+bottom color=orange!90!black, 
+element
+},
+corrector/.style={default_corrector}
 }
 
 %cavity
