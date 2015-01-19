@@ -1,9 +1,13 @@
 \documentclass[tikz]{standalone}
 \usepackage[ngerman]{babel}
+%\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
-%\usepackage[scale=0.95]{geometry}
+\usepackage{iflang}
 \usepackage{lattice} % by Jan Schmidt <schmidt@physik.uni-bonn.de>
-\sisetup{locale=DE, range-units=single, range-phrase=\,-\,, detect-weight=true, detect-family=true}
+
+\sisetup{range-units=single, range-phrase=\,-\,, detect-weight=true, detect-family=true}
+\addto\extrasngerman{\sisetup{locale = DE}}
+\addto\extrasenglish{\sisetup{locale = US}}
 
 \def\scale{0.5}
 
@@ -16,7 +20,7 @@
 \begin{document}
 \begin{lattice}[][\scale]
 \def\quadl{0.2}
-\setelementcolor{dipole}{blue!60!cyan!90}[blue!60!cyan!90]
+\setelementcolor{dipole}{blue!55!cyan!90}[blue!55!cyan!90]
 \setelementcolor{solenoid}{cyan}
 \setlinecolor{drift}{red!70!black}
 \def\photonbeam{black}
@@ -32,7 +36,7 @@
 %lengths and positions not precise!
 %-----------------------------------
 \turnlabels
-\source{Quelle pol. $e^-$}{1}
+\source{\IfLanguageName{ngerman}{Quelle}{Source} pol. $e^-$}{1}
 \drift{2.5}
 \drift{0.5} % wand
 \source{}{0.2}
@@ -58,7 +62,7 @@
 \drift{2.1}
 \kicker{KD}{\quadl}
 \drift{2.1}
-\kicker{}{0.4} % M3
+\dipole{}{0.4}{0}[r][0.3] % M3
 \savecoordinate{M3}[center]
 \drift{0.4}
 \quadrupole{}{\quadl}
@@ -144,14 +148,14 @@
 \draw [fill=none] (bestrahlung) +(-\bestrl,-\bestrl) rectangle +(\bestrl,\bestrl);
 %text
 \node[smalllabel, yshift=5mm, anchor=east, text width=3cm] at (bestrahlung)
-{Bestrahlungs\-platz};
+{\IfLanguageName{ngerman}{Bestrahlungs\-platz}{irradiation area}};
 
 
 %-----------------------------
 %Booster
 %-----------------------------
 \begin{scope}
-\setelementcolor{dipole}{green!50!black}[green!50!black]
+\setelementcolor{dipole}{green!55!black}[green!55!black]
 \goto{BoosterInj}
 %\marker{Start}[0.5]
 \setlabeldistance{0.5}
@@ -548,7 +552,7 @@
 \end{scope}
 % label
 \node[smalllabel, anchor=west, yshift=1cm, text width=4cm] at (sylilabel)
-{Synchrotronlicht\\{Diagnoseplatz}};
+{\IfLanguageName{ngerman}{Synchrotronlicht}{synchrotron light}\\\IfLanguageName{ngerman}{Diagnoseplatz}{diagnostic area}};
 
 
 %-----------------------
@@ -603,10 +607,7 @@
 \drift{1.6515}
 \savecoordinate{CBphotons}
 \begin{labeldistance}{1}
-  \begin{scope}
-    \setelementcolor{dipole}{red}
-    \dipole{Tagger}{1.26}{8.99544}[r][1.2]
-  \end{scope}
+  \dipole{Tagger}{1.26}{8.99544}[r][1.2]
   \drift{1.34}
   \dipole{M5}{1.26}{6.1994}[r][1.2]
 \end{labeldistance}
@@ -620,13 +621,13 @@
 \begin{scope}
 \setlinecolor{drift}{\photonbeam}
 \drift{16}
-\beamdump{Photonenkamera}{0.4}[0.2]
+\beamdump{\IfLanguageName{ngerman}{Photonenkamera}{photon camera}}{0.4}[0.2]
 \end{scope}
 
 %title
 \node[mediumlabel, anchor=east, yshift=1.5cm] at (CBlabel) {Crystal Barrel};
-\node[biglabel, yshift=3.8cm,xshift=-3cm, text width=6cm] at (CBlabel)
-{Hadronenphysik- Experimente};
+\node[biglabel, yshift=3.8cm,xshift=-3cm, text width=7cm] at (CBlabel)
+{\IfLanguageName{ngerman}{Hadronenphysik- Experimente}{hadron physics experiments}};
 
 
 %-------------------
@@ -651,7 +652,6 @@
   \drift{0.95}
   \begin{scope}
     \setlabeldistance{0.7}
-    \setelementcolor{dipole}{red}
     \dipole{Tagger}{1.34}{0}[r][1]
   \end{scope}
 
@@ -662,7 +662,7 @@
   \dipole{}{1.61}{0}[r][3.64] %spektrometer
   \savecoordinate{BGOlabel}
   \drift{3.13}
-  \beamdump{Photonenkamera}{0.4}[0.2]
+  \beamdump{\IfLanguageName{ngerman}{Photonenkamera}{photon camera}}{0.4}[0.2]
   \end{scope}
 
   % label
@@ -694,8 +694,10 @@
 \drift{2.77607}
 \beamdump{}{0.4}
   % title
-  \node[smalllabel, anchor=north, yshift=-5mm, text width=4cm] at (NEWSFlabel)
-  {Messplatz für\\{Detektortests}\\{(im Aufbau)}};
+  \node[smalllabel, anchor=north, yshift=-5mm, text width=4.5cm] at (NEWSFlabel)
+  {\IfLanguageName{ngerman}{Messplatz für}{area
+      for}\\\IfLanguageName{ngerman}{Detektortests}{detector
+      tests}\\\IfLanguageName{ngerman}{(im Aufbau)}{(under construction)}};
 
 %---------------------------
 % legend shows all element types occuring before this commmand
