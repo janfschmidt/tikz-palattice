@@ -95,9 +95,9 @@
 
 \newenvironmentx{fade}[1][1=0.25]{%
 \tikzset{fade/.style={opacity=#1, color=gray}}
-\tikzset{fadeElement/.style={fade, color=gray,bottom color=gray}}
+\tikzset{fadeElement/.style={fade, color=gray,bottom color=gray,top color=white}}
 }{%
-\tikzset{fade/.style={opacity=1.0}}
+\tikzset{fade/.style={opacity=1.0}} % color not set
 \tikzset{fadeElement/.style={fade}}
 }
 
