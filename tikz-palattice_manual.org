@@ -1,8 +1,9 @@
-#+TITLE:     TeXlattice - draw accelerator lattices with LaTeX\\\textit{using pgf/tikz}
+#+TITLE:     tikz-palattice - draw particle accelerator lattices with TikZ
 #+AUTHOR:    Jan Schmidt <schmidt@physik.uni-bonn.de>
 #+DATE:      v2.1 (\today)
 #+LaTeX_HEADER: \usepackage{geometry}[scale=0.9]
 #+LaTeX_CLASS_OPTIONS:[colorlinks]
+[[file:elsa.pdf][The Electron Stretcher Facility ELSA at Bonn University - drawn with tikz-palattice]]
 \clearpage
 * Installation
 ** Copy lattice.sty

@@ -1,0 +1,195 @@
+\documentclass[colorlinks]{scrartcl}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\tolerance=1000
+\author{Jan Schmidt <schmidt@physik.uni-bonn.de>}
+\date{v2.1 (\today)}
+\title{tikz-palattice - draw particle accelerator lattices with Ti\textit{k}Z}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 24.3.1 (Org mode 8.2.7b)}}
+\begin{document}
+
+\maketitle
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1.1\textwidth]{elsa.pdf}
+  \caption{The Electron Stretcher Facility ELSA at Bonn University, drawn with
+    tikz-palattice}
+\end{figure}
+
+\clearpage
+\tableofcontents
+\clearpage
+
+
+\section{Installation}
+\label{sec-1}
+\subsection{Copy lattice.sty}
+\label{sec-1-1}
+You just need to copy the lattice.sty file to a place where your \LaTeX{} installation can recognize it.
+This can be
+\begin{itemize}
+\item the same folder as your .tex document
+\item in the \LaTeX{} system or user tree
+\end{itemize}
+e.g. to add it to the system tree for texlive under ubuntu:
+\begin{verbatim}
+sudo mkdir -p /usr/local/share/texmf/tex/latex/lattice/
+sudo cp lattice.sty /usr/local/share/texmf/tex/latex/lattice/
+sudo mktexlsr (or sudo texhash)
+\end{verbatim}
+For this path there is also a Makefile prepared, so just enter
+\begin{verbatim}
+sudo make install
+\end{verbatim}
+Otherwise read the documentation of your \LaTeX{} distribution.
+\subsection{Required packages}
+\label{sec-1-2}
+\begin{itemize}
+\item tikz, pgf
+\item siunitx
+\item ifthen
+\item xargs
+\end{itemize}
+\section{What is missing?}
+\label{sec-2}
+\begin{itemize}
+\item manually adding (and maybe changing?) legend entries
+\item The look of the elements can be improved
+\item More element types can be added
+\item \ldots{}
+\end{itemize}
+\section{Known issues}
+\label{sec-3}
+\begin{itemize}
+\item no error handling implemented
+\item no dedicated scoping of internal macros (use of lattice with documentclass standalone recommended)
+\item legend entry alignment does not work correctly for some legend scales
+\item please report bugs\ldots{}
+\end{itemize}
+
+\section{General Remarks}
+\label{sec-6}
+\begin{itemize}
+\item lengths are set in meter, so you write \{1.32\} for \SI{1.32}{\m}.
+\item beamline with angle \SI{0}{\degree} goes to the right, positive angles bend counter clockwise.
+\item settings (colors, font, rotatelabel,\ldots{}) changed within a \verb+scope+ environment are set back to the previous values outside of \verb+scope+
+\item picture scale: for lattice scale=1 an element of 1m length is plotted with 2cm length
+\end{itemize}
+
+\section{lattice environment}
+\label{sec-4}
+To draw a lattice just add
+\begin{verbatim}
+\usepackage{lattice}
+\end{verbatim}
+to your preambel and use the lattice environment.
+the lattice environment has 2 optional arguments:
+\begin{enumerate}
+\item \verb+[tikz options]+ give any options for the tikzpicture (e.g. overlay)
+\item \verb+[scale]+ scale whole picture (default: 1)
+\end{enumerate}
+\section{Within lattice environment}
+\label{sec-5}
+The values in round brackets are default values of optional arguments.
+\subsection{Elements}
+\label{sec-5-1}
+Element names are self-explanatory:
+
+\begin{itemize}
+\item \verb+\drift{length/m}[name (none)]+
+\item
+\begin{verbatim}
+\dipole{name}{arc length/m}{bending angle/deg}[type (s)][thickness/m (0.6)]
+\end{verbatim}
+
+the \verb+type+ option allows to select different dipole shapes. It can be:
+\begin{itemize}
+\item br for a bend rectangle magnet (parallel entrance/exit surfaces)
+\item r for a rectangle magnet
+\item s for a sector magnet (entrance/exit surface 90 degree to beampipe)
+\end{itemize}
+If you use any other letters, also the default (s) is used.
+\item \verb+\quadrupole{name}{length/m}[thickness/m (0.5)]+
+\item \verb+\sextupole{name}{length/m}[thickness/m (0.3)]+
+\item \verb+\corrector{name}{length/m}[thickness/m (0.25)]+
+\item \verb+\kicker{name}{length/m}[thickness/m (0.25)]+
+\item \verb+\cavity{name}{length/m}[thickness/m (0.45)]+
+\item \verb+\solenoid{name}{length/m}[thickness/m (0.2)]+
+\item \verb+\beamdump{name}{length/m}[thickness/m (0.5)]+
+\item \verb+\source{name}{length/m}[thickness/m (0.5)]+
+\item \verb+\screen{name}[length/m (0.2)]+
+\item \verb+\valve{name}+
+\item \verb+\marker{name}[length/m (0.35)]+ a line perpendicular to beamline of given length
+\end{itemize}
+\subsection{Modify your lattice/elements}
+\label{sec-5-2}
+\begin{itemize}
+\item \verb+\rotate{angle/deg}+ "bends" the beamline., offset from current angle
+\item \verb+\setangle{angle/deg}+ "bends" the beamline., set absolute angle
+\item \verb+\goto{coordinate name}+ sets current position and angle to values saved with \verb+\savecoordinate+
+hint: e.g. use to draw injection/extraction
+\item \verb+\start{coordinate/m}+ sets starting point of lattice. use before first element
+coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+hint: use with \verb+\savecoordinate+ to connect lattices! (compile twice!)
+\item \verb+\drawrule{position/m}[tick distance/m (1)]+\ldots{}\\ \verb+[scale (1)][height/m (0.1)]+\\  a rule to visualize lattice size. coordinate in form (x,y) or any tikz label, e.g. (mylabel.east)
+\item \verb+\legend{position/m}[scale (1)]+ a legend with all element types that occur in the lattice before this command.
+position is north west (upper left corner) of the legend box.
+the scale option scales the whole box including the text, which has the usual label textsize for scale=1
+\item \verb+\completelegend{position/m}[scale (1)]+ similar to \verb+\legend+, but shows all existing element types.
+\end{itemize}
+\subsubsection{Labels}
+\label{sec-5-2-1}
+\begin{itemize}
+\item \verb+\turnlabels+ moves labels to other side of elements (swap with marker labels)
+\item \verb+\rotatelabels{angle/deg}[anchor (automatic)]+ allows rotation of element labels.
+the anchor sets the center of rotation (north, center, south west, \ldots{}). west corresponds to labels first character.
+\item environment \texttt\{labeldistance\{distance/m\}\} sets distance of text labels to element center for all elements within this environment (default is 0.35)
+\item \verb+\setlabeldistance{fontsize}+ sets distance of text labels to element center for following elements (default is 0.35)
+\item \verb+\resetlabeldistance{fontsize}+ resets distance of text labels to element center for following elements to default 0.35
+\item \verb+\setlabelfont{fontsize}+ text label fontsize (default is \verb+\normalsize+)
+\end{itemize}
+\subsubsection{Colors}
+\label{sec-5-2-2}
+The color can be changed at any point in the lattice. A setting is valid until the next color setting comand.
+\begin{itemize}
+\item \verb+\setlabelcolor{color}+ for textlabels (set to white to hide labels).
+\item \verb+\setlinecolor{type}{color}+ for type drift and marker.
+\item \verb+\setelementcolor{type}{color}[gradient color (white)]+ for all element types. set gradient color = color to "disable" gradient
+\item \verb+\resetlinecolor{type}+ reset to default color.
+\item \verb+\resetelementcolor{type}+ reset to default color.
+\item environment \verb+\begin{fade}[opacity (0.25)]+ sets the opacity of all elements within the environment to fade out regions of the lattice - e.g. for presentations. Also sets all colors to gray.
+This can also be used to completely hide regions by setting opacity to zero.
+\end{itemize}
+\subsection{Access lattice coordinates}
+\label{sec-5-3}
+You can use element coordinates to draw anything you want using pgf/tikz. You can even connect lattices to draw injection/extraction or a complete accelerator facility.
+\begin{itemize}
+\item \verb+\savecoordinate{name}[position (east)]+ saves coordinate of previous element
+to access it later.
+\begin{itemize}
+\item position specifies the exact place of the element. East (default) and center are available. East is always downstream.
+\item you can use all tikz/pgf commands within lattice environment to draw anything.
+\item You can use this to connect multiple beamlines within a lattice environment with \verb+\goto{name}+
+\item You can use this to connect multiple lattices with \verb+\start{name}+. use tikz overlay option (1. argument of lattice)
+\item see example 3
+\end{itemize}
+\end{itemize}
+\end{document}
