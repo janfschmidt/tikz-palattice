@@ -1,4 +1,5 @@
 latex = pdflatex
+packagename = tikz-palattice
 INSTALL_PATH = /usr/local/share/texmf/tex/latex
 e1 = example1_linear
 e2 = example2_circular
@@ -27,7 +28,7 @@ $(e5).pdf: $(e5).tex
 
 
 install:
-	install -m 644 -p -D -v lattice.sty $(INSTALL_PATH)/lattice/lattice.sty
+	install -m 644 -p -D -v tikz-palattice.sty $(INSTALL_PATH)/$(packagename)/$(packagename).sty
 	mktexlsr
 
 clean:

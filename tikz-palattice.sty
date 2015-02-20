@@ -21,16 +21,16 @@
 
 
 %---lattice environment---
-\newenvironmentx{lattice}[2][1=, 2=1]{%
+\newenvironmentx{lattice}[2][1=1, 2=]{%
 %begin
-\tikzpicture[node distance=0mm, remember picture, #1]
+\tikzpicture[node distance=0mm, remember picture, #2]
 \newdimen\labeldist
 \newdimen\savelabeldist
 \newdimen\corners;
 \newdimen\elementheight;
 \newdimen\elementwidth;
 \newdimen\markerlen;
-\pgfmathsetmacro{\scal}{#2*0.1};
+\pgfmathsetmacro{\scal}{#1*0.1};
 \def\labelfont{\normalsize};
 \def\labelcolor{black};
 \def\labelang{-90};

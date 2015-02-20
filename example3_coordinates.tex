@@ -22,7 +22,7 @@
   \centering
   % this is the ring from example 2, but plotted smaller (30%).
   % the element sizes (in meter) are the same - as the rule indicates.
-  \begin{lattice}[][0.3]
+  \begin{lattice}[0.3]
     \setlabelfont{\tiny}
     \begin{labeldistance}{0.3}
       \drift{1}
@@ -145,7 +145,7 @@
   \end{lattice}
   % 
   %now draw second lattice and connect them using the saved coordinate
-  \begin{lattice}[overlay]
+  \begin{lattice}[1][overlay]
     \start{(Septum)}
     \rotate{70}
     \drift{0.6}
