@@ -218,22 +218,11 @@ has 2 optional arguments:
 
 \subsection{Elements}
 \label{sec-5-1}
- The element names are self-explanatory:
 
+ Here is a list of all implemented element types. The element names are self-explanatory:
 \begin{lstlisting}
   \drift{(*\option{length/m}*)}[(*\optiondef{name}{}*)]
   \dipole{(*\option{name}*)}{(*\option{arc length/m}*)}{(*\option{bending angle/deg}*)}[(*\optiondef{type}{s}*)][(*\optiondef{thickness/m}{0.6}*)]
-\end{lstlisting}
-The \lstinline+dipole+ option \optiondef{type}{s} allows to select different dipole
-shapes. It is shown in example 2. Possible values are:
-\begin{itemize}
-\item s for a sector magnet (entrance/exit surface 90 degree to beampipe)
-\item br for a bend rectangle magnet (parallel entrance/exit surfaces)
-\item r for a rectangle magnet
-\end{itemize}
-If you use any other letters, also the default (s) is used.
-
-\begin{lstlisting}
   \quadrupole{(*\option{name}*)}{(*\option{length/m}*)}[(*\optiondef{thickness/m}{0.5}*)]
   \sextupole{(*\option{name}*)}{(*\option{length/m}*)}[(*\optiondef{thickness/m}{0.3}*)]
   \corrector{(*\option{name}*)}{(*\option{length/m}*)}[(*\optiondef{thickness/m}{0.25}*)]
@@ -244,9 +233,18 @@ If you use any other letters, also the default (s) is used.
   \source{(*\option{name}*)}{(*\option{length/m}*)}[(*\optiondef{thickness/m}{0.5}*)]
   \screen{(*\option{name}*)}[(*\optiondef{length/m}{0.2}*)]
   \valve{(*\option{name}*)}
-  \marker{(*\option{name}*)}[(*\optiondef{length/m}{0.35}*)]
+  \marker{(*\option{name}*)}[(*\optiondef{length/m}{0.35}*)] % a line perpendicular to the beamline, see Fig. (*\ref{fig:example1}*)
 \end{lstlisting}
-The \lstinline+marker+ is a line perpendicular to the beamline, e.g. to mark sections.
+
+The \lstinline+dipole+ option \optiondef{type}{s} allows to select different dipole
+shapes. It is shown in example~2. Possible values are:
+\begin{itemize}
+\item s for a sector magnet (entrance/exit surface 90 degree to beampipe)
+\item br for a bend rectangle magnet (parallel entrance/exit surfaces)
+\item r for a rectangle magnet
+\end{itemize}
+If you use any other letters, also the default (s) is used.
+
 
 \begin{figure}[h]
   \centering
@@ -559,7 +557,7 @@ You can use element coordinates to draw anything you want using pgf/tikz.
 \section{TODO}
 \label{sec:todo}
 
-What is missing? 
+\paragraph{What is missing?}
 \begin{itemize}
 \item manually adding and editing legend entries
 \item The look of the elements can be improved
@@ -574,7 +572,7 @@ bunch of macros. So there is:
 \item no dedicated scoping of internal macros (use of lattice with documentclass standalone recommended)
 \end{itemize}
 
-Known issues:
+\paragraph{Known issues:}
 \begin{itemize}
 \item Legend entry alignment is buggy for some legend scales that differ significantly
   from~1

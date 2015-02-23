@@ -3,7 +3,7 @@
 tarname=tikz-palattice
 
 mkdir $tarname
-for f in tikz-palattice.sty Makefile tikz-palattice_documentation.{tex,pdf} example*.tex elsa.tex
+for f in tikz-palattice.sty Makefile README tikz-palattice_documentation.{tex,pdf} example*.tex elsa.tex
 do
     cp $f $tarname/
 done
