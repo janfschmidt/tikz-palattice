@@ -168,13 +168,10 @@
 \quadrupole{QT1}{\quadl}
 \drift{0.2}
 \quadrupole{QT2}{\quadl}
-\drift{0.7}
+\drift{0.45}
 \turnlabels
 \savecoordinate{bestrahlung}
-\def\bestrl{0.25}
-\drift{\bestrl}
-\draw [fill=none] (bestrahlung) +(-\bestrl,-\bestrl) rectangle +(\bestrl,\bestrl);
-
+\beamdump{}{0.5}
 %title
 \node[smalllabel, yshift=5mm, anchor=east, text width=3cm] at (bestrahlung)
 {\IfLanguageName{ngerman}{Bestrahlungs\-platz}{irradiation area}};
