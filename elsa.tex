@@ -35,7 +35,7 @@
 \tikzset{biggestlabel/.style={font=\bfseries\Huge,scale=2.5, align=center}}
 \tikzset{biglabel/.style={font=\bfseries\Huge,scale=2, align=center}}
 \tikzset{mediumlabel/.style={font=\huge,scale=2, align=center}}
-\tikzset{smalllabel/.style={font=\Large,scale=2, align=center}}
+\tikzset{smalllabel/.style={font=\Large,scale=2.2, align=center}}
 
 
 
@@ -54,7 +54,7 @@
 % "switch labels off":
 %\setlabelcolor{white}
 
-\drawrule{(58,-7)}[5][2][0.2]
+\drawrule{(58,-7)}[5][3][0.3]
 \setangle{180}
 \start{(0,0)}
 
@@ -62,7 +62,8 @@
 %LINAC2
 %-----------------------------------
 \turnlabels
-\source{\IfLanguageName{ngerman}{Quelle}{Source} pol. $e^-$}{1}
+\source{}{1}
+\savecoordinate{PolQ}[center]
 \drift{2.5}
 \drift{0.5} % wand
 \source{}{0.2}
@@ -100,6 +101,9 @@
 %text
 \node[mediumlabel, anchor=north, yshift=-1cm] at (L2label)
 {LINAC 2\\{\Large \SI{26}{\MeV}}};
+\node[smalllabel, anchor=west, xshift=4mm] at (PolQ)
+{\IfLanguageName{ngerman}{Quelle}{Source of} pol.
+  $e^-$};
 
 
 %-----------------------------------
