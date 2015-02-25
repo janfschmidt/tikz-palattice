@@ -1,13 +1,13 @@
 #!/bin/bash
 
-tarname=tikz-palattice
+zipname=tikz-palattice
 
-mkdir $tarname
+mkdir $zipname
 for f in tikz-palattice.sty Makefile README tikz-palattice_documentation.{tex,pdf} example*.tex elsa.tex
 do
-    cp $f $tarname/
+    rsync -a $f $zipname/
 done
 
-zip -r $tarname.zip $tarname
+zip -r $zipname.zip $zipname
 
-rm -r $tarname
+rm -r $zipname
