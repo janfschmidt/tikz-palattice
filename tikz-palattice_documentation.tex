@@ -22,10 +22,10 @@
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{fixltx2e}
 \usepackage{graphicx}
 \usepackage{subcaption}
-\usepackage[normalem]{ulem}
 \usepackage{amsmath}
 \usepackage{textcomp}
 \usepackage{marvosym}
@@ -43,6 +43,12 @@
 \author{Jan Schmidt <schmidt@physik.uni-bonn.de>}
 \date{v2.1 (February 23, 2015)}
 \title{tikz-palattice - draw particle accelerator lattices with \tikzlabel}
+
+\hypersetup{
+  pdftitle={tikz-palattice - draw particle accelerator lattices with \tikzlabel},
+  pdfauthor={Jan Schmidt}
+}
+
 \begin{document}
 
 \definecolor{keycolor}{RGB}{172, 42, 42}
@@ -245,7 +251,7 @@ shapes. It is shown in example~2. Possible values are:
 If you use any other letters, also the default (s) is used.
 
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=10cm]{example1_linear}
   \caption{Example 1}
