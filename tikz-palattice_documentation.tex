@@ -41,7 +41,7 @@
 \newcommand{\tikzlabel}{Ti\textit{k}Z}
 
 \author{Jan Schmidt <schmidt@physik.uni-bonn.de>}
-\date{v2.1 (February 23, 2015)}
+\date{v2.2 (March 01, 2015)}
 \title{tikz-palattice - draw particle accelerator lattices with \tikzlabel}
 
 \hypersetup{
@@ -185,6 +185,9 @@ separate tex-files for the source code.
   especially for larger beamlines.
 \item lengths are set in meter, so you write \{1.32\} for \SI{1.32}{\m}.
 \item beamline with angle \SI{0}{\degree} goes to the right, positive angles bend counter clockwise.
+\item some commands use the \tikzlabel{} \textit{north/east/south/west} terms. \textit{east}
+  of an element is always where the beam leaves the element (downstream) and \textit{west} is where the
+  beam enters the element (upstream).
 \item settings (colors, font, rotatelabel,\ldots{}) changed within a \verb+scope+ environment are set back to the previous values outside of \verb+scope+
 \item picture scale: for lattice scale=1 an element of 1m length is plotted with \SI{2}{\cm} length
 \end{itemize}
@@ -314,7 +317,6 @@ textsize if scale=1.
 is similar to \lstinline+\legend+, but shows all element types.
 
 
-\clearpage
 \begin{figure}[h]
   \centering
   % this is the ring from example 2, but plotted smaller (30%).
@@ -357,12 +359,21 @@ is similar to \lstinline+\legend+, but shows all element types.
 Every element has a text label showing the given element name. The position and
 orientation of the label is set automatically according to the current angle of the
 beamline. Several commands to modify the labels manually are described below. If you want
-to disable labels, leave the element names blank or set the label color (section \ref{sec:colors}) to your background color.
+to disable labels, leave the element names blank or set the label color (section
+\ref{sec:colors}) to your background color.
 
 \begin{lstlisting}
   \turnlabels
 \end{lstlisting}
-moves labels to other side of elements (swap with marker labels)
+moves labels to other side of elements (swap with marker labels), while
+\begin{lstlisting}
+  \northlabels
+  \southlabels
+\end{lstlisting}
+explicitly sets the labels to north or south (see section \ref{sec:remarks}) of the
+elements. It is recommended to use these and not \lstinline+\turnlabels+, because
+otherwise the label position at a certain element is determined by the number of
+\lstinline+\turnlabels+ commands before this element.
 
 \begin{lstlisting}
   \rotatelabels{(*\option{angle/deg}*)}[(*\optiondef{anchor}{}*)]
@@ -438,7 +449,9 @@ You can use element coordinates to draw anything you want using pgf/tikz.
 \begin{lstlisting}
   \savecoordinate{(*\option{name}*)}[(*\optiondef{position}{east}*)]
 \end{lstlisting}
- saves the coordinate of the previous element to access it later. Position specifies the exact place of the element. East and center are available. East is always downstream.
+saves the coordinate of the previous element to access it later. Position specifies the
+exact place of the element. \textit{east} and \textit{center} are available (see section
+\ref{sec:remarks}).
 
 \begin{itemize}
 \item you can use all tikz/pgf commands within the lattice environment to draw anything.
@@ -451,11 +464,11 @@ You can use element coordinates to draw anything you want using pgf/tikz.
 
 
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \begin{subfigure}[b]{.45\textwidth}
 \centering
- \begin{lattice}
+ \begin{lattice}[0.8]
     \rotate{90}
     \turnlabels %labels to the left
     \drift{0.5}
@@ -483,7 +496,7 @@ You can use element coordinates to draw anything you want using pgf/tikz.
   \end{lattice}
   % 
   %now draw second lattice and connect them using the saved coordinate
-  \begin{lattice}[1][overlay]
+  \begin{lattice}[0.8][overlay]
     \start{(Septum)}
     \rotate{70}
     \drift{0.6}
@@ -506,7 +519,7 @@ You can use element coordinates to draw anything you want using pgf/tikz.
 %
 \begin{subfigure}[b]{.45\textwidth}
   \centering
-  \begin{lattice}
+  \begin{lattice}[0.8]
     \rotate{90}
     \turnlabels %labels to the left
     \drift{0.5}
@@ -558,7 +571,19 @@ You can use element coordinates to draw anything you want using pgf/tikz.
 \end{figure}
 
 
-\clearpage
+
+\section{Changelog}
+\label{sec:changelog}
+v2.1 from 2015/02/23 is the first published version.
+
+\paragraph{v2.2 from 2015/03/01}
+\begin{itemize}
+\item added \lstinline+\northlabels+ and \lstinline+\southlabels+
+\item minor legend improvements (label position is now independent of current lattice settings)
+\item minor documentation improvements
+\end{itemize}
+
+
 \section{TODO}
 \label{sec:todo}
 
@@ -579,8 +604,6 @@ bunch of macros. So there is:
 
 \paragraph{Known issues:}
 \begin{itemize}
-\item Legend entry alignment is buggy for some legend scales that differ significantly
-  from~1
 \item Please report bugs!
 \end{itemize}
 
