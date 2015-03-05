@@ -102,15 +102,15 @@
 \newcommandx{\setelementcolor}[3][3=white]{%
 \tikzset{#1/.append style={bottom color=#2, top color=#3, fadeElement}}}
 \newcommand{\resetelementcolor}[1]{\tikzset{#1/.style={default_#1}}}
-\newcommand{\setlinecolor}[2]{\tikzset{#1/.append style={#2, fade}}}
+\newcommand{\setlinecolor}[2]{\tikzset{#1/.append style={#2, faded}}}
 \newcommand{\resetlinecolor}[1]{\tikzset{#1/.style={default_#1}}}
 
 \newenvironmentx{fade}[1][1=0.25]{%
-\tikzset{fade/.style={opacity=#1, color=gray}}
-\tikzset{fadeElement/.style={fade, color=gray,bottom color=gray,top color=white}}
+\tikzset{faded/.style={opacity=#1, color=gray}}
+\tikzset{fadeElement/.style={faded, color=gray,bottom color=gray,top color=white}}
 }{%
-\tikzset{fade/.style={opacity=1.0}} % color not set
-\tikzset{fadeElement/.style={fade}}
+\tikzset{faded/.style={opacity=1.0}} % color not set
+\tikzset{fadeElement/.style={faded}}
 }
 
 
@@ -495,12 +495,12 @@
 
 
 % ----- styles -----
-%fade (for global fade setting)
-\tikzset{fade/.style={
+%faded (for global fade setting)
+\tikzset{faded/.style={
 opacity=1
 }}
 \tikzset{fadeElement/.style={
-fade
+faded
 }}
 
 %element (for all, except drift)
@@ -609,7 +609,7 @@ valve/.style={default_valve}
 %drift
 \tikzset{default_drift/.style={
 line width=0.8pt*10*\scal, draw=black,
-fade  %must be last to overwrite other settings
+faded  %must be last to overwrite other settings
 },
 drift/.style={default_drift}
 }
@@ -620,13 +620,13 @@ text=\labelcolor,
 font=\labelfont,
 rotate=\labelrot,
 anchor=\labelanchor,
-fade  %must be last to overwrite other settings
+faded  %must be last to overwrite other settings
 }}
 
 %marker (line)
 \tikzset{default_marker/.style={
 red, densely dashed,
-fade  %must be last to overwrite other settings
+faded  %must be last to overwrite other settings
 },
 marker/.style={default_marker}
 }
@@ -635,7 +635,7 @@ marker/.style={default_marker}
 \tikzset{rule/.style={
 draw=black,
 fill=black,
-fade  %must be last to overwrite other settings
+faded  %must be last to overwrite other settings
 }}
 
 %start
@@ -643,5 +643,5 @@ fade  %must be last to overwrite other settings
 draw=none,
 anchor=center,
 scale=0.1,
-fade  %must be last to overwrite other settings
+faded  %must be last to overwrite other settings
 }}

@@ -394,7 +394,7 @@ sets the text label font size. Default is \lstinline+\normalsize+.
 
 
 
-\subsubsection{Colors}
+\subsection{Colors}
 \label{sec:colors}
 The colors can be changed at any point of the lattice. A setting is valid until the next
 color command. The reset commands set the according default color. Use a \lstinline+scope+
@@ -419,6 +419,10 @@ for all element types. Set \optiondef{gradient color}{white} equal to \option{co
 for textlabels. Set to background color to hide text labels.
 
 
+
+\subsection{Fade Out}
+\label{sec:fade-out}
+
 \begin{lstlisting}
   \begin{fade}[(*\optiondef{opacity}{0.25}*)]
     ...
@@ -426,8 +430,63 @@ for textlabels. Set to background color to hide text labels.
 \end{lstlisting}
  reduces the opacity of all elements within the environment and sets all colors to gray.
  So you can fade out regions of the lattice - e.g. for presentations.
- This can also be used to completely hide regions by setting \optiondef{opacity}{0.25} to zero.
+ This can also be used to completely hide regions by setting \optiondef{opacity}{0.25} to
+ zero.
 
+ Custom drawings and annotations (see section \ref{sec:coords}) can also be faded out
+ automatically. The tikz style \lstinline{faded} provides the appropriate settings: Add
+ \lstinline{faded} to the style of any tikz drawing or node within the \lstinline{lattice}
+ environment. If it is drawn within a \lstinline{fade} environment, it is faded out. Else
+ its style is not changed:
+
+\begin{minipage}[c]{0.6\textwidth}
+\begin{lstlisting}
+  \begin{lattice}
+    \tikzset{mynode/.style={
+        anchor=west,xshift=7mm,font=\bf,red}}
+    \setangle{-90}
+    \drift{0.2}
+    \sextupole{S1}{0.2}
+    \drift{0.267}
+    \begin{fade}[0.4]
+      \quadrupole{Q1}{0.4}
+      \savecoordinate{Q1}[center]
+      \node[mynode,faded] at (Q1) {a quadrupole!};
+      \drift{0.29}
+    \end{fade}
+    \kicker{VC1}{0.1}
+    \savecoordinate{kick}[center]
+    \node[mynode,faded] at (kick) {a kicker!};
+    \drift{0.2}   
+    \dipole{M1}{0.8}{30}
+    \drift{0.29}
+  \end{lattice}
+\end{lstlisting}
+\end{minipage}
+%
+\begin{minipage}[c]{0.4\textwidth}
+  \begin{center}
+    \begin{lattice}
+      \tikzset{mynode/.style={anchor=west,xshift=7mm,font=\bf,red}}
+      \setangle{-90}
+      \drift{0.2}
+      \sextupole{S1}{0.2}
+      \drift{0.267}
+      \begin{fade}[0.4]
+        \quadrupole{Q1}{0.4}
+        \savecoordinate{Q1}[center]
+        \node[mynode,faded] at (Q1) {a quadrupole!};
+        \drift{0.29}
+      \end{fade}
+      \kicker{VC1}{0.1}
+      \savecoordinate{kick}[center]
+      \node[mynode,faded] at (kick) {a kicker!};
+      \drift{0.2}   
+      \dipole{M1}{0.8}{30}
+      \drift{0.29}
+    \end{lattice}
+  \end{center}
+\end{minipage}
 
 
 
