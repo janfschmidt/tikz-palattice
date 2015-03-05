@@ -61,7 +61,7 @@
 %-----------------------------------
 %LINAC2
 %-----------------------------------
-\turnlabels
+\northlabels
 \source{}{1}
 \savecoordinate{PolQ}[center]
 \drift{2.5}
@@ -110,16 +110,18 @@
 %-----------------------------------
 \goto{M3}
 \setangle{-180}
+\northlabels
 \drift{0.44}
 \quadrupole{Q7}{\quadl}
 \drift{0.2}
 \quadrupole{Q6}{\quadl}
 \drift{0.35}
+\turnlabels
 \dipole{M2}{0.3}{45}
 \drift{1.1}
 \dipole{M1}{0.3}{45}
 \savecoordinate{M1}[center]
-\turnlabels
+\southlabels
 \drift{0.58}
 \quadrupole{Q5}{\quadl}
 \drift{0.36}
@@ -162,14 +164,13 @@
 %-----------------------------
 \goto{M1}
 \setangle{90}
-\turnlabels
+\northlabels
 \drift{0.25}
 \drift{0.37}
 \quadrupole{QT1}{\quadl}
 \drift{0.2}
 \quadrupole{QT2}{\quadl}
 \drift{0.45}
-\turnlabels
 \savecoordinate{bestrahlung}
 \beamdump{}{0.5}
 %title
@@ -183,6 +184,7 @@
 \begin{scope}
 \setelementcolor{dipole}{green!55!black}[green!55!black]
 \goto{BoosterInj}
+\southlabels
 %\marker{Start}[0.5]
 \setlabeldistance{0.5}
 \kicker{INJSEPT}{0.88}
@@ -253,8 +255,8 @@
 %-----------------------------
 \goto{Booster_extract}
 \setangle{-47}
+\northlabels
 \drift{2}
-\turnlabels
 \corrector{KV1}{0.25}
 \drift{0.16}
 \quadrupole{QA}{0.48}
@@ -280,7 +282,7 @@
 \goto{ELSA_inject}
 \setangle{-55}
 \setlabeldistance{0.5}
-\turnlabels
+\northlabels
 
 % "end" put at beginning to start at injection
 \quadrupole{QD31}{0.4997}
@@ -590,7 +592,7 @@
 %Extraktion + CB
 %-----------------------
 \goto{ELSA_extract}
-\turnlabels
+\southlabels
 \rotate{-8}
 \drift{0.2}
 %----
@@ -665,7 +667,7 @@
 %-------------------
   \goto{MB1}
   \rotate{-10.8-11}
-  \turnlabels
+  \southlabels
   \drift{1.03}                                                               
   \dipole{MB2}{1.08166}{-11}[r][0.6]
   \drift{1.06}                                                               
@@ -702,6 +704,7 @@
 %neue externe Strahlführung
 %-----------------------------
 \goto{ELSA_extract_neu}
+\southlabels
 \rotate{-4}
 \drift{1.578}
 \drift{1.578}

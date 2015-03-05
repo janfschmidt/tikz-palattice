@@ -18,7 +18,7 @@
 % and the 5 example files example1_linear.tex, example2_circular.tex,
 % example3_coordinates.tex, example4_labels.tex and elsa.tex
 
-\ProvidesPackage{tikz-palattice}[2015/02/23 v2.1]
+\ProvidesPackage{tikz-palattice}[2015/03/01 v2.2]
 \RequirePackage{tikz}
 \RequirePackage{ifthen}
 \RequirePackage{siunitx}
@@ -134,6 +134,9 @@
 \def\labelang{+90} \def\marklabelang{-90}}{%
 \def\labelang{-90} \def\marklabelang{+90}}}
 
+\newcommand{\southlabels}{\def\labelang{-90} \def\marklabelang{+90}}
+\newcommand{\northlabels}{\def\labelang{+90} \def\marklabelang{-90}}
+
 \newcommandx{\rotatelabels}[2][2=notset]{%
   \def\labelrot{#1}
   \ifthenelse{\equal{#2}{notset}}{%
@@ -174,15 +177,15 @@
 \def\h{0.4}
 \def\l{0.3}
 \def\dist{0.18}
-\turnlabels
-\tikzset{drift/.append style={draw=none}}
 \savecoordinate{_here_}
 \coordinate (east\j) at (legendstart);
 \coordinate (legendstart') at ($(legendstart) + (-\h*\scal*15*#2,\dist*\scal*15*#2)$);
 \coordinate (legendstart'') at ($(legendstart) + (\h*\scal*15*#2,\dist*\scal*15*#2)$);
 \edef\points{(legendstart') (legendstart'')}
 \begin{scope}[scale=#2, every node/.style={scale=#2}]
-\setlabelcolor{black}
+\tikzset{drift/.append style={draw=none}}
+\northlabels%
+\setlabelcolor{black}%
   \iftoggle{dip}{\dipole{Dipole}{\l}{0}[s][\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
   \iftoggle{quad}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j)
@@ -207,8 +210,7 @@
 \node[draw=black, rounded corners, fit=\points] {};
 \pgfmathsetmacro{\scal}{\savescal}
 \pgfmathsetmacro{\angle}{\saveang}
-\tikzset{drift/.append style={draw=black}}
-\turnlabels
+%\tikzset{drift/.append style={draw=black}}
 \coordinate (east\j) at (_here_);
 }
 
