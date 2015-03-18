@@ -203,7 +203,7 @@ the default value of "scale" is 1.
 
 To draw a lattice just add
 \begin{lstlisting}
-\usepackage{lattice}
+\usepackage{tikz-palattice}
 \end{lstlisting}
 to your preambel and use the lattice environment with
 \begin{lstlisting}
@@ -664,6 +664,9 @@ bunch of macros. So there is:
 
 \paragraph{Known issues:}
 \begin{itemize}
+\item A circular lattice can have a significant offset (no closed circle), if the dipole
+  bending angles are not integer. Probably, this is due to rounding or calculation
+  accuracy.
 \item Please report bugs!
 \end{itemize}
 
