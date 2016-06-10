@@ -285,20 +285,31 @@
 \northlabels
 
 % "end" put at beginning to start at injection
+\drift{0.2325}
+\screen{}[0.025] %BPM31
+\drift{0.01665}
 \quadrupole{QD31}{0.4997}
-\drift{0.30115}
+\drift{0.02115}
+%\marker{IC31}
+\drift{0.28}
 \dipole{M31}{2.875}{15}
-\drift{0.307}
-\corrector{KV31}{0.1}
-\drift{1.05465}
+\drift{0.2765}
+\corrector{KV31}{0.13}
+\drift{0.1615}
+\corrector{MSI31}{0.6}
+\drift{0.2745}
+%\marker{IC32}
+\drift{0.01915}
 \quadrupole{QF32}{0.4997}
-\drift{0.13665}
+\drift{0.01115}
+\screen{}[0.025] %BPM32
+\drift{0.1005}
 \sextupole{SX32}{0.287}
 \drift{0.2069}
 \quadrupole{LQ32}{0.45}[0.2]
-\drift{0.5031}
-\corrector{KV32}{0.1}
-\drift{0.41025}
+\drift{0.5296}
+\corrector{KV32}{0.13}
+\drift{0.35375}
 \quadrupole{SQ32}{0.45}
 \drift{1.382}
 \quadrupole{TJQ32}{0.5515}[0.2]
@@ -306,129 +317,195 @@
 
 % usual start
 %\marker{start}[0.5]
-\drift{0.03415}
+\drift{0.013}
+%\marker{IC01}
+\drift{0.02115}
 \quadrupole{QD1}{0.4997}
-\drift{0.19515}
-\corrector{KV01}{0.1}
-\drift{1.79875}
-\quadrupole{SQ1}{0.45}[0.2]
+\drift{0.00365}
+\screen{}[0.025] %BPM01
+\drift{0.6285}
+\corrector{KV01}{0.13}
+\drift{1.30675}
+\quadrupole{SQ1}{0.45}
 \drift{1.01375}
 \quadrupole{LQ1}{0.45}[0.2]
 \drift{0.2065}
 \sextupole{SX1}{0.287}
-\drift{0.13665}
+\drift{0.0825}
+%\marker{IC02}
+\drift{0.05415}
 \quadrupole{QF2}{0.4997}
-\drift{1.05365}
-\corrector{KV02}{0.1}
-\drift{0.3077}
+\drift{0.00615}
+\screen{}[0.025] %BPM02
+\drift{0.2145}
+\corrector{IJK2}{0.73}
+\drift{0.0595}
+\corrector{KV02}{0.13}
+\drift{0.2962}
 \dipole{M2}{2.875}{15}
-\drift{0.30145}
-\quadrupole{QD3}{0.4997}
-\drift{0.13665}
-\sextupole{SD3}{0.287}
-\drift{0.4305}
-\corrector{KV03}{0.1}
-\drift{1.84183}
-\drift{1.84183}
-
-\rotatelabels{60}[west]
-\quadrupole{QF4}{0.4997}
-\drift{0.13665}
-\sextupole{SF4}{0.287}
-\drift{0.214}
-\corrector{KV04}{0.1}
-\drift{0.7237}
-\rotatelabels{0}
-
+\drift{0.2803}
+%\marker{IC03}
+\drift{0.02115}
+\begin{scope}
+  \rotatelabels{55}[west]
+  \quadrupole{QD3}{0.4997}
+  \drift{0.00865}
+  \screen{}[0.025] %BPM03
+  \drift{0.103}
+  \sextupole{SD3}{0.287}
+  \drift{0.1025}
+  \corrector{KV03}{0.13}
+  \drift{3.011}
+  \corrector{IJK3}{0.73}
+  \drift{0.2195}
+  % \marker{IC04}
+  \drift{0.02115}
+  \quadrupole{QF4}{0.4997}
+  \drift{0.01115}
+  \screen{}[0.025] %BPM04
+  \drift{0.1005}
+  \sextupole{SF4}{0.287}
+  \drift{0.1995}
+  \corrector{KV04}{0.13}
+  \drift{0.7082}
+\end{scope}
 \dipole{M4}{2.875}{15}
-\drift{0.30145}
-
-\rotatelabels{77}[west]
-\quadrupole{QD5}{0.4997}
-\drift{0.09715}
-\corrector{KV05}{0.1}
-\rotatelabels{0}
-
-\drift{1.2642}
+\drift{0.2803}
+%\marker{IC05}
+\drift{0.02115}
+\begin{scope}
+  \rotatelabels{90}[west]
+  \quadrupole{QD5}{0.4997}
+  \drift{0.00365}
+  \screen{}[0.025] %BPM05
+  \drift{0.1545}
+  \corrector{KV05}{0.13}
+  \drift{1.1482}
+\end{scope}
 \dipole{M5}{2.875}{15}
-\drift{0.30145}
-\quadrupole{QF6}{0.4997}
-\drift{0.94465}
-\corrector{KV06}{0.1}
-\drift{0.4167}
+\drift{0.2803}
+%\marker{IC06}
+\drift{0.02115}
+\begin{scope}
+  \rotatelabels{90}[west]
+  \quadrupole{QF6}{0.4997}
+  \drift{0.00615}
+  \screen{}[0.025] %BPM06
+  \drift{0.1745}
+  \kicker{MSE6}{0.65}
+  \drift{0.139}
+  % \marker{ICMSE6}
+  \drift{0.0185}
+  \corrector{KV06}{0.13}
+  \drift{0.3182}
+\end{scope}
 \dipole{M6}{2.875}{15}
-\drift{0.30145}
-
-\rotatelabels{-72}[east]
+\drift{0.2803}
+%\marker{IC07}
+\drift{0.02115}
 \quadrupole{QD7}{0.4997}
-\drift{0.41215}
-\kicker{MSE23}{0.90027}
+\drift{0.00865}
+\screen{}[0.025] %BPM07
+\drift{0.185}
+\kicker{MSE7}{0.9}
 \savecoordinate{ELSA_extract_neu}
-\drift{0.04893}
-\rotatelabels{0}
 
-% deleted due to "neue Extraktion"
-%\drift{0.19415}
-%\corrector{KV07}{0.1} 
-%\drift{1.1672}
 
+\drift{0.3427}
 \dipole{M7}{2.875}{15}
 \savecoordinate{sylibeamline}[center]
-\drift{0.30145}
+
+
+\drift{0.2803}
+%\marker{IC08}
+\drift{0.02115}
 \quadrupole{QF8}{0.4997}
-\drift{1.02365}
-\corrector{KV08}{0.1}
-\drift{0.3377}
+\drift{0.01115}
+\screen{}[0.025] %BPM08
+\drift{0.971}
+\corrector{KV08}{0.13}
+\drift{0.3242}
 \dipole{M8}{2.875}{15}
 \drift{0.30145}
 \quadrupole{QD9}{0.4997}
-\drift{0.30135}
+\drift{0.00365}
+\screen{}[0.025] %BPM09
+\drift{0.2727}
 \dipole{M9}{2.875}{15}
-\drift{0.3208}
-\corrector{KV09}{0.1}
-\drift{1.04065}
+\drift{0.3473}
+\corrector{KV09}{0.13}
+\drift{0.963}
+%\marker{IC10}
+\drift{0.02115}
 \quadrupole{QF10}{0.4997}
-\drift{0.30135}
+\drift{0.00615}
+\screen{}[0.025] %BPM10
+\drift{0.2702}
 \dipole{M10}{2.875}{15}
-\drift{0.7203}
-\corrector{KV10}{0.1}
-\drift{0.2175}
+\drift{0.6963}
+\corrector{KV10}{0.13}
+\drift{0.2115}
 \sextupole{SD10}{0.287}
-\drift{0.13665}
+\drift{0.105}
+\screen{}[0.025] %BPM11
+\drift{0.00665}
 \quadrupole{QD11}{0.4997}
-\drift{0.30135}
+\drift{0.02115}
+%\marker{IC11}
+\drift{0.2802}
 \dipole{M11}{2.875}{15}
-\drift{0.7208}
-\corrector{KV11}{0.1}
-\drift{0.217}
+\drift{0.7103}
+\corrector{KV11}{0.13}
+\drift{0.1975}
 \sextupole{SF11}{0.287}
-\drift{0.13665}
+\drift{0.1075}
+\screen{}[0.025] %BPM12
+\drift{0.00415}
 \quadrupole{QF12}{0.4997}
-\drift{0.30135}
+\drift{0.02115}
+%\marker{IC12}
+\drift{0.2802}
 \dipole{M12}{2.875}{15}
-\drift{1.1743}
-\corrector{KV12}{0.1}
-\drift{0.18715}
+\drift{1.1563}
+\corrector{KV12}{0.13}
+\drift{0.154}
+%\marker{IC13}
+\drift{0.02115}
 \quadrupole{QD13}{0.4997}
-\drift{0.30135}
+\drift{0.00365}
+\screen{}[0.025] %BPM13
+\drift{0.2727}
 \dipole{M13}{2.875}{15}
-\drift{0.7398}
-\corrector{KV13}{0.1}
-\drift{0.62165}
+\drift{0.7263}
+\corrector{KV13}{0.13}
+\drift{0.584}
+%\marker{IC14}
+\drift{0.02115}
 \quadrupole{QF14}{0.4997}
 \savecoordinate{rechts}
-\drift{1.86133}
-\drift{1.86133}
-\corrector{KV14}{0.1}
-\drift{0.81515}
+
+
+\drift{0.00615}
+\screen{}[0.025] %BPM14
+\drift{3.6265}
+\corrector{KV14}{0.13}
+\drift{0.829}
+%\marker{IC15}
+\drift{0.02115}
 \quadrupole{QD15}{0.4997}
-\drift{0.30135}
+\drift{0.00865}
+\screen{}[0.025] %BPM15
+\drift{0.2677}
 \dipole{M15}{2.875}{15}
-\drift{0.9368}
-\corrector{KV15}{0.1}
-\drift{0.42465}
+\drift{1.1483}
+\corrector{KV15}{0.13}
+\drift{0.162}
+%\marker{IC16}
+\drift{0.02115}
 \quadrupole{QF16}{0.4997}
-\drift{0.13665}
+\drift{0.01115}
+\screen{}[0.025] %BPM16
+\drift{0.1005}
 \sextupole{SX16}{0.287}
 \drift{0.2065}
 \quadrupole{LQ16}{0.45}[0.2]
@@ -436,117 +513,182 @@
 \cavity{PETRA1}{1.6}
 \drift{0.93725}
 \quadrupole{TJQD16}{0.5515}[0.2]
-\drift{0.1614}
+\drift{0.12475}
+\screen{}[0.025] %BPM17
+\drift{0.01165}
 \quadrupole{QD17}{0.4997}
-\drift{0.10615}
-\corrector{KV17}{0.1}
-\drift{0.244}
+\drift{0.02115}
+%\marker{IC17}
+\drift{0.429}
 \cavity{PETRA2}{1.6}
-\drift{1.43175}
-\drift{0.07575}
+\drift{0.311}
+\corrector{KV17}{0.13}
+\drift{1.0665}
 \quadrupole{LQ17}{0.45}[0.2]
 \drift{0.2065}
 \sextupole{SX17}{0.287}
-\drift{0.13665}
+\drift{0.0825}
+%\marker{IC18}
+\drift{0.05415}
 \quadrupole{QF18}{0.4997}
-\drift{0.41665}
-\corrector{KV18}{0.1}
-\drift{0.9447}
+\drift{0.00615}
+\screen{}[0.025] %BPM18
+\drift{0.962}
+\corrector{KV18}{0.13}
+\drift{0.3382}
 \dipole{M18}{2.875}{15}
-\drift{0.30145}
-
-%labels rotated (anchor automatic)
-\rotatelabels{61}[east]
-\quadrupole{QD19}{0.4997}
-\drift{0.13665}
-\sextupole{SD19}{0.287}
-\drift{0.1965}
-\corrector{KV19}{0.1}
-\drift{1.747}
-\drift{1.747}
-\sextupole{SF19}{0.287}
-\drift{0.13665}
-\quadrupole{QF20}{0.4997}
-\drift{0.22565}
-\corrector{KV20}{0.1}
-\rotatelabels{0}
-
-\drift{1.1357}
+\drift{0.2803}
+%\marker{IC19}
+\drift{0.02115}
+\begin{scope}
+  \rotatelabels{60}[east]
+  \quadrupole{QD19}{0.4997}
+  \drift{0.00865}
+  \screen{}[0.025] %BPM19
+  \drift{0.103}
+  \sextupole{SD19}{0.287}
+  \drift{0.2105}
+  \corrector{KV19}{0.13}
+  \drift{0.507}
+  \screen{}[0] %FMON
+  \drift{2.943}
+  \sextupole{SF19}{0.287}
+  \drift{0.1075}
+  \screen{}[0.025] %BPM20
+  \drift{0.00415}
+  \quadrupole{QF20}{0.4997}
+  \drift{0.02115}
+  % \marker{IC20}
+  \drift{0.985}
+  \corrector{KV20}{0.13}
+  \drift{0.3252}
+\end{scope}
 \dipole{M20}{2.875}{15}
-\drift{0.30145}
-
-\rotatelabels{76}[east]
-\quadrupole{QD21}{0.4997}
-\drift{0.21015}
-\corrector{KV21}{0.1}
-\rotatelabels{0}
-
-\drift{1.151}
+\begin{scope}
+  \rotatelabels{90}[east]
+  \drift{0.2803}
+  % \marker{IC21}
+  \drift{0.02115}
+  \quadrupole{QD21}{0.4997}
+  \drift{0.00365}
+  \screen{}[0.025] %BPM21
+  \drift{0.1765}
+  \corrector{KV21}{0.13}
+  \drift{1.126}
+\end{scope}
 \dipole{M21}{2.875}{15}
-\drift{0.30165}
-\quadrupole{QF22}{0.4997}
-\drift{0.99865}
-\corrector{KV22}{0.1}
-\drift{0.363}
+\begin{scope}
+  \rotatelabels{90}[east]
+  \drift{0.2805}
+  % \marker{IC22}
+  \drift{0.02115}
+  \quadrupole{QF22}{0.4997}
+  \drift{0.00615}
+  \screen{}[0.025] %BPM22
+  \drift{0.1315}
+  \kicker{MSE22}{0.65}
+  \drift{0.165}
+  % \marker{ICMSE22}
+  \drift{0.0005}
+  \corrector{KV22}{0.13}
+  \drift{0.3535}
+\end{scope}
 \dipole{M22}{2.875}{15}
-\drift{0.30115}
+\drift{0.28}
+%\marker{IC23}
+\drift{0.02115}
 \quadrupole{QD23}{0.4997}
-
-\drift{0.21}
+\drift{0.00865}
+\screen{}[0.025] %BPM23
+\drift{0.1765}
 \kicker{MSE23}{0.9}
 \savecoordinate{ELSA_extract}
-\drift{0.3}
 
+
+\drift{0.351}
 \dipole{M23}{2.875}{15}
-\drift{0.30165}
+\drift{0.2805}
+%\marker{IC24}
+\drift{0.02115}
 \quadrupole{QF24}{0.4997}
-\drift{0.99265}
-\corrector{KV24}{0.1}
-\drift{0.369}
+\drift{0.01115}
+\screen{}[0.025] %BPM24
+\drift{0.886}
+\corrector{KV24}{0.13}
+\drift{0.4095}
 \dipole{M24}{2.875}{15}
-\drift{0.30115}
+\drift{0.2645}
+\screen{}[0.025] %BPM25
+\drift{0.01165}
 \quadrupole{QD25}{0.4997}
 \savecoordinate{compton}[center]
-\drift{0.30115}
+
+
+\drift{0.02115}
+%\marker{IC25}
+\drift{0.28}
 \dipole{M25}{2.875}{15}
-\drift{0.716}
-\corrector{KV25}{0.1}
-\drift{0.64565}
+\drift{0.6985}
+\corrector{KV25}{0.13}
+\drift{0.612}
+%\marker{IC26}
+\drift{0.02115}
 \quadrupole{QF26}{0.4997}
-\drift{0.30165}
+\drift{0.00615}
+\screen{}[0.025] %BPM26
+\drift{0.2705}
 \dipole{M26}{2.875}{15}
-\drift{0.723}
-\corrector{KV26}{0.1}
-\drift{0.214}
+\drift{0.729}
+\corrector{KV26}{0.13}
+\drift{0.178}
 \sextupole{SD26}{0.287}
-\drift{0.13715}
+\drift{0.1055}
+\screen{}[0.025] %BPM27
+\drift{0.00665}
 \quadrupole{QD27}{0.4997}
-\drift{0.30115}
+\drift{0.02115}
+%\marker{IC27}
+\drift{0.28}
 \dipole{M27}{2.875}{15}
-\drift{0.728}
-\corrector{KV27}{0.1}
-\drift{0.21}
+\drift{0.7025}
+\corrector{KV27}{0.13}
+\drift{0.2055}
 \sextupole{SF27}{0.287}
-\drift{0.13665}
+\drift{0.1075}
+\screen{}[0.025] %BPM28
+\drift{0.00415}
 \quadrupole{QF28}{0.4997}
-\drift{0.30165}
+\drift{0.02115}
+%\marker{IC28}
+\drift{0.2805}
 \dipole{M28}{2.875}{15}
-\drift{1.168}
-\corrector{KV28}{0.1}
-\drift{0.19315}
+\drift{1.159}
+\corrector{KV28}{0.13}
+\drift{0.151}
+%\marker{IC29}
+\drift{0.02115}
 \quadrupole{QD29}{0.4997}
-\drift{0.30115}
+\drift{0.00365}
+\screen{}[0.025] %BPM29
+\drift{0.2725}
 \dipole{M29}{2.875}{15}
-\savecoordinate{links}
-\drift{0.318}
-\corrector{KV29}{0.1}
-\drift{1.04365}
+\drift{0.3105}
+\corrector{KV29}{0.13}
+\drift{0.0455}
+\corrector{IJK29}{0.73}
+\drift{0.2245}
+%\marker{IC30}
+\drift{0.02115}
 \quadrupole{QF30}{0.4997}
-\drift{1.56882}
-\drift{1.56882}
-\corrector{KV30}{0.1}
-\drift{1.0}
-\drift{0.40015}
+\savecoordinate{links}
+
+
+\drift{0.00615}
+\screen{}[0.025] %BPM30
+\drift{3.0545}
+\corrector{KV30}{0.13}
+\drift{0.248}
+\corrector{MSI30}{0.9}
 \resetlabeldistance
 
 %title - aligned between M29 and QF14 via \savecoordinate
@@ -705,26 +847,95 @@
 %-----------------------------
 \goto{ELSA_extract_neu}
 \southlabels
-\rotate{-4}
-\drift{1.578}
-\drift{1.578}
-\quadrupole{QF1}{0.5}[0.3]
-\drift{2.06505}
-\drift{2.06505}
-\drift{2.06505}
-\quadrupole{QD1}{0.4997}[0.3]
-\drift{0.89515}
+\rotate{-5.44}
+\drift{2.55}
+\begin{scope}
+\setlabelfont{\footnotesize}
+\rotatelabels{-90}[west]
+\corrector{SSH1}{0.34}[0.29]
+\end{scope}
+\drift{0.225}
+\begin{scope}
+\setlabelfont{\footnotesize}
+\rotatelabels{-90}[west]
+\corrector{SSV1}{0.2}[0.162]
+\end{scope}
+\drift{0.26856}
+\quadrupole{QF1}{0.5}[0.266]
+\drift{0.1435}
+\begin{scope}
+\setlabelfont{\scriptsize}
+\northlabels
+\setlabeldistance{0.2}
+\screen{CS1}[0.2]
+\end{scope}
+\drift{5.3035}
+\begin{scope}
+\setlabelfont{\footnotesize}
+\northlabels
+\rotatelabels{-90}[east]
+\corrector{SSH2}{0.2}[0.22]
+\end{scope}
+\drift{0.16}
+\begin{scope}
+\setlabelfont{\footnotesize}
+\northlabels
+\rotatelabels{-90}[east]
+\corrector{SSV2}{0.2}[0.175]
+\end{scope}
+\drift{0.16}
+\quadrupole{QD2}{0.4997}[0.61]
+\drift{0.11309}
+\begin{scope}
+\setlabelfont{\scriptsize}
+\northlabels
+\screen{CS2}[0.2]
+\end{scope}
+\drift{0.8032}
 \begin{labeldistance}{1.2}
   \dipole{MB}{1.50274}{-12}[r][2]
 \end{labeldistance}
-\drift{0.89415}
-\quadrupole{QF2}{0.4997}[0.3]
-\drift{2.1063}
-\quadrupole{QD2}{0.4997}[0.3]
-\drift{2.77607}
+\drift{0.41180}
+\begin{scope}
+\setlabelfont{\scriptsize}
+\northlabels
+\screen{CS3}[0.2]
+\end{scope}
+\drift{0.50289}
+\quadrupole{QF3}{0.4997}[0.61]
+\drift{0.22983}
+\begin{scope}
+\setlabelfont{\footnotesize}
+\northlabels
+\rotatelabels{-90}[east]
+\corrector{SSH3}{0.2}[0.22]
+\drift{0.31732}
+\end{scope}
+\begin{scope}
+\setlabelfont{\footnotesize}
+\northlabels
+\rotatelabels{-90}[east]
+\corrector{SSV3}{0.2}[0.175]
+\end{scope}
+\drift{0.74414}
+\begin{scope}
+\setlabelfont{\scriptsize}
+\northlabels
+\cavity{IR}{0.130}[0.168]
+\end{scope}
+\drift{0.34731}
+\quadrupole{QD4}{0.4997}[0.61]
+\drift{0.113094}
+\begin{scope}
+\setlabelfont{\scriptsize}
+\northlabels
+\screen{CS4}[0.2]
+\end{scope}
+\drift{0.653}
 \savecoordinate{NEWSFlabel}
-\drift{2.77607}
-\beamdump{}{0.4}
+\setlinecolor{drift}{dotted}
+\drift{6.45}
+\beamdump{}{0.5} 
   %title
   \node[smalllabel, anchor=north, yshift=-5mm, text width=4.5cm] at (NEWSFlabel)
   {\IfLanguageName{ngerman}{Messplatz für}{area
