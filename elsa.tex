@@ -1,5 +1,5 @@
 %% elsa.tex
-%% Copyright 2015 J. Schmidt
+%% Copyright 2016 J. Schmidt
 %% tikz-palattice LaTeX package
 % 
 % This work may be distributed and/or modified under the
@@ -36,6 +36,7 @@
 \tikzset{biglabel/.style={font=\bfseries\Huge,scale=2, align=center,faded}}
 \tikzset{mediumlabel/.style={font=\huge,scale=2, align=center,faded}}
 \tikzset{smalllabel/.style={font=\Large,scale=2.2, align=center,faded}}
+\tikzset{experimentlabel/.style={mediumlabel, fill=white, fill opacity=0.7, text opacity=1}}
 
 
 
@@ -99,7 +100,7 @@
 %title
 \node[mediumlabel, anchor=north, yshift=-1cm] at (L2label)
 {LINAC 2\\{\Large \SI{26}{\MeV}}};
-\node[smalllabel, anchor=west, xshift=4mm] at (PolQ)
+\node[mediumlabel, anchor=west, xshift=4mm] at (PolQ)
 {\IfLanguageName{ngerman}{Quelle}{Source of} pol.
   $e^-$};
 
@@ -799,7 +800,7 @@
 \end{scope}
 
 %title
-\node[mediumlabel, anchor=east, yshift=1.5cm] at (CBlabel) {Crystal Barrel};
+\node[experimentlabel, anchor=center, yshift=0.6cm] at (CBlabel) {Crystal Barrel (E1)};
 \node[biglabel, yshift=3.8cm,xshift=-3cm, text width=7cm] at (CBlabel)
 {\IfLanguageName{ngerman}{Hadronenphysik- Experimente}{hadron physics experiments}};
 
@@ -839,7 +840,7 @@
   \end{scope}
 
   % title
-  \node[mediumlabel, anchor=east, yshift=-0.7cm, xshift=-0.3cm] at (BGOlabel) {BGO-OD};
+  \node[experimentlabel, anchor=center, xshift=1cm,yshift=-0.4cm] at (BGOlabel) {BGO-OD (E2)};
 
 
 %-----------------------------
@@ -937,13 +938,13 @@
 \drift{6.45}
 \beamdump{}{0.5} 
   %title
-  \node[smalllabel, anchor=north, yshift=-5mm, text width=4.5cm] at (NEWSFlabel)
-  {\IfLanguageName{ngerman}{Messplatz für}{area
-      for}\\\IfLanguageName{ngerman}{Detektortests}{detector
-      tests}\\\IfLanguageName{ngerman}{(im Aufbau)}{(under construction)}};
+  \node[experimentlabel, anchor=north, yshift=-4mm, text width=7cm] at (NEWSFlabel)
+  {\IfLanguageName{ngerman}{Messplatz für}{Area
+      for}\\\IfLanguageName{ngerman}{Detektortests}{Detector
+      Tests} (E3)};
 
 %---------------------------
 % legend shows all element types occuring before this commmand
-\legend{(67,46)}[2]
+\legend{(67,46)}[3]
 \end{lattice}
 \end{document}
