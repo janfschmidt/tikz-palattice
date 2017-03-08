@@ -201,6 +201,14 @@
 }
 
 
+% add custom legend entry
+\newcommand{\addlegendentry}[3]{%
+  \pgfkeys{/legkeys/.append = {,#1}}
+  \pgfkeyssetvalue{/legtxt/#1}{#2}
+  \pgfkeys{/legimg/#1/.style = {#3}}
+}
+
+
 %legend (types that occured in the lattice before this command)
 \newcommandx{\legend}[2][2=1]{%
 \coordinate (legendstart) at ($(0,0)!\scal*20!#1$);
@@ -241,6 +249,17 @@
       \points}\drift{\dist}}{}%
   \iftoggle{valv}{\drift{\dist}\valve{\pgfkeysvalueof{/pal/legendtxt/valve}}\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
+  % custom entries (addlegendentry)
+  \edef\mylist{\pgfkeysvalueof{/legkeys}}%
+  \node[anchor=north west,inner sep=0,outer sep=0,xshift=-2mm] at (east\j) {
+    \begin{tikzpicture}[start chain=going below,node distance=2mm]
+      \foreach \ele in \mylist {%
+        \node[on chain, /legimg/\ele, draw,minimum width=4mm, minimum height=3mm] (n) {};%
+        \node[anchor=west,xshift=3mm] (ntxt) at (n.east) {\pgfkeysvalueof{/legtxt/\ele}};%
+        \xdef\points{(ntxt)\points}%
+      }
+    \end{tikzpicture}
+  };
 \end{scope}
 \node[draw=black, rounded corners, fit=\points] {};
 \pgfmathsetmacro{\scal}{\savescal}
