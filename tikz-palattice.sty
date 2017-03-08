@@ -24,6 +24,7 @@
 \RequirePackage{siunitx}
 \RequirePackage{xargs}
 \RequirePackage{etoolbox}
+\RequirePackage{iflang}
 \usetikzlibrary{calc,positioning,fit}
 \usetikzlibrary{scopes}
 \pgfdeclarelayer{background}
@@ -167,6 +168,39 @@
   }
 }
 
+
+
+% legend text defaults
+\IfLanguageName{ngerman}{%
+\pgfkeyssetvalue{/pal/legendtxt/dipole}{Dipol}
+\pgfkeyssetvalue{/pal/legendtxt/quadrupole}{Quadrupol}
+\pgfkeyssetvalue{/pal/legendtxt/sextupole}{Sextupol}
+\pgfkeyssetvalue{/pal/legendtxt/kicker}{Kicker}
+\pgfkeyssetvalue{/pal/legendtxt/corrector}{Korrektor}
+\pgfkeyssetvalue{/pal/legendtxt/solenoid}{Solenoid}
+\pgfkeyssetvalue{/pal/legendtxt/cavity}{Hochfrequenz}
+\pgfkeyssetvalue{/pal/legendtxt/source}{Quelle}
+\pgfkeyssetvalue{/pal/legendtxt/screen}{Schirm}
+\pgfkeyssetvalue{/pal/legendtxt/valve}{Ventil}
+}{%
+\pgfkeyssetvalue{/pal/legendtxt/dipole}{Dipole}
+\pgfkeyssetvalue{/pal/legendtxt/quadrupole}{Quadrupole}
+\pgfkeyssetvalue{/pal/legendtxt/sextupole}{Sextupole}
+\pgfkeyssetvalue{/pal/legendtxt/kicker}{Kicker}
+\pgfkeyssetvalue{/pal/legendtxt/corrector}{Corrector}
+\pgfkeyssetvalue{/pal/legendtxt/solenoid}{Solenoid}
+\pgfkeyssetvalue{/pal/legendtxt/cavity}{Cavity}
+\pgfkeyssetvalue{/pal/legendtxt/source}{Source}
+\pgfkeyssetvalue{/pal/legendtxt/screen}{Screen}
+\pgfkeyssetvalue{/pal/legendtxt/valve}{Valve}
+}
+
+% change legend text
+\newcommand{\setlegendtext}[2]{%
+  \pgfkeys{/pal/legendtxt/#1=#2}
+}
+
+
 %legend (types that occured in the lattice before this command)
 \newcommandx{\legend}[2][2=1]{%
 \coordinate (legendstart) at ($(0,0)!\scal*20!#1$);
@@ -186,25 +220,26 @@
 \tikzset{drift/.append style={draw=none}}
 \northlabels%
 \setlabelcolor{black}%
-  \iftoggle{dip}{\dipole{Dipole}{\l}{0}[r][\h]\xdef\points{(elementlabel\j)
+\setlabeldistance{\h}%
+  \iftoggle{dip}{\dipole{\pgfkeysvalueof{/pal/legendtxt/dipole}}{\l}{0}[r][\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{quad}{\quadrupole{Quadrupole}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{quad}{\quadrupole{\pgfkeysvalueof{/pal/legendtxt/quadrupole}}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{sext}{\sextupole{Sextupole}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{sext}{\sextupole{\pgfkeysvalueof{/pal/legendtxt/sextupole}}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{correct}{\corrector{Corrector}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{correct}{\corrector{\pgfkeysvalueof{/pal/legendtxt/corrector}}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{kick}{\kicker{Kicker}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{kick}{\kicker{\pgfkeysvalueof{/pal/legendtxt/kicker}}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{cav}{\cavity{Cavity}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{cav}{\cavity{\pgfkeysvalueof{/pal/legendtxt/cavity}}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{sol}{\solenoid{Solenoid}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{sol}{\solenoid{\pgfkeysvalueof{/pal/legendtxt/solenoid}}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{sourc}{\source{Source}{\l}[\h]\xdef\points{(elementlabel\j)
+  \iftoggle{sourc}{\source{\pgfkeysvalueof{/pal/legendtxt/source}}{\l}[\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{scree}{\screen{Screen}[\l]\xdef\points{(elementlabel\j)
+  \iftoggle{scree}{\screen{\pgfkeysvalueof{/pal/legendtxt/screen}}[\l]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
-  \iftoggle{valv}{\drift{\dist}\valve{Valve}\xdef\points{(elementlabel\j)
+  \iftoggle{valv}{\drift{\dist}\valve{\pgfkeysvalueof{/pal/legendtxt/valve}}\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
 \end{scope}
 \node[draw=black, rounded corners, fit=\points] {};
