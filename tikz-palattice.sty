@@ -266,7 +266,7 @@
         \foreach \ele in \mylist {%
           \node[on chain, draw, thin,/pal/customlegendimg/\ele, minimum width=\h*10mm, minimum height=\l*10mm] (n) {};%
           \node[anchor=west,xshift=5.15mm] (ntxt) at (n.center) {\ele};%
-          \xdef\points{(ntxt)\points}%
+          \xdef\points{($(ntxt.south east)+#2*(2mm,-2mm)$)\points}%
         }
       \end{tikzpicture}
     };
