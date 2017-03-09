@@ -68,6 +68,9 @@
 \global\providetoggle{sourc} \global\settoggle{sourc}{false}
 \global\providetoggle{scree} \global\settoggle{scree}{false}
 \global\providetoggle{valv} \global\settoggle{valv}{false}
+% custom legend
+\pgfkeys{/pal/customlegendkeys/.initial = {nix}}
+\def\emptycustomlegendkeys{nix}
 }{%
 %end
 \endtikzpicture
@@ -202,10 +205,14 @@
 
 
 % add custom legend entry
-\newcommand{\addlegendentry}[3]{%
-  \pgfkeys{/legkeys/.append = {,#1}}
-  \pgfkeyssetvalue{/legtxt/#1}{#2}
-  \pgfkeys{/legimg/#1/.style = {#3}}
+\newcommand{\addlegendentry}[2]{%
+  \pgfkeys{/pal/customlegendkeys/.get = \lktemp}
+  \ifdefequal{\lktemp}{\emptycustomlegendkeys}{%
+    \pgfkeyssetvalue{/pal/customlegendkeys}{#1}%
+  }{%
+    \pgfkeys{/pal/customlegendkeys/.append = {,#1}}%
+  }%
+  \pgfkeys{/pal/customlegendimg/#1/.style = {#2}}%
 }
 
 
@@ -229,6 +236,7 @@
 \northlabels%
 \setlabelcolor{black}%
 \setlabeldistance{\h}%
+\setlabelfont{\normalsize}%
   \iftoggle{dip}{\dipole{\pgfkeysvalueof{/pal/legendtxt/dipole}}{\l}{0}[r][\h]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
   \iftoggle{quad}{\quadrupole{\pgfkeysvalueof{/pal/legendtxt/quadrupole}}{\l}[\h]\xdef\points{(elementlabel\j)
@@ -248,19 +256,21 @@
   \iftoggle{scree}{\screen{\pgfkeysvalueof{/pal/legendtxt/screen}}[\l]\xdef\points{(elementlabel\j)
       \points}\drift{\dist}}{}%
   \iftoggle{valv}{\drift{\dist}\valve{\pgfkeysvalueof{/pal/legendtxt/valve}}\xdef\points{(elementlabel\j)
-      \points}\drift{\dist}}{}%
-  % custom entries (addlegendentry)
-  \edef\mylist{\pgfkeysvalueof{/legkeys}}%
-  \node[anchor=north west,inner sep=0,outer sep=0,xshift=-2mm] at (east\j) {
-    \begin{tikzpicture}[start chain=going below,node distance=2mm]
-      \foreach \ele in \mylist {%
-        \node[on chain, /legimg/\ele, draw,minimum width=4mm, minimum height=3mm] (n) {};%
-        \node[anchor=west,xshift=3mm] (ntxt) at (n.east) {\pgfkeysvalueof{/legtxt/\ele}};%
-        \xdef\points{(ntxt)\points}%
-      }
-    \end{tikzpicture}
-  };
+      \points}\drift{\dist}\drift{\dist}}{}%
 \end{scope}
+  % custom entries (addlegendentry)
+  \edef\mylist{\pgfkeysvalueof{/pal/customlegendkeys}}%
+  \ifdefequal{\mylist}{\emptycustomlegendkeys}{}{%
+    \node[anchor=north west,inner sep=0,outer sep=0,xshift=#2*-2mm] at (east\j) {
+      \begin{tikzpicture}[start chain=going below,node distance=2mm,scale=#2,transform shape]
+        \foreach \ele in \mylist {%
+          \node[on chain, draw, thin,/pal/customlegendimg/\ele, minimum width=\h*10mm, minimum height=\l*10mm] (n) {};%
+          \node[anchor=west,xshift=5.15mm] (ntxt) at (n.center) {\ele};%
+          \xdef\points{(ntxt)\points}%
+        }
+      \end{tikzpicture}
+    };
+  }
 \node[draw=black, rounded corners, fit=\points] {};
 \pgfmathsetmacro{\scal}{\savescal}
 \pgfmathsetmacro{\angle}{\saveang}
