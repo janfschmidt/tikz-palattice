@@ -1,5 +1,5 @@
 %% tikz-palattice_documentation.tex
-%% Copyright 2015 J. Schmidt
+%% Copyright 2017 J. Schmidt
 %% tikz-palattice LaTeX package
 % 
 % This work may be distributed and/or modified under the
@@ -23,8 +23,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage{fixltx2e}
-\usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{textcomp}
@@ -40,8 +38,8 @@
 \newcommand{\optiondef}[2]{{\color{green!50!black}$\langle$\textit{#1=#2}$\rangle$}}
 \newcommand{\tikzlabel}{Ti\textit{k}Z}
 
-\author{Jan Schmidt <schmidt@physik.uni-bonn.de>}
-\date{v2.21 (March 18, 2015)}
+\author{Jan Schmidt <janschmidt@mailbox.org>}
+\date{v2.3 (March 9, 2017)}
 \title{tikz-palattice - draw particle accelerator lattices with \tikzlabel}
 
 \hypersetup{
@@ -93,7 +91,7 @@ escapeinside={(*}{*)}
 
 \clearpage
 \parindent=0pt
-Copyright 2015 Jan Schmidt
+Copyright 2017 Jan Schmidt
 
 \medskip
 Permission is granted to distribute and/or modify both the documentation and the code
@@ -133,6 +131,7 @@ Otherwise read the documentation of your \LaTeX{} distribution.
 \item ifthen
 \item xargs
 \item etoolbox
+\item iflang
 \end{itemize}
 
 \lstset{language=[LaTeX]TeX}
@@ -244,17 +243,46 @@ has 2 optional arguments:
   \marker{(*\option{name}*)}[(*\optiondef{length/m}{0.35}*)] % a line perpendicular to the beamline, see Fig. (*\ref{fig:example1}*)
 \end{lstlisting}
 
+
+\subsubsection{Dipole Types}
 The \lstinline+dipole+ option \optiondef{type}{s} allows to select different dipole
 shapes. It is shown in example~2. Possible values are:
-\begin{itemize}
-\item s for a sector magnet (entrance/exit surface 90 degree to beampipe)
-\item br for a bend rectangle magnet (parallel entrance/exit surfaces)
-\item r for a rectangle magnet
-\end{itemize}
+
+\def\dipang{30}
+\def\dipl{1.5}
+\def\dipthick{0.3}
+\begin{minipage}[c]{0.33\textwidth}
+  \centering
+  \begin{lattice}
+    \setangle{-\dipang/2}
+    \drift{0.1}
+    \dipole{s: sector magnet}{\dipl}{\dipang}[s][\dipthick]
+    \drift{0.1}
+  \end{lattice}
+\end{minipage}
+\begin{minipage}[c]{0.33\textwidth}
+  \centering
+  \begin{lattice}
+    \setangle{-\dipang/2}
+    \drift{0.1}
+    \dipole{r: rectangle magnet}{\dipl}{\dipang}[r][\dipthick]
+    \drift{0.1}
+  \end{lattice}
+\end{minipage}
+\begin{minipage}[c]{0.33\textwidth}
+  \centering
+  \begin{lattice}
+    \setangle{-\dipang/2}
+    \drift{0.1}
+    \dipole{br: bend rectangle magnet}{\dipl}{\dipang}[br][\dipthick]
+    \drift{0.1}
+  \end{lattice}
+\end{minipage}
+
 If you use any other letters, also the default (s) is used.
 
 
-\begin{figure}[ht]
+\begin{figure}
   \centering
   \includegraphics[width=10cm]{example1_linear}
   \caption{Example 1}
@@ -292,36 +320,11 @@ with \lstinline+\savecoordinate+ (section \ref{sec:coords}).
 Use this to connect lattices and draw injection, extraction or even a complete accelerator
 facility. This is shown in example 3.
 
-
-
-\subsection{Rule and Legend}
-\label{sec:rule-legend}
-
-\begin{lstlisting}
-  \drawrule{(*\option{position/m}*)}[(*\optiondef{tick distance/m}{1}*)][(*\optiondef{scale}{1}*)][(*\optiondef{height/m}{0.1}*)]
-\end{lstlisting}
-draws a rule to visualize the size of the lattice. Coordinate is of form (x,y) or any tikz
-label, e.g. (mylabel.east)
-
-\begin{lstlisting}
-  \legend{(*\option{position/m}*)}[(*\optiondef{scale}{1}*)]
-\end{lstlisting}
-draws a legend with all element types that occur in the lattice before this command.
-The given \option{position/m} is north west (upper left corner) of the legend box.
-The scale option scales the whole box including the text, which has the usual label
-textsize if scale=1.
-
-\begin{lstlisting}
-  \completelegend{(*\option{position/m}*)}[(*\optiondef{scale}{1}*)]
-\end{lstlisting}
-is similar to \lstinline+\legend+, but shows all element types.
-
-
 \begin{figure}[h]
   \centering
   % this is the ring from example 2, but plotted smaller (30%).
   % the element sizes (in meter) are the same - as the rule indicates.
-  \begin{lattice}[0.3]
+  \begin{lattice}[0.27]
     \setlabelfont{\tiny}
     \begin{labeldistance}{0.3}
       \drift{1}
@@ -352,6 +355,84 @@ is similar to \lstinline+\legend+, but shows all element types.
 \caption{From example 3}
 \label{fig:fromexample3}
 \end{figure}
+
+
+\newpage
+\subsection{Rule and Legend}
+\label{sec:rule-legend}
+
+\begin{lstlisting}
+  \drawrule{(*\option{position/m}*)}[(*\optiondef{tick distance/m}{1}*)][(*\optiondef{scale}{1}*)][(*\optiondef{height/m}{0.1}*)]
+\end{lstlisting}
+draws a rule to visualize the size of the lattice. Coordinate is of form (x,y) or any tikz
+label, e.g. (mylabel.east)
+
+\begin{lstlisting}
+  \legend{(*\option{position/m}*)}[(*\optiondef{scale}{1}*)]
+\end{lstlisting}
+draws a legend with all element types that occur in the lattice before this command.
+The given \option{position/m} is north west (upper left corner) of the legend box.
+The scale option scales the whole box including the text, which has the usual label
+textsize if scale=1.
+
+\begin{lstlisting}
+  \completelegend{(*\option{position/m}*)}[(*\optiondef{scale}{1}*)]
+\end{lstlisting}
+is similar to \lstinline+\legend+, but shows all element types.
+
+The legend can be customized with the following two commands.
+Here is an example for legend customizations:
+
+\begin{minipage}[c]{0.5\textwidth}
+\begin{lstlisting}
+  \begin{lattice}
+    \drift{0.2}
+    \quadrupole{Q1}{0.4}
+    \drift{0.1}
+    \kicker{C1}{0.1}
+    \drift{0.5}
+    \screen{S1}
+    \drift{0.2}
+    \setlegendtext{quadrupole}{I am focusing}
+    \addlegendentry{What's that?}{cyan, fill=violet}
+    \legend{(0.2,-1)}
+  \end{lattice}
+\end{lstlisting}
+\end{minipage}
+%
+\begin{minipage}[c]{0.5\textwidth}
+  \begin{center}
+  \begin{lattice}
+    \drift{0.2}
+    \quadrupole{Q1}{0.4}
+    \drift{0.1}
+    \kicker{C1}{0.1}
+    \drift{0.5}
+    \screen{S1}
+    \drift{0.2}
+    \setlegendtext{quadrupole}{I am focusing}
+    \addlegendentry{What's that?}{cyan, fill=violet}
+    \legend{(0.2,-1)}
+  \end{lattice}
+  \end{center}
+\end{minipage}
+
+\begin{lstlisting}
+  \setlegendtext{(*\option{type}*)}{(*\option{text}*)}
+\end{lstlisting}
+allows to change the text shown in the legend for element type \option{type}. The legend
+is automatically translated to German if \textit{ngerman} is set with the babel package.
+
+\begin{lstlisting}
+  \addlegendentry{(*\option{text}*)}{(*\option{style}*)}
+\end{lstlisting}
+adds a custom entry to the legend. The style of the legend image can set with
+\option{style}. All style options for a tikz node are allowed. All custom legend entries
+appear below the normal entries.
+
+
+
+
 
 
 \subsection{Labels}
@@ -500,7 +581,7 @@ for textlabels. Set to background color to hide text labels.
 \end{minipage}
 
 
-
+\clearpage
 \subsection{Access lattice Coordinates}
 \label{sec:coords}
 You can use element coordinates to draw anything you want using pgf/tikz. 
@@ -515,9 +596,9 @@ exact place of the element. \textit{east} and \textit{center} are available (see
 \begin{itemize}
 \item you can use all tikz/pgf commands within the lattice environment to draw anything.
 \item You can use this to connect multiple beamlines \textbf{within a lattice environment} with
-  \lstinline+\goto{name}+ (recommended, Figure \ref{fig:twoways} (b)).
+  \lstinline+\goto{name}+ (recommended, Figure \ref{fig:twoways} (a)).
 \item You can use this to connect \textbf{multiple lattice environments} with
-  \lstinline+\start{name}+. Use the tikz overlay option. (Figure \ref{fig:twoways} (a))
+  \lstinline+\start{name}+. Use the tikz overlay option. (Figure \ref{fig:twoways} (b))
 \end{itemize}
 
 
@@ -525,6 +606,56 @@ exact place of the element. \textit{east} and \textit{center} are available (see
 
 \begin{figure}[h]
 \centering
+\begin{subfigure}[b]{.45\textwidth}
+  \centering
+  \begin{lattice}[0.8]
+    \rotate{90}
+    \turnlabels %labels to the left
+    \drift{0.5}
+    \quadrupole{QF1}{0.3}
+    \drift{0.2}
+    \kicker{}{0.1}
+    \drift{0.07}
+    \quadrupole{QD2}{0.3}
+    \drift{0.4}
+    \setelementcolor{kicker}{cyan}
+    \kicker{Septum}{0.5}
+    \resetelementcolor{kicker}
+    \savecoordinate{Septum}[center] %save to connect other beamline
+    \drift{0.8}
+    \kicker{}{0.1}
+    \drift{0.37}
+    \quadrupole{QD3}{0.2}
+    \drift{0.17}
+    \kicker{}{0.1}
+    \drift{0.1}
+    \sextupole{SF1}{0.2}
+    \drift{0.27}
+    \dipole{MB1}{0.2}{30}[s][0.4]
+    \drift{0.2}
+
+    % now go back to saved coordinate and continue with another beamline
+    \goto{Septum}
+    \rotate{-20}
+    \turnlabels %labels to the right
+    \drift{0.6}
+    \kicker{SS1}{0.2}
+    \drift{0.2}
+    \kicker{SSH1}{0.2}
+    \drift{0.3}
+    \dipole{M1}{0.2}{-30}[r][0.4]
+    \begin{fade} %fade out this part
+      \drift{0.2}
+      \dipole{M2}{0.2}{50}[r][0.4]
+      \drift{0.2}
+      \dipole{M3}{0.2}{-20}[r][0.4]
+      \drift{0.7}
+    \end{fade}
+    \legend{(0,6.5)}
+  \end{lattice}
+  \caption{one lattice environment and goto}
+\end{subfigure}
+%
 \begin{subfigure}[b]{.45\textwidth}
 \centering
  \begin{lattice}[0.8]
@@ -575,56 +706,6 @@ exact place of the element. \textit{east} and \textit{center} are available (see
   \end{lattice}
  \caption{two lattice environments and start}
 \end{subfigure}
-%
-\begin{subfigure}[b]{.45\textwidth}
-  \centering
-  \begin{lattice}[0.8]
-    \rotate{90}
-    \turnlabels %labels to the left
-    \drift{0.5}
-    \quadrupole{QF1}{0.3}
-    \drift{0.2}
-    \kicker{}{0.1}
-    \drift{0.07}
-    \quadrupole{QD2}{0.3}
-    \drift{0.4}
-    \setelementcolor{kicker}{cyan}
-    \kicker{Septum}{0.5}
-    \resetelementcolor{kicker}
-    \savecoordinate{Septum}[center] %save to connect other beamline
-    \drift{0.8}
-    \kicker{}{0.1}
-    \drift{0.37}
-    \quadrupole{QD3}{0.2}
-    \drift{0.17}
-    \kicker{}{0.1}
-    \drift{0.1}
-    \sextupole{SF1}{0.2}
-    \drift{0.27}
-    \dipole{MB1}{0.2}{30}[s][0.4]
-    \drift{0.2}
-
-    % now go back to saved coordinate and continue with another beamline
-    \goto{Septum}
-    \rotate{-20}
-    \turnlabels %labels to the right
-    \drift{0.6}
-    \kicker{SS1}{0.2}
-    \drift{0.2}
-    \kicker{SSH1}{0.2}
-    \drift{0.3}
-    \dipole{M1}{0.2}{-30}[r][0.4]
-    \begin{fade} %fade out this part
-      \drift{0.2}
-      \dipole{M2}{0.2}{50}[r][0.4]
-      \drift{0.2}
-      \dipole{M3}{0.2}{-20}[r][0.4]
-      \drift{0.7}
-    \end{fade}
-    \legend{(0,6.5)}
-  \end{lattice}
-  \caption{one lattice environment and goto}
-\end{subfigure}
 \caption{From example 3: Two ways to connect lattices}
 \label{fig:twoways}
 \end{figure}
@@ -650,13 +731,19 @@ v2.1 from 2015/02/23 is the first published version.
 \item documentation fixes
 \end{itemize}
 
+\paragraph{v2.3 from 2017/03/09}
+\begin{itemize}
+\item added \lstinline+\setlegendtext+ and \lstinline+\addlegendentry+
+\item German legend translation via babel (\textit{ngerman})
+\item legend fixes
+\end{itemize}
+
 
 \section{TODO}
 \label{sec:todo}
 
 \paragraph{What is missing?}
 \begin{itemize}
-\item manually adding and editing legend entries
 \item The look of the elements can be improved
 \item More element types can be added
 \item \ldots{}

@@ -1,5 +1,5 @@
 %% example3_coordinates.tex
-%% Copyright 2015 J. Schmidt
+%% Copyright 2017 J. Schmidt
 %% tikz-palattice LaTeX package
 % 
 % This work may be distributed and/or modified under the
@@ -136,6 +136,56 @@
 \begin{figure}
 \centering
 \begin{subfigure}[b]{.45\textwidth}
+  \centering
+  \begin{lattice}
+    \rotate{90}
+    \northlabels %labels to the left
+    \drift{0.5}
+    \quadrupole{QF1}{0.3}
+    \drift{0.2}
+    \kicker{}{0.1}
+    \drift{0.07}
+    \quadrupole{QD2}{0.3}
+    \drift{0.4}
+    \setelementcolor{kicker}{cyan}
+    \kicker{Septum}{0.5}
+    \resetelementcolor{kicker}
+    \savecoordinate{Septum}[center] %save to connect other beamline
+    \drift{0.8}
+    \kicker{}{0.1}
+    \drift{0.37}
+    \quadrupole{QD3}{0.2}
+    \drift{0.17}
+    \kicker{}{0.1}
+    \drift{0.1}
+    \sextupole{SF1}{0.2}
+    \drift{0.27}
+    \dipole{MB1}{0.2}{30}[s][0.4]
+    \drift{0.2}
+
+    % now go back to saved coordinate and continue with another beamline
+    \goto{Septum}
+    \rotate{-20}
+    \southlabels %labels to the right
+    \drift{0.6}
+    \kicker{SS1}{0.2}
+    \drift{0.2}
+    \kicker{SSH1}{0.2}
+    \drift{0.3}
+    \dipole{M1}{0.2}{-30}[r][0.4]
+    \begin{fade} %fade out this part
+      \drift{0.2}
+      \dipole{M2}{0.2}{50}[r][0.4]
+      \drift{0.2}
+      \dipole{M3}{0.2}{-20}[r][0.4]
+      \drift{0.7}
+    \end{fade}
+    \legend{(0,6.5)}
+  \end{lattice}
+  \caption{one lattice environment and goto}
+\end{subfigure}
+%
+\begin{subfigure}[b]{.45\textwidth}
 \centering
  \begin{lattice}
     \rotate{90}
@@ -184,56 +234,6 @@
     \legend{(-1,6.5)}
   \end{lattice}
  \caption{two lattice environments and start}
-\end{subfigure}
-%
-\begin{subfigure}[b]{.45\textwidth}
-  \centering
-  \begin{lattice}
-    \rotate{90}
-    \northlabels %labels to the left
-    \drift{0.5}
-    \quadrupole{QF1}{0.3}
-    \drift{0.2}
-    \kicker{}{0.1}
-    \drift{0.07}
-    \quadrupole{QD2}{0.3}
-    \drift{0.4}
-    \setelementcolor{kicker}{cyan}
-    \kicker{Septum}{0.5}
-    \resetelementcolor{kicker}
-    \savecoordinate{Septum}[center] %save to connect other beamline
-    \drift{0.8}
-    \kicker{}{0.1}
-    \drift{0.37}
-    \quadrupole{QD3}{0.2}
-    \drift{0.17}
-    \kicker{}{0.1}
-    \drift{0.1}
-    \sextupole{SF1}{0.2}
-    \drift{0.27}
-    \dipole{MB1}{0.2}{30}[s][0.4]
-    \drift{0.2}
-
-    % now go back to saved coordinate and continue with another beamline
-    \goto{Septum}
-    \rotate{-20}
-    \southlabels %labels to the right
-    \drift{0.6}
-    \kicker{SS1}{0.2}
-    \drift{0.2}
-    \kicker{SSH1}{0.2}
-    \drift{0.3}
-    \dipole{M1}{0.2}{-30}[r][0.4]
-    \begin{fade} %fade out this part
-      \drift{0.2}
-      \dipole{M2}{0.2}{50}[r][0.4]
-      \drift{0.2}
-      \dipole{M3}{0.2}{-20}[r][0.4]
-      \drift{0.7}
-    \end{fade}
-    \legend{(0,6.5)}
-  \end{lattice}
-  \caption{one lattice environment and goto}
 \end{subfigure}
 \caption{Two ways to connect lattices}
 \label{fig:twoways}

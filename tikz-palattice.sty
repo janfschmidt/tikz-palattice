@@ -1,5 +1,5 @@
 %% tikz-palattice.sty
-%% Copyright 2015 J. Schmidt
+%% Copyright 2017 J. Schmidt
 %% tikz-palattice LaTeX package
 % 
 % This work may be distributed and/or modified under the
@@ -18,14 +18,14 @@
 % and the 5 example files example1_linear.tex, example2_circular.tex,
 % example3_coordinates.tex, example4_labels.tex and elsa.tex
 
-\ProvidesPackage{tikz-palattice}[2015/03/18 v2.21]
+\ProvidesPackage{tikz-palattice}[2017/03/09 v2.3]
 \RequirePackage{tikz}
 \RequirePackage{ifthen}
 \RequirePackage{siunitx}
 \RequirePackage{xargs}
 \RequirePackage{etoolbox}
 \RequirePackage{iflang}
-\usetikzlibrary{calc,positioning,fit}
+\usetikzlibrary{calc,positioning,fit,chains}
 \usetikzlibrary{scopes}
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
